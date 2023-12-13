@@ -1,0 +1,9 @@
+<div *ngFor="let menu of menuPermissions">
+    <div>{{translate(menu?.parent?.name, menu?.parent?.name)}}</div>
+    <div *ngFor="let menu2 of menu.child">
+        <div>{{translate(menu2?.parent?.name, menu2?.parent?.name)}}</div>
+        <div *ngFor="let menu3 of menu2.child">
+            <div>{{translate(menu3?.name, menu3?.name)}}</div>
+        </div>
+    </div>
+</div>
