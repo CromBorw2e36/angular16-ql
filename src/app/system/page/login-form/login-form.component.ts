@@ -31,10 +31,7 @@ export class LoginFormComponent
     private configSv: ConfigServerService
   ) {
     super();
-    this.accountsClient = new AccountsClient(
-      this.httpClient,
-      this.configSv.BASE_URL_SERVER
-    );
+    this.accountsClient = new AccountsClient(configSv, this.httpClient);
   }
 
   accountsClient: AccountsClient;

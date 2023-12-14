@@ -23,21 +23,21 @@ export class AppComponent implements OnInit, OnChanges {
     private configServerService: ConfigServerService
   ) {
     this.accountsClient = new AccountsClient(
+      this.configServerService,
       this.httpClient,
-      this.configServerService.BASE_URL_SERVER
     );
     this.isLogin = new Observable(undefined);
 
     try {
-      // this.accountsClient.checkTheExpirationDateOfToken().subscribe(
-      //   res => {
-      //     this.sysLogin.setLogin(res);
-      //     this.isLogin = this.sysLogin.checkIsLogin();
-      //   },
-      //   error => {
-      //     this.sysLogin.setLogin(false);
-      //   }); // check token
-      this.sysLogin.setLogin(false);
+      this.accountsClient.checkTheExpirationDateOfToken().subscribe(
+        res => {
+          this.sysLogin.setLogin(res);
+          this.isLogin = this.sysLogin.checkIsLogin();
+        },
+        error => {
+          this.sysLogin.setLogin(false);
+        }); // check token
+      // this.sysLogin.setLogin(false);
       this.isLogin = this.sysLogin.checkIsLogin();
     } catch {}
   }

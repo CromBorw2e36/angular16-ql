@@ -1,8 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SysMenu } from '../../server/api_share';
-import { IGenericMenu, SysMenuService } from '../../service/sys-menu/sys-menu.service';
+import { MenuPermissionsClient, SysMenu } from '../../server/api_share';
+import {
+  IGenericMenu,
+  SysMenuService,
+} from '../../service/sys-menu/sys-menu.service';
 import { ConfigServerService } from '../../server/config/config-server.service';
 import { SysLoginService } from '../../service/sys-login/sys-login.service';
 import LayoutComponentBase from 'src/app/share/layoutBase/LayoutComponentBase';
@@ -28,16 +31,18 @@ export class HomePageComponent extends LayoutComponentBase implements OnInit {
   loading: boolean = false;
 
   ngOnInit(): void {
-    // const menuPermissionsClient = new MenuPermissionsClient(this.httpClient, this.configServerService.BASE_URL_SERVER);
-    // this.loading = true;
-    // menuPermissionsClient.getListMenu()
-    //   .subscribe(res => {
-    //     const newRes: IGenericMenu[] = this._sysMenuService.buildMenuList(res);
-    //     this.menuPermissions = newRes;
-    //     this.loading = false;
-    //   });
+    const menuPermissionsClient = new MenuPermissionsClient(
+      this.configServerService,
+      this.httpClient
+    );
+    this.loading = true;
+    menuPermissionsClient.getListMenu().subscribe((res) => {
+      const newRes: IGenericMenu[] = this._sysMenuService.buildMenuList(res);
+      this.menuPermissions = newRes;
+      this.loading = false;
+    });
 
-    this.menuPermissions = defautlMenu as any;
+    // this.menuPermissions = defautlMenu as any;
   }
 
   RouterPage(params: SysMenu) {

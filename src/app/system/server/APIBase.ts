@@ -1,17 +1,19 @@
-import { Injectable } from "@angular/core";
+import { ConfigServerService } from "./config/config-server.service";
 
-@Injectable()
 export class APIBase {
     authToken = '';
-    protected constructor() {
+    base_url = '';
+    protected constructor(config: ConfigServerService) {
         this.authToken = "QUAN-LI-APP";
+        this.base_url = config.BASE_URL_SERVER;
     }
+
     setAuthToken(text: string) {
         this.authToken = text;
     }
 
     public getBaseUrl(text: string) {
-        return "";
+        return this.base_url;
     }
 
     protected transformOptions(options: any): Promise<any> {
