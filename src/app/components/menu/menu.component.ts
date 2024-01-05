@@ -3,6 +3,7 @@ import {
   Injector,
   Input,
   OnChanges,
+  OnInit,
   SimpleChanges,
 } from '@angular/core';
 import LayoutComponentBase from '../../share/layoutBase/LayoutComponentBase';
@@ -20,11 +21,13 @@ import { SysMenu } from 'src/app/system/server/api_share';
 })
 export class MenuComponent
   extends LayoutComponentBase
-  implements OnChanges, OnChanges
+  implements OnChanges, OnChanges, OnInit
 {
   constructor(injector: Injector) {
     super(injector);
     this.menuPermissions = [];
+  }
+  ngOnInit(): void {
   }
 
   ngAfterViewChecked(): void {}
