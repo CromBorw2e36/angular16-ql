@@ -8,14 +8,12 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
-import LayoutComponentBase from 'src/app/share/layoutBase/LayoutComponentBase';
-import { ConfigServerService } from './config/config-server.service';
-import { Injector } from '@angular/core';
+import { ConfigServerService } from "./config/config-server.service";
 import { mergeMap as _observableMergeMap, catchError as _observableCatch } from 'rxjs/operators';
 import { Observable, from as _observableFrom, throwError as _observableThrow, of as _observableOf } from 'rxjs';
 import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angular/common/http';
-import { APIBase } from './APIBase';
+import { APIBase } from "./APIBase";
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
@@ -33,7 +31,7 @@ export class CurrentJobPositionsClient extends APIBase implements ICurrentJobPos
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    constructor(@Inject(ConfigServerService) configuration: ConfigServerService, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         super(configuration);
         this.http = http;
         this.baseUrl = baseUrl ?? this.getBaseUrl("");
@@ -336,7 +334,7 @@ export class SalaryAndBenefitsClient extends APIBase implements ISalaryAndBenefi
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    constructor(@Inject(ConfigServerService) configuration: ConfigServerService, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         super(configuration);
         this.http = http;
         this.baseUrl = baseUrl ?? this.getBaseUrl("");
@@ -639,7 +637,7 @@ export class WorkHistoriesClient extends APIBase implements IWorkHistoriesClient
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    constructor(@Inject(ConfigServerService) configuration: ConfigServerService, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         super(configuration);
         this.http = http;
         this.baseUrl = baseUrl ?? this.getBaseUrl("");
@@ -942,7 +940,7 @@ export class AccountsClient extends APIBase implements IAccountsClient {
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    constructor(@Inject(ConfigServerService) configuration: ConfigServerService, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         super(configuration);
         this.http = http;
         this.baseUrl = baseUrl ?? this.getBaseUrl("");
@@ -1217,7 +1215,6 @@ export class AccountsClient extends APIBase implements IAccountsClient {
 
 export interface IMenuPermissionsClient {
     getListMenu(): Observable<SysMenu[]>;
-    getAllListMenus(): Observable<SysMenu>;
 }
 
 @Injectable()
@@ -1226,7 +1223,7 @@ export class MenuPermissionsClient extends APIBase implements IMenuPermissionsCl
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    constructor(@Inject(ConfigServerService) configuration: ConfigServerService, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         super(configuration);
         this.http = http;
         this.baseUrl = baseUrl ?? this.getBaseUrl("");
@@ -1288,56 +1285,6 @@ export class MenuPermissionsClient extends APIBase implements IMenuPermissionsCl
         }
         return _observableOf(null as any);
     }
-
-    getAllListMenus(): Observable<SysMenu> {
-        let url_ = this.baseUrl + "/api/MenuPermissions";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
-            return this.http.request("get", url_, transformedOptions_);
-        })).pipe(_observableMergeMap((response_: any) => {
-            return this.processGetAllListMenus(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetAllListMenus(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<SysMenu>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<SysMenu>;
-        }));
-    }
-
-    protected processGetAllListMenus(response: HttpResponseBase): Observable<SysMenu> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = SysMenu.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
 }
 
 export interface IUserInfoesClient {
@@ -1354,7 +1301,7 @@ export class UserInfoesClient extends APIBase implements IUserInfoesClient {
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    constructor(@Inject(ConfigServerService) configuration: ConfigServerService, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         super(configuration);
         this.http = http;
         this.baseUrl = baseUrl ?? this.getBaseUrl("");
@@ -1645,7 +1592,7 @@ export class CommonContronllerClient extends APIBase implements ICommonContronll
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    constructor(@Inject(ConfigServerService) configuration: ConfigServerService, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         super(configuration);
         this.http = http;
         this.baseUrl = baseUrl ?? this.getBaseUrl("");
@@ -2340,10 +2287,6 @@ export class UserInfo implements IUserInfo {
     bhxh?: string | undefined;
     cccd?: string | undefined;
     codeCompany?: string | undefined;
-    avatar?: string | undefined;
-    avatar16?: string | undefined;
-    avatar32?: string | undefined;
-    avatar64?: string | undefined;
 
     constructor(data?: IUserInfo) {
         if (data) {
@@ -2370,10 +2313,6 @@ export class UserInfo implements IUserInfo {
             this.bhxh = _data["bhxh"];
             this.cccd = _data["cccd"];
             this.codeCompany = _data["codeCompany"];
-            this.avatar = _data["avatar"];
-            this.avatar16 = _data["avatar16"];
-            this.avatar32 = _data["avatar32"];
-            this.avatar64 = _data["avatar64"];
         }
     }
 
@@ -2400,10 +2339,6 @@ export class UserInfo implements IUserInfo {
         data["bhxh"] = this.bhxh;
         data["cccd"] = this.cccd;
         data["codeCompany"] = this.codeCompany;
-        data["avatar"] = this.avatar;
-        data["avatar16"] = this.avatar16;
-        data["avatar32"] = this.avatar32;
-        data["avatar64"] = this.avatar64;
         return data;
     }
 
@@ -2430,10 +2365,6 @@ export interface IUserInfo {
     bhxh?: string | undefined;
     cccd?: string | undefined;
     codeCompany?: string | undefined;
-    avatar?: string | undefined;
-    avatar16?: string | undefined;
-    avatar32?: string | undefined;
-    avatar64?: string | undefined;
 }
 
 export class Company implements ICompany {

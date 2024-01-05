@@ -35,7 +35,9 @@
               "@angular/material/prebuilt-themes/pink-bluegrey.css",
               "src/styles.scss"
             ],
-            "scripts": [],
+            "scripts": [
+              "node_modules/face-api.js/dist/face-api.js"
+            ],
             "serviceWorker": true,
             "ngswConfigPath": "ngsw-config.json"
           },
@@ -67,13 +69,19 @@
           "defaultConfiguration": "production"
         },
         "serve": {
+          "options": {
+            "port": 7777
+          },
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
               "browserTarget": "angular16-ql:build:production"
             },
             "development": {
-              "browserTarget": "angular16-ql:build:development"
+              "browserTarget": "angular16-ql:build:development",
+              "sslKey": "./localhost.key",
+              "sslCert": "./localhost.crt",
+              "ssl": true
             }
           },
           "defaultConfiguration": "development"
@@ -100,9 +108,12 @@
             ],
             "styles": [
               "@angular/material/prebuilt-themes/pink-bluegrey.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/bootstrap5/scss/bootstrap.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/bootstrap5/dist/js/bootstrap.min.js"
+            ]
           }
         }
       }

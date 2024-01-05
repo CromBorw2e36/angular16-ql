@@ -1,9 +1,42 @@
-<div *ngFor="let menu of menuPermissions">
-    <div>{{translate(menu?.parent?.name, menu?.parent?.name)}}</div>
-    <div *ngFor="let menu2 of menu.child">
-        <div>{{translate(menu2?.parent?.name, menu2?.parent?.name)}}</div>
-        <div *ngFor="let menu3 of menu2.child">
-            <div>{{translate(menu3?.name, menu3?.name)}}</div>
-        </div>
-    </div>
-</div>
+<ul class="menu-container">
+  <li
+    *ngFor="let menu of menuPermissions; trackBy: identifyFarent"
+    class="list-menu-item"
+  >
+    <a
+      class="ct-collapse nav-link"
+      (click)="navigator(menu?.parent)"
+      [id]="menu?.parent?.menuid"
+    >
+      {{ translate(menu?.parent?.name, menu?.parent?.name) }}
+      <mat-icon
+        *ngIf="menu?.parent?.isParent"
+        class="expand-icon"
+        aria-hidden="false"
+        aria-label="Example home icon"
+        fontIcon="expand_more"
+      ></mat-icon>
+    </a>
+    <ul [className]="'collapse   ' + menu?.parent?.menuid">
+      <li
+        *ngFor="let menu2 of menu.child; trackBy: identifyChild"
+        class="list-menu-item"
+      >
+        <a
+          (click)="navigator(menu2?.parent)"
+          class="nav-link ct-collapse"
+          [id]="menu2?.parent?.menuid"
+        >
+          {{ translate(menu2?.parent?.name, menu2?.parent?.name) }}
+        </a>
+        <!-- <ul>
+          <li *ngFor="let menu3 of menu2.child">
+            <a (click)="navigator(menu3?.url)" class="nav-link">
+              {{ translate(menu3?.name, menu3?.name) }}
+            </a>
+          </li>
+        </ul> -->
+      </li>
+    </ul>
+  </li>
+</ul>

@@ -12,24 +12,37 @@ import { DashboardComponent } from './page/dashboard/dashboard.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { LoginFormComponent } from './page/login-form/login-form.component';
-import { ComponentModule } from "../components/component.module";
+import { ComponentModule } from '../components/component.module';
 import { MenuComponent } from '../components/menu/menu.component';
- 
-const routes: Routes = [];
+import { MatButtonModule } from '@angular/material/button';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { CookieService } from 'ngx-cookie-service';
+import { AccountsClient, MenuPermissionsClient } from './server/api_share';
+import { APIBase } from './server/APIBase';
+import { ConfigServerService } from './server/config/config-server.service';
+
+const routes: Routes = [{ path: 'dashboard', component: DashboardComponent }];
 
 @NgModule({
-    declarations: [HomePageComponent, DashboardComponent, LoginFormComponent],
-    providers: [],
-    exports: [HomePageComponent, DashboardComponent, LoginFormComponent],
-    imports: [
-        RouterModule.forChild(routes),
-        CommonModule,
-        RouterLink,
-        RouterLinkActive,
-        RouterOutlet,
-        HttpClientModule,
-        FormsModule,
-        ComponentModule,
-    ]
+  declarations: [HomePageComponent, DashboardComponent, LoginFormComponent],
+  providers: [
+    CookieService,
+    MenuPermissionsClient,
+    ConfigServerService,
+    AccountsClient,
+  ],
+  exports: [HomePageComponent, DashboardComponent, LoginFormComponent],
+  imports: [
+    RouterModule.forChild(routes),
+    CommonModule,
+    RouterLink,
+    RouterLinkActive,
+    RouterOutlet,
+    HttpClientModule,
+    FormsModule,
+    ComponentModule,
+    MatSidenavModule,
+    MatButtonModule,
+  ],
 })
 export class SystemModule {}

@@ -6,11 +6,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { DxLoadPanelModule } from 'devextreme-angular';
 import { SelectBoxCompanyComponent } from './common/select-box-company/select-box-company.component';
+import {MatIconModule} from '@angular/material/icon';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [MenuComponent, LoadPanelDevextremeComponent, SelectBoxCompanyComponent],
-  imports: [CommonModule, DxLoadPanelModule, FormsModule, HttpClientModule],
-  providers: [],
+  imports: [CommonModule, DxLoadPanelModule, FormsModule, HttpClientModule,MatIconModule],
+  providers: [CookieService],
   exports: [MenuComponent, LoadPanelDevextremeComponent],
 })
 export class ComponentModule {}

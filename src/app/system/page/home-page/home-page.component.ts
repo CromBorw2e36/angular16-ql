@@ -1,7 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { MenuPermissionsClient, SysMenu } from '../../server/api_share';
+import {
+  Account,
+  MenuPermissionsClient,
+  SysMenu,
+  UserInfo,
+} from '../../server/api_share';
 import {
   IGenericMenu,
   SysMenuService,
@@ -9,6 +14,7 @@ import {
 import { ConfigServerService } from '../../server/config/config-server.service';
 import { SysLoginService } from '../../service/sys-login/sys-login.service';
 import LayoutComponentBase from 'src/app/share/layoutBase/LayoutComponentBase';
+import { MenuComponent } from 'src/app/components/menu/menu.component';
 
 @Component({
   selector: 'app-home-page',
@@ -17,37 +23,41 @@ import LayoutComponentBase from 'src/app/share/layoutBase/LayoutComponentBase';
 })
 export class HomePageComponent extends LayoutComponentBase implements OnInit {
   constructor(
+    injector: Injector,
     private sysLoginService: SysLoginService,
     private httpClient: HttpClient,
     private configServerService: ConfigServerService,
-    private routes: Router,
-    private _sysMenuService: SysMenuService
+    private _sysMenuService: SysMenuService,
+    private menuPermissionsClient: MenuPermissionsClient
   ) {
-    super();
+    super(injector);
     this.menuPermissions = [];
+    this.userInfo = this.getUserInfo() as UserInfo;
   }
 
   menuPermissions: IGenericMenu[];
   loading: boolean = false;
-
+  showFiller = true;
+  userInfo: UserInfo = new UserInfo();
+  avatar: string = '../../../assets/image/avatar-default.png';
   ngOnInit(): void {
-    const menuPermissionsClient = new MenuPermissionsClient(
-      this.configServerService,
-      this.httpClient
-    );
     this.loading = true;
-    menuPermissionsClient.getListMenu().subscribe((res) => {
-      const newRes: IGenericMenu[] = this._sysMenuService.buildMenuList(res);
-      this.menuPermissions = newRes;
-      this.loading = false;
-    });
-
-    // this.menuPermissions = defautlMenu as any;
-  }
-
-  RouterPage(params: SysMenu) {
-    console.log(params);
-    this.routes.navigate([`${params.url}`]);
+    this.menuPermissionsClient.getListMenu().subscribe(
+      (res) => {
+        this.setListMenu(res);
+        const newRes: IGenericMenu[] = this._sysMenuService.buildMenuList(res);
+        this.menuPermissions = newRes;
+      },
+      (err) => {
+        if (err.status === 401) {
+          this.setLogin();
+        }
+      },
+      () => {
+        this.loading = false;
+      }
+    );
+    // this.menuPermissions = defautlMenu as any; // run demo
   }
 }
 
@@ -78,7 +88,7 @@ const defautlMenu = [
   {
     parent: {
       menuid: '10.00.00',
-      url: 'quan-li-nhan-su',
+      url: '',
       name: 'Nhân sự',
       active: true,
       isParent: true,
@@ -105,7 +115,7 @@ const defautlMenu = [
   {
     parent: {
       menuid: '99.00.00',
-      url: 'he-thong-trang-web',
+      url: '',
       name: 'Hệ thống',
       active: true,
       isParent: true,

@@ -15,6 +15,7 @@
             class="input100"
             type="text"
             [(ngModel)]="InputMaster.account"
+            (keyup.enter)="OnSubmit()"
             [ngModelOptions]="{ standalone: true }"
             autofocus
           />

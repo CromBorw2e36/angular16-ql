@@ -1,0 +1,46 @@
+@import '../../../../assets/scss/core.scss';
+
+#homePage {
+  height: 100vh;
+  width: 100vw;
+  background-color: $color3;
+
+  .sidenav-menu {
+    width: 230px;
+    background-color: $color2;
+    box-shadow: $boxShadow1;
+  }
+
+  .logo-container {
+    width: auto;
+    margin: 20px 10px;
+    padding: 20px 10px;
+    //   background-color: $color3;
+    //   box-shadow: $boxShadow1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .logo {
+      background-color: $color8;
+      height: 75px;
+      width: 75px;
+      border-radius: 100%;
+      margin-bottom: 10px;
+    }
+
+    .title {
+      font-size: medium;
+      font-weight: 500;
+      color: $color1;
+      user-select: none;
+    }
+
+    .title:hover {
+      color: $color5;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
+}

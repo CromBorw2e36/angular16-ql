@@ -9,7 +9,7 @@ export class SessionStorageServiceService {
 
   setSessionData(key: string, value: any) {
     try {
-      sessionStorage.setItem(key, value);
+      localStorage.setItem(key, value);
     }
     catch {
       console.log('Not found sessionStorage');
@@ -18,7 +18,7 @@ export class SessionStorageServiceService {
 
   getSessionData(key: string) {
     try {
-      const data = sessionStorage.getItem(key);
+      const data = localStorage.getItem(key);
       return data ? data : null;
     } catch {
       console.log('Not found sessionStorage');

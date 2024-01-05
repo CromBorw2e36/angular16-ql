@@ -1,45 +1,52 @@
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  Component,
+  Injector,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { SysLoginService } from './system/service/sys-login/sys-login.service';
 import { ConfigServerService } from './system/server/config/config-server.service';
 import { AccountsClient, SysMenu } from './system/server/api_share';
+import LayoutComponentBase from './share/layoutBase/LayoutComponentBase';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit, OnChanges {
+export class AppComponent
+  extends LayoutComponentBase
+  implements OnInit, OnChanges
+{
   title = 'my-app-2';
   isLogin: Observable<boolean | undefined>;
-  accountsClient: AccountsClient;
-
   constructor(
-    private router: Router,
+    injector: Injector,
     private sysLogin: SysLoginService,
     private httpClient: HttpClient,
-    private configServerService: ConfigServerService
+    private accountsClient: AccountsClient
   ) {
-    this.accountsClient = new AccountsClient(
-      this.configServerService,
-      this.httpClient,
-    );
+    super(injector);
     this.isLogin = new Observable(undefined);
 
     try {
       this.accountsClient.checkTheExpirationDateOfToken().subscribe(
-        res => {
+        (res) => {
           this.sysLogin.setLogin(res);
           this.isLogin = this.sysLogin.checkIsLogin();
         },
-        error => {
+        (error) => {
           this.sysLogin.setLogin(false);
-        }); // check token
-      // this.sysLogin.setLogin(false);
+        }
+      ); // check token
+      // this.sysLogin.setLogin(true); // run demo
       this.isLogin = this.sysLogin.checkIsLogin();
-    } catch {}
+    } catch {
+      this.sysLogin.setLogin(false);
+    }
   }
   ngOnChanges(changes: SimpleChanges): void {}
 
