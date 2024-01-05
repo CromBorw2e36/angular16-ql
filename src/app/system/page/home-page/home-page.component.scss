@@ -4,6 +4,7 @@
   height: 100vh;
   width: 100vw;
   background-color: $color3;
+  user-select: none;
 
   .sidenav-menu {
     width: 230px;
@@ -15,8 +16,6 @@
     width: auto;
     margin: 20px 10px;
     padding: 20px 10px;
-    //   background-color: $color3;
-    //   box-shadow: $boxShadow1;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -35,6 +34,7 @@
       font-weight: 500;
       color: $color1;
       user-select: none;
+      margin-bottom: 20px;
     }
 
     .title:hover {
@@ -42,5 +42,27 @@
       font-weight: bold;
       cursor: pointer;
     }
+
+    .control-user-container {
+
+
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+
+      .item-user-control {
+        cursor: pointer;
+        transition: cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s;
+      }
+
+      .item-user-control:hover {
+        transform: scale(1.03);
+      }
+
+      .item-user-control:active {
+        transform: scale(0.98);
+      }
+    }
   }
+
 }

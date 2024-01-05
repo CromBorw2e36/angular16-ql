@@ -20,7 +20,10 @@ import { CookieService } from 'ngx-cookie-service';
 import { AccountsClient, MenuPermissionsClient } from './server/api_share';
 import { APIBase } from './server/APIBase';
 import { ConfigServerService } from './server/config/config-server.service';
-
+import { DxButtonModule } from 'devextreme-angular';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatBadgeModule } from '@angular/material/badge';
 const routes: Routes = [{ path: 'dashboard', component: DashboardComponent }];
 
 @NgModule({
@@ -43,6 +46,10 @@ const routes: Routes = [{ path: 'dashboard', component: DashboardComponent }];
     ComponentModule,
     MatSidenavModule,
     MatButtonModule,
+    DxButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatBadgeModule,
   ],
 })
 export class SystemModule {}

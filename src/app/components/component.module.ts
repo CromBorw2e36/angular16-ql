@@ -14,6 +14,9 @@ import {
   MenuPermissionsClient,
 } from '../system/server/api_share';
 import { SysLoginService } from '../system/service/sys-login/sys-login.service';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @NgModule({
   declarations: [
@@ -27,6 +30,9 @@ import { SysLoginService } from '../system/service/sys-login/sys-login.service';
     FormsModule,
     HttpClientModule,
     MatIconModule,
+    MatMenuModule,
+    MatBadgeModule,
+    MatButtonModule,
   ],
   providers: [
     CookieService,

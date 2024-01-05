@@ -2,10 +2,48 @@
   <mat-drawer #drawer class="sidenav-menu" mode="side" opened>
     <!-- Logo websites -->
     <div class="logo-container">
-      <img [src]="userInfo.avatar ??  avatar" class="logo" />
+      <img [src]="userInfo.avatar ?? avatar" class="logo" />
       <div class="title">
         {{ userInfo.name ?? "Tài khoản không xác định" }}
       </div>
+      <div class="w-100 control-user-container">
+        <mat-icon
+          class="ql-text item-user-control"
+          mat-raised-button
+          aria-hidden="false"
+          aria-label="Example home icon"
+          fontIcon="account_circle"
+        ></mat-icon>
+        <mat-icon
+          matBadge="7"
+          matBadgeSize="small"
+          class="ql-text item-user-control"
+          mat-raised-button
+          aria-hidden="false"
+          aria-label="Example home icon"
+          fontIcon="mail"
+          matBadgeColor="warn"
+        ></mat-icon>
+        <mat-icon
+          class="ql-text text-light item-user-control"
+          mat-raised-button
+          aria-hidden="false"
+          aria-label="Example home icon"
+          fontIcon="people"
+        ></mat-icon>
+        <mat-icon
+          class="ql-text text-light item-user-control"
+          mat-raised-button
+          [matMenuTriggerFor]="menu"
+          aria-hidden="false"
+          aria-label="Example home icon"
+          fontIcon="settings"
+        ></mat-icon>
+      </div>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>Hỗ trợ</button>
+        <button mat-menu-item>Đăng xuất</button>
+      </mat-menu>
     </div>
     <!-- Logo websites -->
     <!-- List menu -->
