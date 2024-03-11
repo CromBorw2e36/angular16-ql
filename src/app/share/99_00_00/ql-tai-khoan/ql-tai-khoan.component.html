@@ -1,0 +1,225 @@
+<div class="container-fluid" id="qlTaiKhoan">
+    <div class="">
+        Ảnh bìa, ảnh đại diện
+    </div>
+
+    <div class="user-information-card row">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 col-xxl-3 mb-2">
+            <div class="user-information-avatar-container">
+                <div class="d-none">
+                    <button mat-fab aria-label="Example icon button with a heart icon">
+                        <mat-icon>camera</mat-icon>
+                    </button>
+                </div>
+                <img src="{{userInformation.avatar64}}" height="100%" width="100%" alt="avatar user">
+            </div>
+            <div class="user-information-full-name">{{userInformation.name}}</div>
+            <div class="user-information-about">
+                <div class="user-information-title">{{translate('Ngày sinh', "Birth")}}</div>
+                <div class="user-information-value">{{formatDateString(userInformation.dateOfBirth)}}</div>
+            </div>
+            <div class="user-information-about">
+                <div class="user-information-title">{{translate('Giới tính' , 'Gender')}}</div>
+                <div class="user-information-value">{{renderValue(userInformation.gender)}}</div>
+            </div>
+            <div class="user-information-about">
+                <div class="user-information-title">{{translate('Bộ phận', 'Department of company')}}</div>
+                <div class="user-information-value">{{renderValue(userInformation.nameDepartment)}}</div>
+            </div>
+            <div class="user-information-about">
+                <div class="user-information-title">{{translate('Thời gian làm việc', 'Join a company')}}</div>
+                <div class="user-information-value">{{'Chưa khởi tạo trường'}}</div>
+            </div>
+            <div class="user-information-about">
+                <div class="user-information-title">{{translate('Chi nhánh', 'Brach')}}</div>
+                <div class="user-information-value">{{renderValue(userInformation.nameBrach)}}</div>
+            </div>
+            <div class="user-information-about">
+                <div class="user-information-title">{{translate('Công ty', 'Company')}}</div>
+                <div class="user-information-value">{{renderValue(userInformation.nameCompany)}}</div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-5 col-xl-6 col-xxl-5 mb-2">
+            <div class="user-information-about">
+                <div class="user-information-title">{{translate('Quốc tịch', '')}}</div>
+                <div class="user-information-value">{{renderValue(userInformation.nationality)}}</div>
+            </div>
+            <div class="user-information-about">
+                <div class="user-information-title">{{translate('Dân tộc', '')}}</div>
+                <div class="user-information-value">{{renderValue(userInformation.ethnicity)}}</div>
+            </div>
+            <div class="user-information-about">
+                <div class="user-information-title">{{translate('Sở thích', '')}}</div>
+                <div class="user-information-value">{{renderValue(userInformation.interests)}}</div>
+            </div>
+            <div class="user-information-about">
+                <div class="user-information-title">{{translate('Địa chỉ', '')}}</div>
+                <div class="user-information-value">{{renderValue(userInformation.address)}}</div>
+            </div>
+            <div class="user-information-about">
+                <div class="user-information-title">{{translate('Tình trạng hôn nhân','')}}</div>
+                <div class="user-information-value">{{renderValue(userInformation.maritalStatus)}}</div>
+            </div>
+            <div class="user-information-about">
+                <div class="user-information-title">{{translate('Số BHXH', '')}}</div>
+                <div class="user-information-value">{{renderValue(userInformation.bhxh)}}</div>
+            </div>
+            <div class="user-information-about">
+                <div class="user-information-title">{{translate('Số CCCD', '')}}</div>
+                <div class="user-information-value">{{renderValue(userInformation.cccd)}}</div>
+            </div>
+            <div class="user-information-about">
+                <div class="user-information-title">{{translate('Số điện thoại', '')}}</div>
+                <div class="user-information-value">{{renderValue(userInformation.phoneNumber)}}</div>
+            </div>
+            <div class="user-information-about">
+                <div class="user-information-title">{{translate('Email', '')}}</div>
+                <div class="user-information-value">{{renderValue(userInformation.email)}}</div>
+            </div>
+
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 col-xxl-3 mb-2">
+            <div class="user-information-about">
+                <div class="user-information-title">{{translate('Tài khoản', '')}}</div>
+                <div class="user-information-value">{{renderValue(userInformation.id)}}</div>
+            </div>
+            <div class="user-information-about">
+                <div class="user-information-title">{{translate('Lịch sử truy cập', '')}}</div>
+                <ul>
+                    <li *ngFor="let tokenItem of userInformation.tokens;trackBy:trackByFunc">
+                        <span class="me-2">{{translate('Truy cập bằng ','Browser ') + tokenItem.browser}}</span>
+                        <span class="me-2">{{formatDateFromNow(tokenItem.last_date_connect)}}</span>
+                        <span class="me-2">{{translate('Địa chỉ ', 'Address ') + tokenItem.ip_address}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- <div class="row">
+        <div class="col-12 col-md-4 col-lg-2 p-0 m-0">
+            <div class="user-information-category">
+                <div class=""><a href="javascript:;">Thông tin cá nhân</a></div>
+                <div class=""><a href="javascript:;">Liên lạc</a></div>
+                <div class=""><a href="javascript:;">Tài khoản</a></div>
+                <div class=""><a href="javascript:;">Cài đặt</a></div>
+            </div>
+        </div>
+        <div class="col-12 col-md-8 col-lg-10 p-0 m-0">
+            <div class="user-information-card ">
+                <div class="user-information-header" id="userInfomationPerson">Thông tin cá nhân</div>
+                <div class="user-information-content row">
+                    <div class="col-12">
+                        <div class="user-information-title">Họ và tên</div>
+                        <div class="user-information-input">
+                            <editor-text-box-devextreme></editor-text-box-devextreme>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="user-information-title">Ngày sinh</div>
+                        <div class="user-information-input">
+                            <editor-text-box-devextreme></editor-text-box-devextreme>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="user-information-title">Giới tính</div>
+                        <div class="user-information-input">
+                            <editor-text-box-devextreme></editor-text-box-devextreme>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="user-information-title">Dân tộc</div>
+                        <div class="user-information-input">
+                            <editor-text-box-devextreme></editor-text-box-devextreme>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="user-information-title">Quốc tịch</div>
+                        <div class="user-information-input">
+                            <editor-text-box-devextreme></editor-text-box-devextreme>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="user-information-title">Sở thích</div>
+                        <div class="user-information-input">
+                            <editor-text-box-devextreme></editor-text-box-devextreme>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="user-information-title">Tình trạng hôn nhân</div>
+                        <div class="user-information-input">
+                            <editor-text-box-devextreme></editor-text-box-devextreme>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="user-information-title">BHXH</div>
+                        <div class="user-information-input">
+                            <editor-text-box-devextreme></editor-text-box-devextreme>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="user-information-title">CCCD</div>
+                        <div class="user-information-input">
+                            <editor-text-box-devextreme></editor-text-box-devextreme>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="user-information-title">Ảnh đại diện</div>
+                        <div class="user-information-input">
+                            <input type="file" />
+                        </div>
+                    </div>
+                </div>
+                <div class="user-information-dialog">
+                    <dx-button class="button" color="primary">Save</dx-button>
+                    <dx-button class="button">Cancel</dx-button>
+                </div>
+            </div>
+            <div class="user-information-card ">
+                <div class="user-information-header" id="userInfomationContact">Liên lạc</div>
+                <div class="user-information-content row">
+                    <div class="col-12">
+                        <div class="user-information-title">Số điện thoại</div>
+                        <div class="user-information-input">
+                            <editor-text-box-devextreme></editor-text-box-devextreme>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="user-information-title">Email</div>
+                        <div class="user-information-input">
+                            <editor-text-box-devextreme></editor-text-box-devextreme>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="user-information-title">Địa chỉ</div>
+                        <div class="user-information-input">
+                            <editor-text-box-devextreme></editor-text-box-devextreme>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-information-dialog">
+                    <dx-button class="button" color="primary">Save</dx-button>
+                    <dx-button class="button">Cancel</dx-button>
+                </div>
+            </div>
+            <div class="user-information-card ">
+                <div class="user-information-header" id="userInfomationAccount">Thông tin tài khoản</div>
+                <div class="user-information-content row">
+                    <div class="col-12">
+                        <div class="user-information-title">Tài khoản</div>
+                        <div class="user-information-input">
+                            <editor-text-box-devextreme></editor-text-box-devextreme>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="user-information-title">TOKEN đăng nhập</div>
+                        <div class="user-information-input">
+                            <editor-text-box-devextreme></editor-text-box-devextreme>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+</div>

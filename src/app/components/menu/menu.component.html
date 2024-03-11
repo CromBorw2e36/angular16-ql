@@ -5,7 +5,7 @@
   >
     <a
       class="ct-collapse nav-link"
-      (click)="navigator(menu?.parent)"
+      (click)="eventClickMenu(menu?.parent, menu)"
       [id]="menu?.parent?.menuid"
     >
       {{ translate(menu?.parent?.name, menu?.parent?.name) }}
@@ -17,21 +17,21 @@
         fontIcon="expand_more"
       ></mat-icon>
     </a>
-    <ul [className]="'collapse   ' + menu?.parent?.menuid">
+    <ul [className]="'collapse   ' + menu?.parent?.menuid?.replaceAll('.','-')">
       <li
         *ngFor="let menu2 of menu.child; trackBy: identifyChild"
         class="list-menu-item"
       >
         <a
-          (click)="navigator(menu2?.parent)"
-          class="nav-link ct-collapse"
+          (click)="eventClickMenu(menu2?.parent, menu)"
+          class="nav-link ct-collapse menu-level-2"
           [id]="menu2?.parent?.menuid"
         >
           {{ translate(menu2?.parent?.name, menu2?.parent?.name) }}
         </a>
         <!-- <ul>
           <li *ngFor="let menu3 of menu2.child">
-            <a (click)="navigator(menu3?.url)" class="nav-link">
+            <a (click)="eventClickMenu(menu3)" class="nav-link">
               {{ translate(menu3?.name, menu3?.name) }}
             </a>
           </li>

@@ -25,4 +25,10 @@ export class SessionStorageServiceService {
       return null;
     }
   }
+
+  removeSessionData(key: string) {
+    try {
+      localStorage.removeItem(key);
+    } catch { }
+  }
 }

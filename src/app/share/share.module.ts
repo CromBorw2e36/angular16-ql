@@ -7,39 +7,29 @@ import {
   RouterOutlet,
   Routes,
 } from '@angular/router';
-import { HomePageComponent } from './page/home-page/home-page.component';
-import { DashboardComponent } from './page/dashboard/dashboard.component';
+import { QlTaiKhoanComponent } from './99_00_00/ql-tai-khoan/ql-tai-khoan.component';
+import { CookieService } from 'ngx-cookie-service';
+import { AccountsClient, MenuPermissionsClient, UserInfoesClient } from '../system/server/api_share';
+import { ConfigServerService } from '../system/server/config/config-server.service';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { LoginFormComponent } from './page/login-form/login-form.component';
-import { ComponentModule } from '../components/component.module';
-import { MenuComponent } from '../components/menu/menu.component';
-import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { CookieService } from 'ngx-cookie-service';
-import { AccountsClient, MenuPermissionsClient } from './server/api_share';
-import { APIBase } from './server/APIBase';
-import { ConfigServerService } from './server/config/config-server.service';
+import { ComponentModule } from '../components/component.module';
+import { MatButtonModule } from '@angular/material/button';
 import { DxButtonModule } from 'devextreme-angular';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
-import { MenuPageComponent } from './page/menu-page/menu-page.component';
-import { AppComponents } from './server/components';
-import { DeviceDetectorService } from 'ngx-device-detector';
+import {MatTabsModule} from '@angular/material/tabs';
 
 const routes: Routes = [
-  { path: '', component: MenuPageComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  
+  { path: 'ql-tai-khoan', component: QlTaiKhoanComponent },
 ];
 
 @NgModule({
   declarations: [
-    HomePageComponent,
-    DashboardComponent,
-    LoginFormComponent,
-    MenuPageComponent,
+    QlTaiKhoanComponent,
   ],
   providers: [
     CookieService,
@@ -47,8 +37,9 @@ const routes: Routes = [
     ConfigServerService,
     AccountsClient,
     DeviceDetectorService,
+    UserInfoesClient
    ],
-  exports: [HomePageComponent, DashboardComponent, LoginFormComponent],
+  exports: [QlTaiKhoanComponent],
   imports: [
     RouterModule.forChild(routes),
     CommonModule,
@@ -64,6 +55,7 @@ const routes: Routes = [
     MatIconModule,
     MatMenuModule,
     MatBadgeModule,
+    MatTabsModule,
   ],
 })
-export class SystemModule {}
+export class ShareModule {}

@@ -5,10 +5,12 @@ import LayoutComponentBase from 'src/app/share/layoutBase/LayoutComponentBase';
   providedIn: 'root',
 })
 export class ConfigServerService  {
-  BASE_URL_SERVER: string = 'https://localhost:44334';
+  // BASE_URL_SERVER: string = 'https://localhost:44334';
+  // BASE_URL_SERVER: string = 'https://localhost:7119';
+  BASE_URL_SERVER: string = 'https://88c4-2402-800-634b-8536-e806-2a16-16d2-b904.ngrok-free.app';
   HEADER_REQUEST = {
     'content-type': 'application/json',
-    // "authorization": 'MyToken'
+    // "authorization": 'QUANLIAPP'
   } as any;
   constructor() {
   }

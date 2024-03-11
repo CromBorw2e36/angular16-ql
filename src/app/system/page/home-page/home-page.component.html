@@ -42,7 +42,7 @@
       </div>
       <mat-menu #menu="matMenu">
         <button mat-menu-item>Hỗ trợ</button>
-        <button mat-menu-item>Đăng xuất</button>
+        <button mat-menu-item (click)="onLogout()">Đăng xuất</button>
       </mat-menu>
     </div>
     <!-- Logo websites -->
@@ -55,6 +55,7 @@
     <button type="button" mat-button (click)="drawer.toggle()">
       Toggle sidenav
     </button>
+    <router-outlet></router-outlet>
   </div>
 </mat-drawer-container>
 

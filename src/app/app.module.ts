@@ -8,7 +8,13 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { AppComponent } from './app.component';
 import { ComponentModule } from './components/component.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { DxButtonModule } from 'devextreme-angular';
+import { ShareModule } from './share/share.module';
+import { NgxBootstrapIconsModule, alarm, alarmFill, alignBottom, allIcons } from 'ngx-bootstrap-icons';
+const icons = {
+  alarm,
+  alarmFill,
+  alignBottom
+};
 @NgModule({
   declarations: [AppComponent],
   providers: [],
@@ -25,7 +31,9 @@ import { DxButtonModule } from 'devextreme-angular';
     }),
     SystemModule,
     ComponentModule,
+    ShareModule,
     NgbModule,
+    NgxBootstrapIconsModule.pick(allIcons),
   ],
 })
 export class AppModule {}

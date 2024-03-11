@@ -21,29 +21,28 @@ import { SysMenu } from 'src/app/system/server/api_share';
 })
 export class MenuComponent
   extends LayoutComponentBase
-  implements OnChanges, OnChanges, OnInit
-{
+  implements OnChanges, OnChanges, OnInit {
   constructor(injector: Injector) {
     super(injector);
     this.menuPermissions = [];
   }
-  ngOnInit(): void {
-  }
-
-  ngAfterViewChecked(): void {}
-
-  ngAfterViewInit(): void {
-    this.CTColapse();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {}
 
   @Input() menuPermissions: IGenericMenu[] = [];
-  navigator(pMenu: SysMenu | undefined): void {
-    if (pMenu) {
-      const url = pMenu?.url;
+
+  regexLevel1 = /^\d{2}\.00\.00$/;
+  regexLevel2 = /^\d{2}\.\d{2}\.00$/;
+  regexLevel3 = /^\d{2}\.\d{2}\.\d{2}$/;
+
+  ngOnInit(): void { }
+
+  ngOnChanges(changes: SimpleChanges): void { }
+
+  navigator(pMenu: SysMenu): void {
+    const url = pMenu?.url;
+    console.log(url);
+    try {
       this.setNavigator(url, pMenu);
-    }
+    } catch { }
   }
 
   identifyFarent(index: number, item: IGenericMenu) {
@@ -54,39 +53,114 @@ export class MenuComponent
     return item.parent.menuid;
   }
 
-  CTColapse() {
-    let itemCollapse = document.querySelectorAll('.ct-collapse');
-    itemCollapse.forEach((element) => {
-      element.addEventListener('click', function (event: any) {
-        if (event.target.id) {
-          const targetId = event.target.id;
-          document.querySelectorAll('.ct-collapse').forEach((el) => {
-            el.classList.remove('active');
-          });
-          const elementsWithId = document.querySelectorAll(
-            `[id='${targetId}']`
-          );
-          elementsWithId.forEach((el) => {
-            el.classList.add('active');
-            if (el.classList.contains('show')) {
-              el.classList.remove('show');
-            } else {
-              el.classList.add('show');
-            }
-          });
-          const elementWithId = document.getElementsByClassName(targetId);
-          for (let i = 0; i < elementWithId.length; i++) {
-            const element = elementWithId[i];
-            if (element) {
-              if (element.classList.contains('show')) {
-                element.classList.remove('show');
-              } else {
-                element.classList.add('show');
-              }
+  eventClickMenu(pMenu: SysMenu | undefined, pMenu2: IGenericMenu) {
+    if (pMenu && pMenu.menuid) {
+      if (this.regexLevel1.test(pMenu.menuid) && pMenu.url) {
+        this.navigator(pMenu);
+        const menuLv1Class = document.querySelectorAll(`.ct-collapse`);
+        const menuLv1 = document.querySelector(`[id="${pMenu.menuid}"]`);
+        menuLv1Class.forEach((x) => {
+          if (x.classList.contains('active')) {
+            x.classList.remove('active');
+          }
+        });
+        if (menuLv1) {
+          menuLv1.classList.add('active');
+        }
+      } else if (this.regexLevel1.test(pMenu.menuid)) {
+        const menuLv1 = document.querySelector(`[id="${pMenu.menuid}"]`);
+        const menuLv1Class = document.querySelectorAll(
+          `[class*="${pMenu.menuid.replaceAll('.', '-')}"]`
+        );
+        menuLv1Class.forEach((x) => {
+          if (x.classList.contains('show')) {
+            x.classList.remove('show');
+          } else {
+            x.classList.add('show');
+          }
+        });
+        if (menuLv1) {
+          menuLv1.classList.add('active');
+        }
+      } else if (this.regexLevel2.test(pMenu.menuid) && pMenu.url) {
+        this.navigator(pMenu);
+        const menuLv2Class = document.querySelectorAll('.menu-level-2');
+        const menuLv2 = document.querySelector(`[id="${pMenu.menuid}"]`);
+        menuLv2Class.forEach((element) => {
+          element.classList.remove('active');
+        });
+        if (menuLv2) {
+          menuLv2.classList.add('active');
+        }
+      } else if (this.regexLevel2.test(pMenu.menuid)) {
+        const menuLv2Class = document.querySelectorAll('.menu-level-2');
+        const menuLv2 = document.querySelector(`[id="${pMenu.menuid}"]`);
+        const menuPervertSelect = this.getMenuSelected();
+        this.setListMenuLevel3(this.genderListMenu3(pMenu));
+
+        if (menuPervertSelect && menuPervertSelect.menuid) {
+          if (
+            this.regexLevel1.test(menuPervertSelect.menuid) &&
+            menuPervertSelect.url
+          ) {
+            const menuLv1 = document.querySelector(
+              `[id="${menuPervertSelect.menuid}"]`
+            );
+            if (menuLv1) {
+              menuLv1.classList.remove('active');
             }
           }
         }
-      });
-    });
+
+        this.setNavigator('', pMenu);
+        menuLv2Class.forEach((element) => {
+          element.classList.remove('active');
+        });
+
+        if (menuLv2) {
+          menuLv2.classList.add('active');
+        }
+      } else {
+        this.navigator(pMenu);
+      }
+    }
+  }
+
+  genderListMenu3(p: SysMenu) {
+    const menuidParent = p.menuid;
+    if (menuidParent) {
+      const findLastIndex = menuidParent.lastIndexOf('.');
+      if (findLastIndex !== -1) {
+        const regexMenuid = new RegExp(
+          `^${menuidParent.substring(0, findLastIndex)}.\\d{2}$`
+        );
+        const listMenuFilter = this.getLstMenu().filter((x) =>
+          regexMenuid.test(x.menuid ?? '')
+        );
+        console.log(listMenuFilter);
+        console.log(this.getLstMenu());
+        return listMenuFilter;
+      }
+    }
+    return [];
+  }
+
+  genderListMenu1(p: SysMenu) {
+    const menuidParent = p.menuid;
+    if (menuidParent) {
+      const findLastIndex = menuidParent.indexOf('.');
+      if (findLastIndex !== -1) {
+        const regexMenuid = new RegExp(
+          `^${menuidParent.substring(0, findLastIndex)}.00.00$`
+        );
+        const listMenuFilter = this.getLstMenu().filter((x) =>
+          regexMenuid.test(x.menuid ?? '')
+        );
+        console.log(listMenuFilter);
+        console.log(this.getLstMenu());
+        return listMenuFilter;
+      }
+    }
+    return [];
   }
 }

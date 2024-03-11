@@ -9,7 +9,6 @@
 // ReSharper disable InconsistentNaming
 
 import LayoutComponentBase from 'src/app/share/layoutBase/LayoutComponentBase';
-import { ConfigServerService } from './config/config-server.service';
 import { Injector } from '@angular/core';
 import { mergeMap as _observableMergeMap, catchError as _observableCatch } from 'rxjs/operators';
 import { Observable, from as _observableFrom, throwError as _observableThrow, of as _observableOf } from 'rxjs';
@@ -930,8 +929,8 @@ export class WorkHistoriesClient extends APIBase implements IWorkHistoriesClient
 
 export interface IAccountsClient {
     checkTheExpirationDateOfToken(): Observable<boolean>;
-    login(account: Account): Observable<StatusMessage>;
-    postAccount(account: Account): Observable<StatusMessage>;
+    login(account: AccountClientLoginParamsModel): Observable<StatusMessage>;
+    accountIns(profile: AccountClientProfileModel): Observable<StatusMessage>;
     updateAccount(account: Account): Observable<StatusMessage>;
     deleteAccount(id: string): Observable<StatusMessage>;
 }
@@ -999,7 +998,7 @@ export class AccountsClient extends APIBase implements IAccountsClient {
         return _observableOf(null as any);
     }
 
-    login(account: Account): Observable<StatusMessage> {
+    login(account: AccountClientLoginParamsModel): Observable<StatusMessage> {
         let url_ = this.baseUrl + "/api/Accounts/Login";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1053,11 +1052,11 @@ export class AccountsClient extends APIBase implements IAccountsClient {
         return _observableOf(null as any);
     }
 
-    postAccount(account: Account): Observable<StatusMessage> {
-        let url_ = this.baseUrl + "/api/Accounts/AddAccount";
+    accountIns(profile: AccountClientProfileModel): Observable<StatusMessage> {
+        let url_ = this.baseUrl + "/api/Accounts/AccountIns";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(account);
+        const content_ = JSON.stringify(profile);
 
         let options_ : any = {
             body: content_,
@@ -1072,11 +1071,11 @@ export class AccountsClient extends APIBase implements IAccountsClient {
         return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
             return this.http.request("post", url_, transformedOptions_);
         })).pipe(_observableMergeMap((response_: any) => {
-            return this.processPostAccount(response_);
+            return this.processAccountIns(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processPostAccount(response_ as any);
+                    return this.processAccountIns(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<StatusMessage>;
                 }
@@ -1085,7 +1084,7 @@ export class AccountsClient extends APIBase implements IAccountsClient {
         }));
     }
 
-    protected processPostAccount(response: HttpResponseBase): Observable<StatusMessage> {
+    protected processAccountIns(response: HttpResponseBase): Observable<StatusMessage> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1341,10 +1340,11 @@ export class MenuPermissionsClient extends APIBase implements IMenuPermissionsCl
 }
 
 export interface IUserInfoesClient {
-    addUser(userInfo: UserInfo): Observable<StatusMessage>;
+    userIns(userInfo: UserInfo): Observable<StatusMessage>;
     updUser(userInfo: UserInfo): Observable<StatusMessage>;
     getMyUser(): Observable<UserInfo>;
     getLstUser(): Observable<UserInfo[]>;
+    getUserInformation(username?: string | null | undefined): Observable<UserInformationClientGetUser>;
     deleteUserInfo(id: string): Observable<FileResponse>;
 }
 
@@ -1360,7 +1360,7 @@ export class UserInfoesClient extends APIBase implements IUserInfoesClient {
         this.baseUrl = baseUrl ?? this.getBaseUrl("");
     }
 
-    addUser(userInfo: UserInfo): Observable<StatusMessage> {
+    userIns(userInfo: UserInfo): Observable<StatusMessage> {
         let url_ = this.baseUrl + "/api/UserInfoes";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1379,11 +1379,11 @@ export class UserInfoesClient extends APIBase implements IUserInfoesClient {
         return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
             return this.http.request("post", url_, transformedOptions_);
         })).pipe(_observableMergeMap((response_: any) => {
-            return this.processAddUser(response_);
+            return this.processUserIns(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processAddUser(response_ as any);
+                    return this.processUserIns(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<StatusMessage>;
                 }
@@ -1392,7 +1392,7 @@ export class UserInfoesClient extends APIBase implements IUserInfoesClient {
         }));
     }
 
-    protected processAddUser(response: HttpResponseBase): Observable<StatusMessage> {
+    protected processUserIns(response: HttpResponseBase): Observable<StatusMessage> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1565,6 +1565,58 @@ export class UserInfoesClient extends APIBase implements IUserInfoesClient {
             else {
                 result200 = <any>null;
             }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getUserInformation(username?: string | null | undefined): Observable<UserInformationClientGetUser> {
+        let url_ = this.baseUrl + "/api/UserInfoes/GetUserInformation?";
+        if (username !== undefined && username !== null)
+            url_ += "username=" + encodeURIComponent("" + username) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processGetUserInformation(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUserInformation(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<UserInformationClientGetUser>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<UserInformationClientGetUser>;
+        }));
+    }
+
+    protected processGetUserInformation(response: HttpResponseBase): Observable<UserInformationClientGetUser> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserInformationClientGetUser.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2126,8 +2178,9 @@ export interface IWorkHistory {
 
 export class StatusMessage implements IStatusMessage {
     status?: number | undefined;
-    message?: string | undefined;
+    msg?: string | undefined;
     data?: any | undefined;
+    currentID?: string | undefined;
 
     constructor(data?: IStatusMessage) {
         if (data) {
@@ -2141,8 +2194,9 @@ export class StatusMessage implements IStatusMessage {
     init(_data?: any) {
         if (_data) {
             this.status = _data["status"];
-            this.message = _data["message"];
+            this.msg = _data["msg"];
             this.data = _data["data"];
+            this.currentID = _data["currentID"];
         }
     }
 
@@ -2156,8 +2210,9 @@ export class StatusMessage implements IStatusMessage {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["status"] = this.status;
-        data["message"] = this.message;
+        data["msg"] = this.msg;
         data["data"] = this.data;
+        data["currentID"] = this.currentID;
         return data;
     }
 
@@ -2171,8 +2226,179 @@ export class StatusMessage implements IStatusMessage {
 
 export interface IStatusMessage {
     status?: number | undefined;
-    message?: string | undefined;
+    msg?: string | undefined;
     data?: any | undefined;
+    currentID?: string | undefined;
+}
+
+export class AccountClientLoginParamsModel implements IAccountClientLoginParamsModel {
+    account?: string;
+    password?: string;
+    email?: string | undefined;
+    phone?: string | undefined;
+    companyCode?: string | undefined;
+    type_device?: string | undefined;
+    os?: string | undefined;
+    browser?: string | undefined;
+    device?: string | undefined;
+    os_version?: string | undefined;
+    browser_version?: string | undefined;
+    ip_address?: string | undefined;
+    is_mobile?: boolean | undefined;
+    is_tablet?: boolean | undefined;
+    is_desktop?: boolean | undefined;
+    is_ios?: boolean | undefined;
+    is_android?: boolean | undefined;
+    orientation?: string | undefined;
+    latitude?: number | undefined;
+    longitude?: number | undefined;
+
+    constructor(data?: IAccountClientLoginParamsModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.account = _data["account"];
+            this.password = _data["password"];
+            this.email = _data["email"];
+            this.phone = _data["phone"];
+            this.companyCode = _data["companyCode"];
+            this.type_device = _data["type_device"];
+            this.os = _data["os"];
+            this.browser = _data["browser"];
+            this.device = _data["device"];
+            this.os_version = _data["os_version"];
+            this.browser_version = _data["browser_version"];
+            this.ip_address = _data["ip_address"];
+            this.is_mobile = _data["is_mobile"];
+            this.is_tablet = _data["is_tablet"];
+            this.is_desktop = _data["is_desktop"];
+            this.is_ios = _data["is_ios"];
+            this.is_android = _data["is_android"];
+            this.orientation = _data["orientation"];
+            this.latitude = _data["latitude"];
+            this.longitude = _data["longitude"];
+        }
+    }
+
+    static fromJS(data: any): AccountClientLoginParamsModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AccountClientLoginParamsModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["account"] = this.account;
+        data["password"] = this.password;
+        data["email"] = this.email;
+        data["phone"] = this.phone;
+        data["companyCode"] = this.companyCode;
+        data["type_device"] = this.type_device;
+        data["os"] = this.os;
+        data["browser"] = this.browser;
+        data["device"] = this.device;
+        data["os_version"] = this.os_version;
+        data["browser_version"] = this.browser_version;
+        data["ip_address"] = this.ip_address;
+        data["is_mobile"] = this.is_mobile;
+        data["is_tablet"] = this.is_tablet;
+        data["is_desktop"] = this.is_desktop;
+        data["is_ios"] = this.is_ios;
+        data["is_android"] = this.is_android;
+        data["orientation"] = this.orientation;
+        data["latitude"] = this.latitude;
+        data["longitude"] = this.longitude;
+        return data;
+    }
+
+    clone(): AccountClientLoginParamsModel {
+        const json = this.toJSON();
+        let result = new AccountClientLoginParamsModel();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAccountClientLoginParamsModel {
+    account?: string;
+    password?: string;
+    email?: string | undefined;
+    phone?: string | undefined;
+    companyCode?: string | undefined;
+    type_device?: string | undefined;
+    os?: string | undefined;
+    browser?: string | undefined;
+    device?: string | undefined;
+    os_version?: string | undefined;
+    browser_version?: string | undefined;
+    ip_address?: string | undefined;
+    is_mobile?: boolean | undefined;
+    is_tablet?: boolean | undefined;
+    is_desktop?: boolean | undefined;
+    is_ios?: boolean | undefined;
+    is_android?: boolean | undefined;
+    orientation?: string | undefined;
+    latitude?: number | undefined;
+    longitude?: number | undefined;
+}
+
+export class AccountClientProfileModel implements IAccountClientProfileModel {
+    account?: Account | undefined;
+    userInfo?: UserInfo | undefined;
+    token?: TOKEN | undefined;
+
+    constructor(data?: IAccountClientProfileModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.account = _data["account"] ? Account.fromJS(_data["account"]) : <any>undefined;
+            this.userInfo = _data["userInfo"] ? UserInfo.fromJS(_data["userInfo"]) : <any>undefined;
+            this.token = _data["token"] ? TOKEN.fromJS(_data["token"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AccountClientProfileModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AccountClientProfileModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["account"] = this.account ? this.account.toJSON() : <any>undefined;
+        data["userInfo"] = this.userInfo ? this.userInfo.toJSON() : <any>undefined;
+        data["token"] = this.token ? this.token.toJSON() : <any>undefined;
+        return data;
+    }
+
+    clone(): AccountClientProfileModel {
+        const json = this.toJSON();
+        let result = new AccountClientProfileModel();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAccountClientProfileModel {
+    account?: Account | undefined;
+    userInfo?: UserInfo | undefined;
+    token?: TOKEN | undefined;
 }
 
 export class Account implements IAccount {
@@ -2252,77 +2478,6 @@ export interface IAccount {
     codePermision?: string | undefined;
     companyCode?: string | undefined;
     namePermision?: string | undefined;
-}
-
-export class SysMenu implements ISysMenu {
-    menuid?: string | undefined;
-    url?: string | undefined;
-    name?: string | undefined;
-    active?: boolean | undefined;
-    isParent?: boolean | undefined;
-    menuIDParent?: string | undefined;
-    defaultActive?: boolean | undefined;
-    moduleApp?: string | undefined;
-
-    constructor(data?: ISysMenu) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.menuid = _data["menuid"];
-            this.url = _data["url"];
-            this.name = _data["name"];
-            this.active = _data["active"];
-            this.isParent = _data["isParent"];
-            this.menuIDParent = _data["menuIDParent"];
-            this.defaultActive = _data["defaultActive"];
-            this.moduleApp = _data["moduleApp"];
-        }
-    }
-
-    static fromJS(data: any): SysMenu {
-        data = typeof data === 'object' ? data : {};
-        let result = new SysMenu();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["menuid"] = this.menuid;
-        data["url"] = this.url;
-        data["name"] = this.name;
-        data["active"] = this.active;
-        data["isParent"] = this.isParent;
-        data["menuIDParent"] = this.menuIDParent;
-        data["defaultActive"] = this.defaultActive;
-        data["moduleApp"] = this.moduleApp;
-        return data;
-    }
-
-    clone(): SysMenu {
-        const json = this.toJSON();
-        let result = new SysMenu();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface ISysMenu {
-    menuid?: string | undefined;
-    url?: string | undefined;
-    name?: string | undefined;
-    active?: boolean | undefined;
-    isParent?: boolean | undefined;
-    menuIDParent?: string | undefined;
-    defaultActive?: boolean | undefined;
-    moduleApp?: string | undefined;
 }
 
 export class UserInfo implements IUserInfo {
@@ -2436,6 +2591,355 @@ export interface IUserInfo {
     avatar64?: string | undefined;
 }
 
+export class TOKEN implements ITOKEN {
+    id?: string | undefined;
+    token?: string | undefined;
+    username?: string | undefined;
+    date?: Date | undefined;
+    last_date_connect?: Date | undefined;
+    is_connecting?: boolean | undefined;
+    endDate?: Date | undefined;
+    ip_address?: string | undefined;
+    type_device?: string | undefined;
+    os?: string | undefined;
+    browser?: string | undefined;
+    device?: string | undefined;
+    os_version?: string | undefined;
+    browser_version?: string | undefined;
+    is_mobile?: boolean | undefined;
+    is_tablet?: boolean | undefined;
+    is_desktop?: boolean | undefined;
+    is_ios?: boolean | undefined;
+    is_android?: boolean | undefined;
+    orientation?: string | undefined;
+    latitude?: number | undefined;
+    longitude?: number | undefined;
+    connectionSignalID?: string | undefined;
+
+    constructor(data?: ITOKEN) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.token = _data["token"];
+            this.username = _data["username"];
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.last_date_connect = _data["last_date_connect"] ? new Date(_data["last_date_connect"].toString()) : <any>undefined;
+            this.is_connecting = _data["is_connecting"];
+            this.endDate = _data["endDate"] ? new Date(_data["endDate"].toString()) : <any>undefined;
+            this.ip_address = _data["ip_address"];
+            this.type_device = _data["type_device"];
+            this.os = _data["os"];
+            this.browser = _data["browser"];
+            this.device = _data["device"];
+            this.os_version = _data["os_version"];
+            this.browser_version = _data["browser_version"];
+            this.is_mobile = _data["is_mobile"];
+            this.is_tablet = _data["is_tablet"];
+            this.is_desktop = _data["is_desktop"];
+            this.is_ios = _data["is_ios"];
+            this.is_android = _data["is_android"];
+            this.orientation = _data["orientation"];
+            this.latitude = _data["latitude"];
+            this.longitude = _data["longitude"];
+            this.connectionSignalID = _data["connectionSignalID"];
+        }
+    }
+
+    static fromJS(data: any): TOKEN {
+        data = typeof data === 'object' ? data : {};
+        let result = new TOKEN();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["token"] = this.token;
+        data["username"] = this.username;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["last_date_connect"] = this.last_date_connect ? this.last_date_connect.toISOString() : <any>undefined;
+        data["is_connecting"] = this.is_connecting;
+        data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
+        data["ip_address"] = this.ip_address;
+        data["type_device"] = this.type_device;
+        data["os"] = this.os;
+        data["browser"] = this.browser;
+        data["device"] = this.device;
+        data["os_version"] = this.os_version;
+        data["browser_version"] = this.browser_version;
+        data["is_mobile"] = this.is_mobile;
+        data["is_tablet"] = this.is_tablet;
+        data["is_desktop"] = this.is_desktop;
+        data["is_ios"] = this.is_ios;
+        data["is_android"] = this.is_android;
+        data["orientation"] = this.orientation;
+        data["latitude"] = this.latitude;
+        data["longitude"] = this.longitude;
+        data["connectionSignalID"] = this.connectionSignalID;
+        return data;
+    }
+
+    clone(): TOKEN {
+        const json = this.toJSON();
+        let result = new TOKEN();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITOKEN {
+    id?: string | undefined;
+    token?: string | undefined;
+    username?: string | undefined;
+    date?: Date | undefined;
+    last_date_connect?: Date | undefined;
+    is_connecting?: boolean | undefined;
+    endDate?: Date | undefined;
+    ip_address?: string | undefined;
+    type_device?: string | undefined;
+    os?: string | undefined;
+    browser?: string | undefined;
+    device?: string | undefined;
+    os_version?: string | undefined;
+    browser_version?: string | undefined;
+    is_mobile?: boolean | undefined;
+    is_tablet?: boolean | undefined;
+    is_desktop?: boolean | undefined;
+    is_ios?: boolean | undefined;
+    is_android?: boolean | undefined;
+    orientation?: string | undefined;
+    latitude?: number | undefined;
+    longitude?: number | undefined;
+    connectionSignalID?: string | undefined;
+}
+
+export class SysMenu implements ISysMenu {
+    menuid?: string | undefined;
+    url?: string | undefined;
+    name?: string | undefined;
+    active?: boolean | undefined;
+    isParent?: boolean | undefined;
+    menuIDParent?: string | undefined;
+    defaultActive?: boolean | undefined;
+    moduleApp?: string | undefined;
+
+    constructor(data?: ISysMenu) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.menuid = _data["menuid"];
+            this.url = _data["url"];
+            this.name = _data["name"];
+            this.active = _data["active"];
+            this.isParent = _data["isParent"];
+            this.menuIDParent = _data["menuIDParent"];
+            this.defaultActive = _data["defaultActive"];
+            this.moduleApp = _data["moduleApp"];
+        }
+    }
+
+    static fromJS(data: any): SysMenu {
+        data = typeof data === 'object' ? data : {};
+        let result = new SysMenu();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["menuid"] = this.menuid;
+        data["url"] = this.url;
+        data["name"] = this.name;
+        data["active"] = this.active;
+        data["isParent"] = this.isParent;
+        data["menuIDParent"] = this.menuIDParent;
+        data["defaultActive"] = this.defaultActive;
+        data["moduleApp"] = this.moduleApp;
+        return data;
+    }
+
+    clone(): SysMenu {
+        const json = this.toJSON();
+        let result = new SysMenu();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISysMenu {
+    menuid?: string | undefined;
+    url?: string | undefined;
+    name?: string | undefined;
+    active?: boolean | undefined;
+    isParent?: boolean | undefined;
+    menuIDParent?: string | undefined;
+    defaultActive?: boolean | undefined;
+    moduleApp?: string | undefined;
+}
+
+export class UserInformationClientGetUser implements IUserInformationClientGetUser {
+    id?: string | undefined;
+    name?: string | undefined;
+    dateOfBirth?: Date | undefined;
+    address?: string | undefined;
+    phoneNumber?: string | undefined;
+    gender?: string | undefined;
+    nationality?: string | undefined;
+    ethnicity?: string | undefined;
+    interests?: string | undefined;
+    maritalStatus?: string | undefined;
+    modifyDate?: Date | undefined;
+    bhxh?: string | undefined;
+    cccd?: string | undefined;
+    codeCompany?: string | undefined;
+    avatar?: string | undefined;
+    avatar16?: string | undefined;
+    avatar32?: string | undefined;
+    avatar64?: string | undefined;
+    nameCompany?: string | undefined;
+    email?: string | undefined;
+    nameDepartment?: string | undefined;
+    nameBrach?: string | undefined;
+    codeDepartment?: string | undefined;
+    codeName?: string | undefined;
+    tokens?: TOKEN[];
+
+    constructor(data?: IUserInformationClientGetUser) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.dateOfBirth = _data["dateOfBirth"] ? new Date(_data["dateOfBirth"].toString()) : <any>undefined;
+            this.address = _data["address"];
+            this.phoneNumber = _data["phoneNumber"];
+            this.gender = _data["gender"];
+            this.nationality = _data["nationality"];
+            this.ethnicity = _data["ethnicity"];
+            this.interests = _data["interests"];
+            this.maritalStatus = _data["maritalStatus"];
+            this.modifyDate = _data["modifyDate"] ? new Date(_data["modifyDate"].toString()) : <any>undefined;
+            this.bhxh = _data["bhxh"];
+            this.cccd = _data["cccd"];
+            this.codeCompany = _data["codeCompany"];
+            this.avatar = _data["avatar"];
+            this.avatar16 = _data["avatar16"];
+            this.avatar32 = _data["avatar32"];
+            this.avatar64 = _data["avatar64"];
+            this.nameCompany = _data["nameCompany"];
+            this.email = _data["email"];
+            this.nameDepartment = _data["nameDepartment"];
+            this.nameBrach = _data["nameBrach"];
+            this.codeDepartment = _data["codeDepartment"];
+            this.codeName = _data["codeName"];
+            if (Array.isArray(_data["tokens"])) {
+                this.tokens = [] as any;
+                for (let item of _data["tokens"])
+                    this.tokens!.push(TOKEN.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): UserInformationClientGetUser {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserInformationClientGetUser();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
+        data["address"] = this.address;
+        data["phoneNumber"] = this.phoneNumber;
+        data["gender"] = this.gender;
+        data["nationality"] = this.nationality;
+        data["ethnicity"] = this.ethnicity;
+        data["interests"] = this.interests;
+        data["maritalStatus"] = this.maritalStatus;
+        data["modifyDate"] = this.modifyDate ? this.modifyDate.toISOString() : <any>undefined;
+        data["bhxh"] = this.bhxh;
+        data["cccd"] = this.cccd;
+        data["codeCompany"] = this.codeCompany;
+        data["avatar"] = this.avatar;
+        data["avatar16"] = this.avatar16;
+        data["avatar32"] = this.avatar32;
+        data["avatar64"] = this.avatar64;
+        data["nameCompany"] = this.nameCompany;
+        data["email"] = this.email;
+        data["nameDepartment"] = this.nameDepartment;
+        data["nameBrach"] = this.nameBrach;
+        data["codeDepartment"] = this.codeDepartment;
+        data["codeName"] = this.codeName;
+        if (Array.isArray(this.tokens)) {
+            data["tokens"] = [];
+            for (let item of this.tokens)
+                data["tokens"].push(item.toJSON());
+        }
+        return data;
+    }
+
+    clone(): UserInformationClientGetUser {
+        const json = this.toJSON();
+        let result = new UserInformationClientGetUser();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserInformationClientGetUser {
+    id?: string | undefined;
+    name?: string | undefined;
+    dateOfBirth?: Date | undefined;
+    address?: string | undefined;
+    phoneNumber?: string | undefined;
+    gender?: string | undefined;
+    nationality?: string | undefined;
+    ethnicity?: string | undefined;
+    interests?: string | undefined;
+    maritalStatus?: string | undefined;
+    modifyDate?: Date | undefined;
+    bhxh?: string | undefined;
+    cccd?: string | undefined;
+    codeCompany?: string | undefined;
+    avatar?: string | undefined;
+    avatar16?: string | undefined;
+    avatar32?: string | undefined;
+    avatar64?: string | undefined;
+    nameCompany?: string | undefined;
+    email?: string | undefined;
+    nameDepartment?: string | undefined;
+    nameBrach?: string | undefined;
+    codeDepartment?: string | undefined;
+    codeName?: string | undefined;
+    tokens?: TOKEN[];
+}
+
 export class Company implements ICompany {
     id?: string | undefined;
     name?: string | undefined;
@@ -2511,6 +3015,7 @@ export class SysStatus implements ISysStatus {
     id?: string | undefined;
     code?: string | undefined;
     name?: string | undefined;
+    accept_login?: boolean | undefined;
 
     constructor(data?: ISysStatus) {
         if (data) {
@@ -2526,6 +3031,7 @@ export class SysStatus implements ISysStatus {
             this.id = _data["id"];
             this.code = _data["code"];
             this.name = _data["name"];
+            this.accept_login = _data["accept_login"];
         }
     }
 
@@ -2541,6 +3047,7 @@ export class SysStatus implements ISysStatus {
         data["id"] = this.id;
         data["code"] = this.code;
         data["name"] = this.name;
+        data["accept_login"] = this.accept_login;
         return data;
     }
 
@@ -2556,6 +3063,7 @@ export interface ISysStatus {
     id?: string | undefined;
     code?: string | undefined;
     name?: string | undefined;
+    accept_login?: boolean | undefined;
 }
 
 export class SysPermission implements ISysPermission {

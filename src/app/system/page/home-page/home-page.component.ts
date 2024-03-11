@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   Account,
@@ -12,7 +12,6 @@ import {
   SysMenuService,
 } from '../../service/sys-menu/sys-menu.service';
 import { ConfigServerService } from '../../server/config/config-server.service';
-import { SysLoginService } from '../../service/sys-login/sys-login.service';
 import LayoutComponentBase from 'src/app/share/layoutBase/LayoutComponentBase';
 import { MenuComponent } from 'src/app/components/menu/menu.component';
 
@@ -21,10 +20,9 @@ import { MenuComponent } from 'src/app/components/menu/menu.component';
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.scss'],
 })
-export class HomePageComponent extends LayoutComponentBase implements OnInit {
+export class HomePageComponent extends LayoutComponentBase implements OnInit, OnDestroy {
   constructor(
     injector: Injector,
-    private sysLoginService: SysLoginService,
     private httpClient: HttpClient,
     private configServerService: ConfigServerService,
     private _sysMenuService: SysMenuService,
@@ -44,9 +42,8 @@ export class HomePageComponent extends LayoutComponentBase implements OnInit {
     this.loading = true;
     this.menuPermissionsClient.getListMenu().subscribe(
       (res) => {
-        this.setListMenu(res);
-        const newRes: IGenericMenu[] = this._sysMenuService.buildMenuList(res);
-        this.menuPermissions = newRes;
+        this.setLstMenu(res);
+        this.menuPermissions = this._sysMenuService.buildMenuList(res); 
       },
       (err) => {
         if (err.status === 401) {
@@ -57,5 +54,14 @@ export class HomePageComponent extends LayoutComponentBase implements OnInit {
         this.loading = false;
       }
     );
+  }
+
+  
+  ngOnDestroy(): void {
+   alert('Destroy');
+  }
+
+  onLogout() {
+    this.setLogout();
   }
 }

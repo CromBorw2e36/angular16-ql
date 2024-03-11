@@ -1,0 +1,59 @@
+@import '../../../../assets/scss/core.scss';
+
+#qlTaiKhoan {
+  padding: 10px 20px;
+
+  .user-information-category {
+    background-color: white;
+    padding: 10px 10px 10px 10px;
+    border-radius: 5px;
+    box-shadow: $shadowCard;
+    margin: 10px 5px;
+    position: sticky;
+    top: 10px;
+  }
+
+  .user-information-card {
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: $shadowCard;
+    margin: 10px 5px;
+    padding: 10px 10px 10px 10px;
+
+    .user-information-header {
+      font-size: $fontSize_medium;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    .user-information-dialog {
+      margin: 10px 0;
+      display: flex;
+      justify-content: flex-end;
+
+      .button+.button {
+        margin: 0 5px;
+      }
+    }
+
+    .user-information-about {
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+
+      .user-information-title{
+        font-weight: 500;
+        min-width: 150px;
+        width: 25%;
+      }
+
+      .user-information-value{
+        font-style: italic;
+      } 
+      .user-information-editor {
+        width: 100%;
+      } 
+    }
+
+  }
+}

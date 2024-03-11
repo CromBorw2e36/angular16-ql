@@ -36,13 +36,16 @@ export default class LayoutComponentBase {
   expireTime: Date = moment().clone().add(12, 'hours').toDate();
   loginService: SysLoginService;
   listMenu: SysMenu[];
-  configService: ConfigServerService
+  configService: ConfigServerService;
+  sysLoginService: SysLoginService;
+
   constructor(injector: Injector) {
     this.router = injector.get(Router);
     this.cookieService = injector.get(CookieService);
     this.loginService = injector.get(SysLoginService);
     this.listMenu = [];
     this.configService = injector.get(ConfigServerService);
+    this.sysLoginService = injector.get(SysLoginService);
   }
 
   translate(
@@ -57,17 +60,17 @@ export default class LayoutComponentBase {
       sessionStorage.removeItem('navigatorMenu');
       sessionStorage.setItem('navigatorMenu', JSON.stringify(data));
     }
-    if (url) {
-      this.router.navigate([url]);
-    }
+    this.router.navigate([url]);
   }
 
   setLogin(status: boolean = false) {
     this.loginService.setLogin(status);
   }
 
-  public setListMenu(p: SysMenu[]) {
+  public setLstMenu(p: SysMenu[]) {
     this.listMenu = p;
+    sessionStorage.removeItem('listMenu');
+    sessionStorage.setItem('listMenu', JSON.stringify(p));
   }
 
   public getUserInfo() {
@@ -77,8 +80,22 @@ export default class LayoutComponentBase {
     return userInfo as UserInfo | Account;
   }
 
-  public getLstMenu() {
-    return this.listMenu;
+  public getLstMenu(): SysMenu[] {
+    return JSON.parse(sessionStorage.getItem('listMenu') ?? '[]');
+    // return this.listMenu;
+  }
+
+  public setListMenuLevel3(p: SysMenu[]) {
+    sessionStorage.removeItem('listMenuLV3');
+    sessionStorage.setItem('listMenuLV3', JSON.stringify(p));
+  }
+
+  public getListMenuLevel3(): SysMenu[] {
+    return JSON.parse(sessionStorage.getItem('listMenuLV3') ?? '[]');
+  }
+
+  public getMenuSelected(): SysMenu {
+    return JSON.parse(sessionStorage.getItem('navigatorMenu') ?? '{}');
   }
 
   public showMessageSuccess(msg: string = '') {
@@ -124,5 +141,26 @@ export default class LayoutComponentBase {
       },
       { position, direction }
     );
+  }
+
+  public setLogout() {
+    this.cookieService.delete('TOKEN');
+    this.sysLoginService.setLogin(false);
+  }
+
+  formatDateString(datetime: Date | undefined): string {
+    return datetime ? moment(datetime).format('DD/MM/yyyy') : '';
+  }
+  formatDateTimeString(datetime: Date | undefined): string {
+    return datetime ? moment(datetime).format('DD/MM/yyyy HH:mm') : '';
+  }
+
+  formatDateFromNow(date: Date | undefined): string {
+    moment.locale(this.translate('vi', 'us'))
+    return date ? moment(date).fromNow() : '';
+  }
+
+  trackByFunc(index:number, data:any){
+    return index;
   }
 }

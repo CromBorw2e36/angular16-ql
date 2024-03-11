@@ -1,0 +1,18 @@
+<div class="input-container" id="editorInput">
+    <div ngClass="renderClassIcon(iconBefore?.option?.class)" *ngFor="let iconBefore of getIconBefore; trackBy:trackByFunc" ></div>
+    <input type="text" 
+        (change)="handleChange($event)" 
+        (focus)="handleFocus($event)"
+        (focusin)="handleFocusIn($event)"
+        (focusout)="handleFocusOut($event)"
+        (blur)="handleBlur($event)"
+        (invalid)="handleInvalid($event)"
+        (drop)="handleDrop($event)"
+        (drag)="handleDrag($event)"
+        (keypress)="handleKeypress($event)"
+        (keydown)="handleKeyDown($event)"
+        (keyup)="handleKeyUp($event)"
+        (keyup.Enter)="handleKeyEnter($event)"
+    >
+    <div ngClass="renderClassIcon(iconAfter?.option?.class)" *ngFor="let iconAfter of getIconAfter; trackBy:trackByFunc" ></div>
+</div>
