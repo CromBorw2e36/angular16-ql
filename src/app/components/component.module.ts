@@ -4,7 +4,7 @@ import { MenuComponent } from '../components/menu/menu.component';
 import { LoadPanelDevextremeComponent } from '../components/Loading/load-panel-devextreme/load-panel-devextreme.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { DxLoadPanelModule, DxTextBoxModule } from 'devextreme-angular';
+import { DxCheckBoxModule, DxDateBoxModule, DxLoadPanelModule, DxTextBoxModule } from 'devextreme-angular';
 import { SelectBoxCompanyComponent } from './common/select-box-company/select-box-company.component';
 import { MatIconModule } from '@angular/material/icon';
 import { CookieService } from 'ngx-cookie-service';
@@ -33,6 +33,7 @@ const routes: Routes = [
     SelectBoxCompanyComponent,
     TextBoxComponent,
     TextBoxDevextremeComponent,
+
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -45,6 +46,8 @@ const routes: Routes = [
     MatBadgeModule,
     MatButtonModule,
     DxTextBoxModule,
+    DxCheckBoxModule,
+    DxDateBoxModule,
   ],
   providers: [
     CookieService,
