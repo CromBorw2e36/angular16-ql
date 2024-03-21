@@ -42,11 +42,11 @@ a:focus {
 
 a:hover {
   text-decoration: none;
-  color: #6a7dfe;
-  color: -webkit-linear-gradient(left, #21d4fd, #b721ff);
-  color: -o-linear-gradient(left, #21d4fd, #b721ff);
-  color: -moz-linear-gradient(left, #21d4fd, #b721ff);
-  color: linear-gradient(left, #21d4fd, #b721ff);
+  background: #6a7dfe;
+  color: -webkit-linear-gradient(to left, #21d4fd, #b721ff);
+  color: -o-linear-gradient(to left, #21d4fd, #b721ff);
+  color: -moz-linear-gradient(to left, #21d4fd, #b721ff);
+  color: linear-gradient(to left, #21d4fd, #b721ff);
 }
 
 
@@ -222,19 +222,34 @@ iframe {
   align-items: center;
   padding: 15px;
   // background-color: #9EB8D9; Date: 20/03/2024
+  // background-image: url(https://images.pexels.com/photos/6128392/pexels-photo-6128392.jpeg);
+  // background-size: cover;
+  // background-repeat: no-repeat;
+  // background-position: center;
+
+  position: relative;
+  background-color: #D2DAFF;
+}
+
+#login-image-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
+  object-position: center;
 }
 
 .wrap-login100 {
   width: 390px;
-  // background: #fff; Date: 20/03/2024
-  // border-radius: 10px;
+  background: #fff; //Date: 20/03/2024
+  border-radius: 10px;
   overflow: hidden;
-  padding: 0px 20px 33px 20px;
-  // box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);
-  // -moz-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);
-  // -webkit-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);
-  // -o-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);
-  // -ms-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);
+  padding: 20px 20px 33px 20px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   position: relative;
 
   .login100-form-absolute-image-event_000 {
@@ -318,10 +333,10 @@ iframe {
   -moz-transition: all 0.4s;
   transition: all 0.4s;
   background: #6a7dfe;
-  background: -webkit-linear-gradient(left, #21d4fd, #b721ff);
-  background: -o-linear-gradient(left, #21d4fd, #b721ff);
-  background: -moz-linear-gradient(left, #21d4fd, #b721ff);
-  background: linear-gradient(left, #21d4fd, #b721ff);
+  background: -webkit-linear-gradient(to left, #21d4fd, #b721ff);
+  background: -o-linear-gradient(to left, #21d4fd, #b721ff);
+  background: -moz-linear-gradient(to left, #21d4fd, #b721ff);
+  background: linear-gradient(to left, #21d4fd, #b721ff);
 }
 
 .focus-input100::after {
@@ -387,18 +402,18 @@ iframe {
 
 .btn-show-pass:hover {
   color: #6a7dfe;
-  color: -webkit-linear-gradient(left, #21d4fd, #b721ff);
-  color: -o-linear-gradient(left, #21d4fd, #b721ff);
-  color: -moz-linear-gradient(left, #21d4fd, #b721ff);
-  color: linear-gradient(left, #21d4fd, #b721ff);
+  color: -webkit-linear-gradient(to left, #21d4fd, #b721ff);
+  color: -o-linear-gradient(to left, #21d4fd, #b721ff);
+  color: -moz-linear-gradient(to left, #21d4fd, #b721ff);
+  color: linear-gradient(to left, #21d4fd, #b721ff);
 }
 
 .btn-show-pass.active {
   color: #6a7dfe;
-  color: -webkit-linear-gradient(left, #21d4fd, #b721ff);
-  color: -o-linear-gradient(left, #21d4fd, #b721ff);
-  color: -moz-linear-gradient(left, #21d4fd, #b721ff);
-  color: linear-gradient(left, #21d4fd, #b721ff);
+  color: -webkit-linear-gradient(to left, #21d4fd, #b721ff);
+  color: -o-linear-gradient(to left, #21d4fd, #b721ff);
+  color: -moz-linear-gradient(to left, #21d4fd, #b721ff);
+  color: linear-gradient(to left, #21d4fd, #b721ff);
 }
 
 
@@ -432,10 +447,10 @@ iframe {
   width: 300%;
   height: 100%;
   background: #a64bf4;
-  background: -webkit-linear-gradient(right, #21d4fd, #b721ff, #21d4fd, #b721ff);
-  background: -o-linear-gradient(right, #21d4fd, #b721ff, #21d4fd, #b721ff);
-  background: -moz-linear-gradient(right, #21d4fd, #b721ff, #21d4fd, #b721ff);
-  background: linear-gradient(right, #21d4fd, #b721ff, #21d4fd, #b721ff);
+  background: -webkit-linear-gradient(to right, #21d4fd, #b721ff, #21d4fd, #b721ff);
+  background: -o-linear-gradient(to right, #21d4fd, #b721ff, #21d4fd, #b721ff);
+  background: -moz-linear-gradient(to right, #21d4fd, #b721ff, #21d4fd, #b721ff);
+  background: linear-gradient(to right, #21d4fd, #b721ff, #21d4fd, #b721ff);
   top: 0;
   left: -100%;
   -webkit-transition: all 0.4s;

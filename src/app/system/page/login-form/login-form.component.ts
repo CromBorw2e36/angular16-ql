@@ -181,4 +181,9 @@ export class LoginFormComponent
   inValid(text: string | undefined) {
     return text === undefined;
   }
+
+  loadingImageError() {
+    document.querySelector('#login-image-background')?.classList.add('d-none');
+    
+  }
 }
