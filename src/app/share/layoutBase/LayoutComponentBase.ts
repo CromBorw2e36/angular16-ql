@@ -7,8 +7,15 @@ import { SysLoginService } from 'src/app/system/service/sys-login/sys-login.serv
 import notify from 'devextreme/ui/notify';
 import { ConfigServerService } from 'src/app/system/server/config/config-server.service';
 
-type messageType = 'error' | 'success' | 'warning' | 'info';
+interface ICol_Title_Model {
+  id: number,
+  code?: string,
+  name?: string[],
+  placeholder?: string[],
+  required?: boolean,
+}
 
+type messageType = 'error' | 'success' | 'warning' | 'info';
 type messagePosition =
   | 'top left'
   | 'top center'
@@ -38,14 +45,20 @@ export default class LayoutComponentBase {
   listMenu: SysMenu[];
   configService: ConfigServerService;
   sysLoginService: SysLoginService;
+  title_website: string = this.translate('Quản lí doanh nghiệp', '2K')
+  col_title: ICol_Title_Model[] = _col_title;
 
-  constructor(injector: Injector) {
+
+  constructor(
+    injector: Injector,
+  ) {
     this.router = injector.get(Router);
     this.cookieService = injector.get(CookieService);
     this.loginService = injector.get(SysLoginService);
     this.listMenu = [];
     this.configService = injector.get(ConfigServerService);
     this.sysLoginService = injector.get(SysLoginService);
+    document.title = this.title_website
   }
 
   translate(
@@ -65,6 +78,11 @@ export default class LayoutComponentBase {
 
   setLogin(status: boolean = false) {
     this.loginService.setLogin(status);
+  }
+
+  public setTitleWebsite(text: string, replace: boolean = false) {
+    !replace ? document.title = `${this.title_website}${text.length > 0 ? '-' : ''}${text}`
+      : document.title = text;
   }
 
   public setLstMenu(p: SysMenu[]) {
@@ -160,7 +178,73 @@ export default class LayoutComponentBase {
     return date ? moment(date).fromNow() : '';
   }
 
-  trackByFunc(index:number, data:any){
+  trackByFunc(index: number, data: any) {
     return index;
   }
+
+  get_col_title_by_id(id: number): ICol_Title_Model {
+    return this.col_title.find(x => x.id == id)!;
+  }
+
+  showCursorLoading(res: boolean = false) {
+    if (res) {
+      document.body.classList.add('cursor-wait')
+    } else {
+      document.body.classList.remove('cursor-wait')
+    }
+  }
+
 }
+
+
+const _col_title: ICol_Title_Model[] = [
+  {
+    id: 1,
+    code: undefined,
+    name: ['Ẩnh đại diện hệ thống', 'Background image'],
+    placeholder: undefined,
+    required: false,
+  }, {
+    id: 2,
+    code: "TITLE_ACCOUNT",
+    name: ['Tài khoản/Email', 'Account/Email'],
+    placeholder: undefined,
+    required: false,
+  }, {
+    id: 3,
+    code: "TITLE_PASSWORD",
+    name: ['Mật khẩu', 'Password'],
+    placeholder: undefined,
+    required: false,
+  }, {
+    id: 4,
+    code: "TITLE_LOGIN",
+    name: ['Đăng nhập', 'Sign In'],
+    placeholder: undefined,
+    required: false,
+  }, {
+    id: 5,
+    code: "",
+    name: ['Trở thành thành viên', 'Become a member'],
+    placeholder: undefined,
+    required: false,
+  }, {
+    id: 6,
+    code: "",
+    name: ['Dùng thử miễn phí?', 'Free trail?'],
+    placeholder: undefined,
+    required: false,
+  }, {
+    id: 7,
+    code: "",
+    name: ['Đăng ký?', 'Sign Up'],
+    placeholder: undefined,
+    required: false,
+  }, {
+    id: 8,
+    code: "",
+    name: ['ERP-12/23 - Phiên bản thử nghiệm 0.1', 'ERP-12/23 - Version beta 0.1'],
+    placeholder: undefined,
+    required: false,
+  },
+]

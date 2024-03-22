@@ -64,6 +64,7 @@ const routes: Routes = [
     MatIconModule,
     MatMenuModule,
     MatBadgeModule,
+    ComponentModule,
   ],
 })
 export class SystemModule {}
