@@ -20,6 +20,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { TextBoxComponent } from './editor/text-box/text-box.component';
 import { RouterModule, Routes } from '@angular/router';
 import { TextBoxDevextremeComponent } from './editor/text-box-devextreme/text-box-devextreme.component';
+import { LoadingIconComponent } from './Loading/loading-icon/loading-icon.component';
 
 const routes: Routes = [
   { path: 'editor-text-box', component: TextBoxComponent },
@@ -33,6 +34,7 @@ const routes: Routes = [
     SelectBoxCompanyComponent,
     TextBoxComponent,
     TextBoxDevextremeComponent,
+    LoadingIconComponent,
 
   ],
   imports: [
@@ -56,6 +58,11 @@ const routes: Routes = [
     AccountsClient,
     SysLoginService,
   ],
-  exports: [MenuComponent, LoadPanelDevextremeComponent, TextBoxDevextremeComponent],
+  exports: [
+    MenuComponent, 
+    LoadPanelDevextremeComponent, 
+    TextBoxDevextremeComponent, 
+    LoadingIconComponent,
+  ],
 })
-export class ComponentModule {}
+export class ComponentModule { }

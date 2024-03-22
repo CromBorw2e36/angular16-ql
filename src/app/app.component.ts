@@ -22,7 +22,7 @@ export class AppComponent
   implements OnInit, OnChanges
 {
   title = 'my-app-2';
-  isLogin: Observable<boolean | undefined>;
+  isLogin: Observable<boolean | undefined> ;
   constructor(
     injector: Injector,
     private sysLogin: SysLoginService,

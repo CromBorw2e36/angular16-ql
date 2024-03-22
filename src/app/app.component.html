@@ -1,10 +1,16 @@
+<!-- <div [ngSwitch]="this.isLogin | async">
+  <ng-template [ngSwitchCase]="true" #homepage>
+    <app-home-page></app-home-page>
+  </ng-template>
+  <ng-template [ngSwitchCase]="false" #login>
+    <app-login-form></app-login-form>
+  </ng-template>
+  <ng-template *ngSwitchDefault #SwitchDefault></ng-template>
+</div> -->
 
-<div [ngSwitch]="this.isLogin  | async">
-    <ng-template [ngSwitchCase]="true" ##homepage>
-        <app-home-page></app-home-page>
-    </ng-template>
-    <ng-template [ngSwitchCase]="false" #login>
-        <app-login-form></app-login-form>
-    </ng-template>
-    <ng-template *ngSwitchDefault #SwitchDefault>Đang loading</ng-template>
-</div>
+<ng-container *ngIf="this.isLogin | async; else elseTemplate">
+    <app-home-page></app-home-page>
+</ng-container>
+<ng-template #elseTemplate>
+    <app-login-form></app-login-form>
+</ng-template>
