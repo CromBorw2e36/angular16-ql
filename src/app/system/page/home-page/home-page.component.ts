@@ -39,7 +39,8 @@ export class HomePageComponent extends LayoutComponentBase implements OnInit, On
   userInfo: UserInfo = new UserInfo();
   avatar: string = '../../../assets/image/avatar-default.png';
   ngOnInit(): void {
-    this.loading = true;
+    this.setTitleWebsite(this.translate('quản trị', 'management'))
+    this.loading = false;
     this.menuPermissionsClient.getListMenu().subscribe(
       (res) => {
         this.setLstMenu(res);

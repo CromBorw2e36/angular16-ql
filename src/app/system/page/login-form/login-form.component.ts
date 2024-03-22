@@ -21,9 +21,7 @@ import * as moment from 'moment';
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.scss'],
 })
-export class LoginFormComponent
-  extends LayoutComponentBase
-  implements OnInit, OnChanges {
+export class LoginFormComponent extends LayoutComponentBase implements OnInit, OnChanges {
   constructor(
     injector: Injector,
     private sessionData: SessionStorageServiceService,
@@ -44,6 +42,12 @@ export class LoginFormComponent
   @ViewChild('login100FromAbsoluteImageEvent_00') login100FromAbsoluteImageEvent_00?: ElementRef<HTMLImageElement> = undefined;
 
   ngOnInit(): void {
+    this.setTitleWebsite(this.translate('Đăng nhập', 'Login'), true)
+    //  MỤC ĐÍCH ĐỂ TĂNG HIỆU NĂNG CHO THIẾT BỊ LÀ ĐIỆN THOẠI
+    if (this.deviceDetectorService.isMobile()) {
+      document.querySelector('#login_image_background')?.classList.add('d-none')
+      document.querySelector('#detector_device')?.classList.add('container_device_mobile')
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -67,7 +71,6 @@ export class LoginFormComponent
       }
     }, 500)
   }
-
 
   getLocation() {
     if (navigator.geolocation) {
@@ -98,6 +101,7 @@ export class LoginFormComponent
       );
     } else {
       this.loading = true;
+      this.showCursorLoading(true)
       this.InputMaster.type_device = this.deviceDetectorService.deviceType;
       this.InputMaster.os = this.deviceDetectorService.os;
       this.InputMaster.browser = this.deviceDetectorService.browser;
@@ -160,10 +164,12 @@ export class LoginFormComponent
               'Try connect again'
             )
           );
-          this.loading = false;
+      this.showCursorLoading()
+      this.loading = false;
         },
         () => {
-          this.loading = false;
+      this.showCursorLoading()
+      this.loading = false;
         }
       );
   }
@@ -183,7 +189,11 @@ export class LoginFormComponent
   }
 
   loadingImageError() {
-    document.querySelector('#login-image-background')?.classList.add('d-none');
-    
+    document.querySelector('#login_image_background')?.classList.add('d-none');
+  }
+
+  get_col_title(id: number) {
+    const obj = this.get_col_title_by_id(id);
+    return obj?.name ? obj.name[Number(this.translate('0', '1'))] : "";
   }
 }

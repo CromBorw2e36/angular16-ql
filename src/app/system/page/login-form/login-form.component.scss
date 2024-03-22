@@ -78,84 +78,84 @@ li {
 
 /*---------------------------------------------*/
 
-input {
-  outline: none;
-  border: none;
-}
+// input {
+//   outline: none;
+//   border: none;
+// }
 
-textarea {
-  outline: none;
-  border: none;
-}
+// textarea {
+//   outline: none;
+//   border: none;
+// }
 
-textarea:focus,
-input:focus {
-  border-color: transparent !important;
-}
+// textarea:focus,
+// input:focus {
+//   border-color: transparent !important;
+// }
 
-input:focus::-webkit-input-placeholder {
-  color: transparent;
-}
+// input:focus::-webkit-input-placeholder {
+//   color: transparent;
+// }
 
-input:focus:-moz-placeholder {
-  color: transparent;
-}
+// input:focus:-moz-placeholder {
+//   color: transparent;
+// }
 
-input:focus::-moz-placeholder {
-  color: transparent;
-}
+// input:focus::-moz-placeholder {
+//   color: transparent;
+// }
 
-input:focus:-ms-input-placeholder {
-  color: transparent;
-}
+// input:focus:-ms-input-placeholder {
+//   color: transparent;
+// }
 
-textarea:focus::-webkit-input-placeholder {
-  color: transparent;
-}
+// textarea:focus::-webkit-input-placeholder {
+//   color: transparent;
+// }
 
-textarea:focus:-moz-placeholder {
-  color: transparent;
-}
+// textarea:focus:-moz-placeholder {
+//   color: transparent;
+// }
 
-textarea:focus::-moz-placeholder {
-  color: transparent;
-}
+// textarea:focus::-moz-placeholder {
+//   color: transparent;
+// }
 
-textarea:focus:-ms-input-placeholder {
-  color: transparent;
-}
+// textarea:focus:-ms-input-placeholder {
+//   color: transparent;
+// }
 
-input::-webkit-input-placeholder {
-  color: #adadad;
-}
+// input::-webkit-input-placeholder {
+//   color: #adadad;
+// }
 
-input:-moz-placeholder {
-  color: #adadad;
-}
+// input:-moz-placeholder {
+//   color: #adadad;
+// }
 
-input::-moz-placeholder {
-  color: #adadad;
-}
+// input::-moz-placeholder {
+//   color: #adadad;
+// }
 
-input:-ms-input-placeholder {
-  color: #adadad;
-}
+// input:-ms-input-placeholder {
+//   color: #adadad;
+// }
 
-textarea::-webkit-input-placeholder {
-  color: #adadad;
-}
+// textarea::-webkit-input-placeholder {
+//   color: #adadad;
+// }
 
-textarea:-moz-placeholder {
-  color: #adadad;
-}
+// textarea:-moz-placeholder {
+//   color: #adadad;
+// }
 
-textarea::-moz-placeholder {
-  color: #adadad;
-}
+// textarea::-moz-placeholder {
+//   color: #adadad;
+// }
 
-textarea:-ms-input-placeholder {
-  color: #adadad;
-}
+// textarea:-ms-input-placeholder {
+//   color: #adadad;
+// }
 
 
 /*---------------------------------------------*/
@@ -183,6 +183,7 @@ iframe {
   font-size: 13px;
   color: #666666;
   line-height: 1.5;
+  user-select: none;
 }
 
 .txt2 {
@@ -221,17 +222,11 @@ iframe {
   justify-content: center;
   align-items: center;
   padding: 15px;
-  // background-color: #9EB8D9; Date: 20/03/2024
-  // background-image: url(https://images.pexels.com/photos/6128392/pexels-photo-6128392.jpeg);
-  // background-size: cover;
-  // background-repeat: no-repeat;
-  // background-position: center;
-
   position: relative;
   background-color: #D2DAFF;
 }
 
-#login-image-background {
+#login_image_background {
   position: absolute;
   top: 0;
   left: 0;
@@ -376,6 +371,26 @@ iframe {
   width: 100%;
 }
 
+.container_device_mobile {
+  .container-login100{
+    background-color: #ffffff;
+  }
+  .wrap-login100 {
+    background-color: #fff;
+    // background-color: inherit;
+    box-shadow: none;
+  }
+
+  // .input100{
+  //   border-radius: 7px;
+  //   background-color: #fff;
+  // }
+
+  // .focus-input100::before{
+  //   display: none;
+  // }
+
+}
 
 /*---------------------------------------------*/
 
@@ -486,9 +501,9 @@ iframe {
   [ Responsive ]*/
 
 @media (max-width: 576px) {
-  .wrap-login100 {
-    padding: 77px 15px 33px 15px;
-  }
+  // .wrap-login100 {
+  //   padding: 77px 15px 33px 15px; // Vì không dùng logo nữa nên cho ẩn đi
+  // }
 }
 
 
