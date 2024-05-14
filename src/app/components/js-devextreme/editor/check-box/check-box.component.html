@@ -1,0 +1,2 @@
+<div class="control-label" *ngIf="label">{{ label }}</div>
+<dx-check-box #dxCheckBox [value]="value" (valueChange)="valueChange.emit($event)"></dx-check-box>

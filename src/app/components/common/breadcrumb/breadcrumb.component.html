@@ -1,0 +1,13 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li
+      [ngClass]="{
+        'breadcrumb-item': true,
+        active: i === getListMenu.length - 1
+      }"
+      *ngFor="let item of getListMenu; let i = index"
+    >
+      <a href="#">{{translate(item.name!, item.nameVN!)}}</a>
+    </li>
+  </ol>
+</nav>

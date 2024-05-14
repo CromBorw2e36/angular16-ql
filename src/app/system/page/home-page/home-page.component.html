@@ -2,7 +2,8 @@
   <mat-drawer #drawer class="sidenav-menu" mode="side" opened>
     <!-- Logo websites -->
     <div class="logo-container">
-      <img [src]="userInfo.avatar ?? avatar" class="logo" />
+      <!-- <img [src]="userInfo.avatar ?? avatar" class="logo" /> -->
+      <img src="../../../../assets/image/load-image-error.jpg" alt="" class="logo">
       <div class="title">
         {{ userInfo.name ?? "Tài khoản không xác định" }}
       </div>
@@ -47,16 +48,24 @@
     </div>
     <!-- Logo websites -->
     <!-- List menu -->
-    <app-menu #viewMenu [menuPermissions]="menuPermissions"></app-menu>
+    <!-- <app-menu #viewMenu [menuPermissions]="menuPermissions"></app-menu> -->
+    <menu-v2-component
+      #viewMenu
+      [InputMaster]="menuPermissions"
+    ></menu-v2-component>
     <!-- List menu -->
   </mat-drawer>
 
   <div class="">
-    <button type="button" mat-button (click)="drawer.toggle()">
-      Toggle sidenav
-    </button>
     <router-outlet></router-outlet>
   </div>
 </mat-drawer-container>
-
-<app-load-panel-devextreme [InputMaster]="loading"></app-load-panel-devextreme>
+<button
+  class="toggle_menu_float"
+  type="button"
+  mat-button
+  (click)="onClickDrawer()"
+>
+  Toggle sidenav
+</button>
+<app-load-panel-devextreme  [InputMaster]="PageLoading" ></app-load-panel-devextreme>

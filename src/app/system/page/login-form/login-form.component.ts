@@ -32,12 +32,12 @@ export class LoginFormComponent extends LayoutComponentBase implements OnInit, O
   ) {
     super(injector);
 
-    this.loading = false;
+    this.isLoading = false;
     this.InputMaster = new AccountClientLoginParamsModel();
     this.isSwitchLogin = this.sysLogin.getIsTypeSwitchLogin();
   }
   InputMaster: AccountClientLoginParamsModel;
-  loading: boolean;
+  isLoading: boolean;
   isSwitchLogin: typeOfSwitchLogin;
   @ViewChild('login100FromAbsoluteImageEvent_00') login100FromAbsoluteImageEvent_00?: ElementRef<HTMLImageElement> = undefined;
 
@@ -100,7 +100,7 @@ export class LoginFormComponent extends LayoutComponentBase implements OnInit, O
         this.translate('Vui lòng nhập mật khẩu', 'Plaese enter your password')
       );
     } else {
-      this.loading = true;
+      this.isLoading = true;
       this.showCursorLoading(true)
       this.InputMaster.type_device = this.deviceDetectorService.deviceType;
       this.InputMaster.os = this.deviceDetectorService.os;
@@ -165,11 +165,11 @@ export class LoginFormComponent extends LayoutComponentBase implements OnInit, O
             )
           );
       this.showCursorLoading()
-      this.loading = false;
+      this.isLoading = false;
         },
         () => {
       this.showCursorLoading()
-      this.loading = false;
+      this.isLoading = false;
         }
       );
   }

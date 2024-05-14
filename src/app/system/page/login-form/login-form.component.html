@@ -57,9 +57,9 @@
               type="submit"
               class="login100-form-btn"
               (click)="this.OnSubmit()"
-              [disabled]="loading"
+              [disabled]="isLoading"
             >
-              <ng-container *ngIf="loading; else elseEnterTemplate">
+              <ng-container *ngIf="isLoading; else elseEnterTemplate">
                 <loading-icon-component></loading-icon-component>
               </ng-container>
               <ng-template #elseEnterTemplate>

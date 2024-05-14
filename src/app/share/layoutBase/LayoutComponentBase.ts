@@ -2,10 +2,11 @@ import { Inject, Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { CookieService } from 'ngx-cookie-service';
-import { Account, SysMenu, UserInfo } from 'src/app/system/server/api_share';
+import { Account, SysMenu, Sys_Menu_Tree_View_MODEL, UserInfo } from 'src/app/system/server/api_share';
 import { SysLoginService } from 'src/app/system/service/sys-login/sys-login.service';
 import notify from 'devextreme/ui/notify';
 import { ConfigServerService } from 'src/app/system/server/config/config-server.service';
+import { HomePageService } from 'src/app/system/page/home-page/service/home-page.service';
 
 interface ICol_Title_Model {
   id: number,
@@ -48,7 +49,6 @@ export default class LayoutComponentBase {
   title_website: string = this.translate('Quản lí doanh nghiệp', '2K')
   col_title: ICol_Title_Model[] = _col_title;
 
-
   constructor(
     injector: Injector,
   ) {
@@ -73,7 +73,13 @@ export default class LayoutComponentBase {
       sessionStorage.removeItem('navigatorMenu');
       sessionStorage.setItem('navigatorMenu', JSON.stringify(data));
     }
-    this.router.navigate([url]);
+    try {
+      if (url?.length > 0) {
+        this.router.navigate([url]);
+      }
+    } catch (e) {
+      this.router.navigate(['page-not-found']);
+    }
   }
 
   setLogin(status: boolean = false) {
@@ -95,24 +101,24 @@ export default class LayoutComponentBase {
     const userInfo = JSON.parse(
       localStorage.getItem('userInfo') ?? '{}'
     ) as any;
-    return userInfo as UserInfo | Account;
+    return userInfo as UserInfo;
   }
 
-  public getLstMenu(): SysMenu[] {
+  public getLstMenu(): Sys_Menu_Tree_View_MODEL[] {
     return JSON.parse(sessionStorage.getItem('listMenu') ?? '[]');
     // return this.listMenu;
   }
 
-  public setListMenuLevel3(p: SysMenu[]) {
+  public setListMenuLevel3(p: Sys_Menu_Tree_View_MODEL[]) {
     sessionStorage.removeItem('listMenuLV3');
     sessionStorage.setItem('listMenuLV3', JSON.stringify(p));
   }
 
-  public getListMenuLevel3(): SysMenu[] {
+  public getListMenuLevel3(): Sys_Menu_Tree_View_MODEL[] {
     return JSON.parse(sessionStorage.getItem('listMenuLV3') ?? '[]');
   }
 
-  public getMenuSelected(): SysMenu {
+  public getMenuSelected(): Sys_Menu_Tree_View_MODEL {
     return JSON.parse(sessionStorage.getItem('navigatorMenu') ?? '{}');
   }
 
@@ -166,11 +172,15 @@ export default class LayoutComponentBase {
     this.sysLoginService.setLogin(false);
   }
 
+  public Authorization() {
+    this.setLogout();
+  }
+
   formatDateString(datetime: Date | undefined): string {
-    return datetime ? moment(datetime).format('DD/MM/yyyy') : '';
+    return datetime ? moment(datetime).format('DD/MM/yyyy') : '01/01/2000';
   }
   formatDateTimeString(datetime: Date | undefined): string {
-    return datetime ? moment(datetime).format('DD/MM/yyyy HH:mm') : '';
+    return datetime ? moment(datetime).format('DD/MM/yyyy HH:mm') : '01/01/2000 00:00';
   }
 
   formatDateFromNow(date: Date | undefined): string {
@@ -192,6 +202,19 @@ export default class LayoutComponentBase {
     } else {
       document.body.classList.remove('cursor-wait')
     }
+  }
+
+  setLoadingComponent(res: boolean = false) {
+    this.showCursorLoading(res);
+  }
+
+  random_key_string(length: number = 20): string {
+    let text = "";
+    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_abcdefghijklmnopqrstuvwxyz01234";
+    for (let i = 0; i < length; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
   }
 
 }

@@ -1,0 +1,6 @@
+<div class="control-label" *ngIf="label">{{ label }}</div>
+<dx-text-box
+  #dxTextBoxViewChild
+  [value]="value ?? ''"
+  (valueChange)="valueChange.emit($event)"
+></dx-text-box>

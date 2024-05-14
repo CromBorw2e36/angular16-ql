@@ -1,0 +1,11 @@
+<div>
+  <tool-bar-component [action_type]="'1'" (onActionClick)="handleActionClick($event)"  ></tool-bar-component>
+  <data-grid-component
+    #dataGridComponent
+    [tableName]="tableName"
+    [propertyDataGrid]="propertyDataGrid"
+    [dataSource]="InputMaster"
+  ></data-grid-component>
+</div>
+
+<datagrid-column-setting-list-edit #DatagridColumnSettingListEditComponent (uploadDataSource)="onLoadData()"></datagrid-column-setting-list-edit>

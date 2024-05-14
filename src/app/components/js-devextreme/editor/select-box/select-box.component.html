@@ -1,0 +1,11 @@
+<div class="control-label" *ngIf="label">{{ label }}</div>
+<dx-select-box
+  #dxSelectBoxComponent
+  id="custom-templates"
+  [displayExpr]="displayExpr"
+  [valueExpr]="valueExpr"
+  [dataSource]="dataSource"
+  [inputAttr]="{ 'aria-label': 'Templated Product' }"
+  [value]="value"
+  (onValueChanged)="handleValueChange($event)"
+></dx-select-box>

@@ -13,7 +13,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { LoginFormComponent } from './page/login-form/login-form.component';
 import { ComponentModule } from '../components/component.module';
-import { MenuComponent } from '../components/menu/menu.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { CookieService } from 'ngx-cookie-service';
@@ -27,10 +26,12 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MenuPageComponent } from './page/menu-page/menu-page.component';
 import { AppComponents } from './server/components';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { ListPageMenuComponent } from './page/menu-page/list-page-menu/list-page-menu.component';
 
 const routes: Routes = [
   { path: '', component: MenuPageComponent },
   { path: 'dashboard', component: DashboardComponent },
+  { path: 'menu', component: ListPageMenuComponent },
   
 ];
 
@@ -40,6 +41,7 @@ const routes: Routes = [
     DashboardComponent,
     LoginFormComponent,
     MenuPageComponent,
+    ListPageMenuComponent,
   ],
   providers: [
     CookieService,

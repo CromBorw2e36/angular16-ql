@@ -1,0 +1,2 @@
+<div class="control-label" *ngIf="label">{{ label }}</div>
+<dx-date-box #dxDateBox [value]="value || ''" (valueChange)="valueChange.emit($event)"></dx-date-box>

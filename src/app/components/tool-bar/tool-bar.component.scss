@@ -1,0 +1,29 @@
+div#tool_bar_component {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  padding: 5px 0;
+  width: 100%;
+ 
+
+  .toolbar-btn-icon {
+    display: none;
+  }
+
+  @media screen and (max-width: 600px) {
+    .toolbar-name {
+      display: none;
+    }
+
+    .toolbar-btn-icon-text {
+      display: none;
+    }
+
+    .toolbar-btn-icon {
+      display: block;
+    }
+
+  }
+
+}

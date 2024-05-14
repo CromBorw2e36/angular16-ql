@@ -18,6 +18,1333 @@ import { APIBase } from './APIBase';
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
+export interface ISysActionClient {
+    sysActionIns(action: SysAction): Observable<StatusMessageOfSysAction>;
+    sysActionUpd(action: SysAction): Observable<StatusMessageOfObject>;
+    sysActionDel(action: SysAction): Observable<StatusMessageOfObject>;
+    sysActionGetByCode(code?: string | undefined): Observable<SysAction>;
+    sysActionGetByCodeByPermision(actionCode?: string | undefined): Observable<SysAction[]>;
+    sysDropDownActionIns(dropdownAction: SysDropDownAction): Observable<StatusMessageOfSysDropDownAction>;
+    sysDropdownActionUpd(action: SysDropDownAction): Observable<StatusMessageOfSysDropDownAction>;
+    sysDropdownActionDel(action: SysDropDownAction): Observable<StatusMessageOfObject>;
+    sysDropActionGetListSysActionByCode(dropdownAction: SysDropDownAction): Observable<SysAction[]>;
+    sysDropdownActionGet(actionCode: SysDropDownAction): Observable<SysDropDownAction>;
+    getListActionByGroupCode(groupAction: SysGroupAction): Observable<StatusMessageOfListOfSysAction>;
+}
+
+@Injectable()
+export class SysActionClient extends APIBase implements ISysActionClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        super(configuration);
+        this.http = http;
+        this.baseUrl = baseUrl ?? this.getBaseUrl("");
+    }
+
+    sysActionIns(action: SysAction): Observable<StatusMessageOfSysAction> {
+        let url_ = this.baseUrl + "/api/sysAction/SysActionIns";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(action);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processSysActionIns(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSysActionIns(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfSysAction>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfSysAction>;
+        }));
+    }
+
+    protected processSysActionIns(response: HttpResponseBase): Observable<StatusMessageOfSysAction> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfSysAction.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    sysActionUpd(action: SysAction): Observable<StatusMessageOfObject> {
+        let url_ = this.baseUrl + "/api/sysAction/SysActionUpd";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(action);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processSysActionUpd(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSysActionUpd(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfObject>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfObject>;
+        }));
+    }
+
+    protected processSysActionUpd(response: HttpResponseBase): Observable<StatusMessageOfObject> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfObject.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    sysActionDel(action: SysAction): Observable<StatusMessageOfObject> {
+        let url_ = this.baseUrl + "/api/sysAction/SysActionDel";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(action);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processSysActionDel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSysActionDel(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfObject>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfObject>;
+        }));
+    }
+
+    protected processSysActionDel(response: HttpResponseBase): Observable<StatusMessageOfObject> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfObject.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    sysActionGetByCode(code?: string | undefined): Observable<SysAction> {
+        let url_ = this.baseUrl + "/api/sysAction/SysActionGetByCode?";
+        if (code === null)
+            throw new Error("The parameter 'code' cannot be null.");
+        else if (code !== undefined)
+            url_ += "code=" + encodeURIComponent("" + code) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processSysActionGetByCode(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSysActionGetByCode(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SysAction>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SysAction>;
+        }));
+    }
+
+    protected processSysActionGetByCode(response: HttpResponseBase): Observable<SysAction> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SysAction.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    sysActionGetByCodeByPermision(actionCode?: string | undefined): Observable<SysAction[]> {
+        let url_ = this.baseUrl + "/api/sysAction/SysActionGetByCode2?";
+        if (actionCode === null)
+            throw new Error("The parameter 'actionCode' cannot be null.");
+        else if (actionCode !== undefined)
+            url_ += "actionCode=" + encodeURIComponent("" + actionCode) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processSysActionGetByCodeByPermision(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSysActionGetByCodeByPermision(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SysAction[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SysAction[]>;
+        }));
+    }
+
+    protected processSysActionGetByCodeByPermision(response: HttpResponseBase): Observable<SysAction[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(SysAction.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    sysDropDownActionIns(dropdownAction: SysDropDownAction): Observable<StatusMessageOfSysDropDownAction> {
+        let url_ = this.baseUrl + "/api/sysAction/SysDropDownActionIns";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dropdownAction);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processSysDropDownActionIns(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSysDropDownActionIns(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfSysDropDownAction>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfSysDropDownAction>;
+        }));
+    }
+
+    protected processSysDropDownActionIns(response: HttpResponseBase): Observable<StatusMessageOfSysDropDownAction> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfSysDropDownAction.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    sysDropdownActionUpd(action: SysDropDownAction): Observable<StatusMessageOfSysDropDownAction> {
+        let url_ = this.baseUrl + "/api/sysAction/SysDropdownActionUpd";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(action);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processSysDropdownActionUpd(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSysDropdownActionUpd(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfSysDropDownAction>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfSysDropDownAction>;
+        }));
+    }
+
+    protected processSysDropdownActionUpd(response: HttpResponseBase): Observable<StatusMessageOfSysDropDownAction> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfSysDropDownAction.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    sysDropdownActionDel(action: SysDropDownAction): Observable<StatusMessageOfObject> {
+        let url_ = this.baseUrl + "/api/sysAction/SysDropdownActionDel";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(action);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processSysDropdownActionDel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSysDropdownActionDel(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfObject>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfObject>;
+        }));
+    }
+
+    protected processSysDropdownActionDel(response: HttpResponseBase): Observable<StatusMessageOfObject> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfObject.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    sysDropActionGetListSysActionByCode(dropdownAction: SysDropDownAction): Observable<SysAction[]> {
+        let url_ = this.baseUrl + "/api/sysAction/SysDropActionGetListSysActionByCode";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dropdownAction);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processSysDropActionGetListSysActionByCode(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSysDropActionGetListSysActionByCode(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SysAction[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SysAction[]>;
+        }));
+    }
+
+    protected processSysDropActionGetListSysActionByCode(response: HttpResponseBase): Observable<SysAction[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(SysAction.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    sysDropdownActionGet(actionCode: SysDropDownAction): Observable<SysDropDownAction> {
+        let url_ = this.baseUrl + "/api/sysAction/SysDropActionGet";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(actionCode);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processSysDropdownActionGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSysDropdownActionGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SysDropDownAction>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SysDropDownAction>;
+        }));
+    }
+
+    protected processSysDropdownActionGet(response: HttpResponseBase): Observable<SysDropDownAction> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SysDropDownAction.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getListActionByGroupCode(groupAction: SysGroupAction): Observable<StatusMessageOfListOfSysAction> {
+        let url_ = this.baseUrl + "/api/sysAction/GetListActionByGroupCode";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(groupAction);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processGetListActionByGroupCode(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListActionByGroupCode(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfListOfSysAction>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfListOfSysAction>;
+        }));
+    }
+
+    protected processGetListActionByGroupCode(response: HttpResponseBase): Observable<StatusMessageOfListOfSysAction> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfListOfSysAction.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export interface ISysGenRowTablesClient {
+    genRowTableInsert(sysGenRowTable: SysGenRowTable): Observable<StatusMessageOfSysGenRowTable>;
+    genRowTableUpdate(sysGenRowTable: SysGenRowTable): Observable<StatusMessageOfSysGenRowTable>;
+    genRowTableDelete(sysGenRowTable: SysGenRowTable): Observable<StatusMessageOfSysGenRowTable>;
+    genRowTableSearch(sysGenRowTable: SysGenRowTable): Observable<StatusMessageOfListOfSysGenRowTable>;
+}
+
+@Injectable()
+export class SysGenRowTablesClient extends APIBase implements ISysGenRowTablesClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        super(configuration);
+        this.http = http;
+        this.baseUrl = baseUrl ?? this.getBaseUrl("");
+    }
+
+    genRowTableInsert(sysGenRowTable: SysGenRowTable): Observable<StatusMessageOfSysGenRowTable> {
+        let url_ = this.baseUrl + "/api/SysGenRowTables/Gen_Row_Table_Insert";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(sysGenRowTable);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processGenRowTableInsert(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGenRowTableInsert(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfSysGenRowTable>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfSysGenRowTable>;
+        }));
+    }
+
+    protected processGenRowTableInsert(response: HttpResponseBase): Observable<StatusMessageOfSysGenRowTable> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfSysGenRowTable.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    genRowTableUpdate(sysGenRowTable: SysGenRowTable): Observable<StatusMessageOfSysGenRowTable> {
+        let url_ = this.baseUrl + "/api/SysGenRowTables/Gen_Row_Table_Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(sysGenRowTable);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processGenRowTableUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGenRowTableUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfSysGenRowTable>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfSysGenRowTable>;
+        }));
+    }
+
+    protected processGenRowTableUpdate(response: HttpResponseBase): Observable<StatusMessageOfSysGenRowTable> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfSysGenRowTable.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    genRowTableDelete(sysGenRowTable: SysGenRowTable): Observable<StatusMessageOfSysGenRowTable> {
+        let url_ = this.baseUrl + "/api/SysGenRowTables/Gen_Row_Table_Delete";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(sysGenRowTable);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processGenRowTableDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGenRowTableDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfSysGenRowTable>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfSysGenRowTable>;
+        }));
+    }
+
+    protected processGenRowTableDelete(response: HttpResponseBase): Observable<StatusMessageOfSysGenRowTable> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfSysGenRowTable.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    genRowTableSearch(sysGenRowTable: SysGenRowTable): Observable<StatusMessageOfListOfSysGenRowTable> {
+        let url_ = this.baseUrl + "/api/SysGenRowTables/Gen_Row_Table_Search";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(sysGenRowTable);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processGenRowTableSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGenRowTableSearch(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfListOfSysGenRowTable>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfListOfSysGenRowTable>;
+        }));
+    }
+
+    protected processGenRowTableSearch(response: HttpResponseBase): Observable<StatusMessageOfListOfSysGenRowTable> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfListOfSysGenRowTable.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export interface ISysVoucherFormClient {
+    voucherFormColumnInsert(sysVoucherFormColumn: SysVoucherFormColumn): Observable<StatusMessageOfSysVoucherFormColumn>;
+    voucherFormColumnUpdate(sysVoucherFormColumn: SysVoucherFormColumn): Observable<StatusMessageOfSysVoucherFormColumn>;
+    voucherFormColumnDelete(sysVoucherFormColumn: SysVoucherFormColumn): Observable<StatusMessageOfSysVoucherFormColumn>;
+    voucherFormColumnSearch(sysVoucherFormColumn: SysVoucherFormColumn): Observable<StatusMessageOfListOfSysVoucherFormColumn>;
+    voucherFormGroupInsert(sysVoucherFormGroup: SysVoucherFormGroup): Observable<StatusMessageOfSysVoucherFormGroup>;
+    voucherFormGroupUpdate(sysVoucherFormGroup: SysVoucherFormGroup): Observable<StatusMessageOfSysVoucherFormGroup>;
+    voucherFormGroupDelete(sysVoucherFormGroup: SysVoucherFormGroup): Observable<StatusMessageOfSysVoucherFormGroup>;
+    voucherFormGroupSearch(sysVoucherFormGroup: SysVoucherFormGroup): Observable<StatusMessageOfListOfSysVoucherFormGroup>;
+}
+
+@Injectable()
+export class SysVoucherFormClient extends APIBase implements ISysVoucherFormClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        super(configuration);
+        this.http = http;
+        this.baseUrl = baseUrl ?? this.getBaseUrl("");
+    }
+
+    voucherFormColumnInsert(sysVoucherFormColumn: SysVoucherFormColumn): Observable<StatusMessageOfSysVoucherFormColumn> {
+        let url_ = this.baseUrl + "/api/SysVoucherForm/Voucher_Form_Column_Insert";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(sysVoucherFormColumn);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processVoucherFormColumnInsert(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processVoucherFormColumnInsert(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfSysVoucherFormColumn>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfSysVoucherFormColumn>;
+        }));
+    }
+
+    protected processVoucherFormColumnInsert(response: HttpResponseBase): Observable<StatusMessageOfSysVoucherFormColumn> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfSysVoucherFormColumn.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    voucherFormColumnUpdate(sysVoucherFormColumn: SysVoucherFormColumn): Observable<StatusMessageOfSysVoucherFormColumn> {
+        let url_ = this.baseUrl + "/api/SysVoucherForm/Voucher_Form_Column_Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(sysVoucherFormColumn);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processVoucherFormColumnUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processVoucherFormColumnUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfSysVoucherFormColumn>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfSysVoucherFormColumn>;
+        }));
+    }
+
+    protected processVoucherFormColumnUpdate(response: HttpResponseBase): Observable<StatusMessageOfSysVoucherFormColumn> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfSysVoucherFormColumn.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    voucherFormColumnDelete(sysVoucherFormColumn: SysVoucherFormColumn): Observable<StatusMessageOfSysVoucherFormColumn> {
+        let url_ = this.baseUrl + "/api/SysVoucherForm/Voucher_Form_Column_Delete";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(sysVoucherFormColumn);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processVoucherFormColumnDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processVoucherFormColumnDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfSysVoucherFormColumn>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfSysVoucherFormColumn>;
+        }));
+    }
+
+    protected processVoucherFormColumnDelete(response: HttpResponseBase): Observable<StatusMessageOfSysVoucherFormColumn> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfSysVoucherFormColumn.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    voucherFormColumnSearch(sysVoucherFormColumn: SysVoucherFormColumn): Observable<StatusMessageOfListOfSysVoucherFormColumn> {
+        let url_ = this.baseUrl + "/api/SysVoucherForm/Voucher_Form_Column_Search";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(sysVoucherFormColumn);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processVoucherFormColumnSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processVoucherFormColumnSearch(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfListOfSysVoucherFormColumn>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfListOfSysVoucherFormColumn>;
+        }));
+    }
+
+    protected processVoucherFormColumnSearch(response: HttpResponseBase): Observable<StatusMessageOfListOfSysVoucherFormColumn> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfListOfSysVoucherFormColumn.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    voucherFormGroupInsert(sysVoucherFormGroup: SysVoucherFormGroup): Observable<StatusMessageOfSysVoucherFormGroup> {
+        let url_ = this.baseUrl + "/api/SysVoucherForm/Voucher_Form_Group_Insert";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(sysVoucherFormGroup);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processVoucherFormGroupInsert(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processVoucherFormGroupInsert(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfSysVoucherFormGroup>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfSysVoucherFormGroup>;
+        }));
+    }
+
+    protected processVoucherFormGroupInsert(response: HttpResponseBase): Observable<StatusMessageOfSysVoucherFormGroup> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfSysVoucherFormGroup.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    voucherFormGroupUpdate(sysVoucherFormGroup: SysVoucherFormGroup): Observable<StatusMessageOfSysVoucherFormGroup> {
+        let url_ = this.baseUrl + "/api/SysVoucherForm/Voucher_Form_Group_Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(sysVoucherFormGroup);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processVoucherFormGroupUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processVoucherFormGroupUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfSysVoucherFormGroup>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfSysVoucherFormGroup>;
+        }));
+    }
+
+    protected processVoucherFormGroupUpdate(response: HttpResponseBase): Observable<StatusMessageOfSysVoucherFormGroup> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfSysVoucherFormGroup.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    voucherFormGroupDelete(sysVoucherFormGroup: SysVoucherFormGroup): Observable<StatusMessageOfSysVoucherFormGroup> {
+        let url_ = this.baseUrl + "/api/SysVoucherForm/Voucher_Form_Group_Delete";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(sysVoucherFormGroup);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processVoucherFormGroupDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processVoucherFormGroupDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfSysVoucherFormGroup>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfSysVoucherFormGroup>;
+        }));
+    }
+
+    protected processVoucherFormGroupDelete(response: HttpResponseBase): Observable<StatusMessageOfSysVoucherFormGroup> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfSysVoucherFormGroup.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    voucherFormGroupSearch(sysVoucherFormGroup: SysVoucherFormGroup): Observable<StatusMessageOfListOfSysVoucherFormGroup> {
+        let url_ = this.baseUrl + "/api/SysVoucherForm/Voucher_Form_Group_Search";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(sysVoucherFormGroup);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processVoucherFormGroupSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processVoucherFormGroupSearch(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfListOfSysVoucherFormGroup>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfListOfSysVoucherFormGroup>;
+        }));
+    }
+
+    protected processVoucherFormGroupSearch(response: HttpResponseBase): Observable<StatusMessageOfListOfSysVoucherFormGroup> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfListOfSysVoucherFormGroup.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export interface ICurrentJobPositionsClient {
     getCurrentJobPositions(): Observable<CurrentJobPosition[]>;
     postCurrentJobPosition(currentJobPosition: CurrentJobPosition): Observable<CurrentJobPosition>;
@@ -929,10 +2256,10 @@ export class WorkHistoriesClient extends APIBase implements IWorkHistoriesClient
 
 export interface IAccountsClient {
     checkTheExpirationDateOfToken(): Observable<boolean>;
-    login(account: AccountClientLoginParamsModel): Observable<StatusMessage>;
-    accountIns(profile: AccountClientProfileModel): Observable<StatusMessage>;
-    updateAccount(account: Account): Observable<StatusMessage>;
-    deleteAccount(id: string): Observable<StatusMessage>;
+    login(account: AccountClientLoginParamsModel): Observable<StatusMessageOfObject>;
+    accountIns(profile: AccountClientProfileModel): Observable<StatusMessageOfObject>;
+    updateAccount(account: Account): Observable<StatusMessageOfObject>;
+    deleteAccount(id: string): Observable<StatusMessageOfObject>;
 }
 
 @Injectable()
@@ -998,7 +2325,7 @@ export class AccountsClient extends APIBase implements IAccountsClient {
         return _observableOf(null as any);
     }
 
-    login(account: AccountClientLoginParamsModel): Observable<StatusMessage> {
+    login(account: AccountClientLoginParamsModel): Observable<StatusMessageOfObject> {
         let url_ = this.baseUrl + "/api/Accounts/Login";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1023,14 +2350,14 @@ export class AccountsClient extends APIBase implements IAccountsClient {
                 try {
                     return this.processLogin(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<StatusMessage>;
+                    return _observableThrow(e) as any as Observable<StatusMessageOfObject>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<StatusMessage>;
+                return _observableThrow(response_) as any as Observable<StatusMessageOfObject>;
         }));
     }
 
-    protected processLogin(response: HttpResponseBase): Observable<StatusMessage> {
+    protected processLogin(response: HttpResponseBase): Observable<StatusMessageOfObject> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1041,7 +2368,7 @@ export class AccountsClient extends APIBase implements IAccountsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = StatusMessage.fromJS(resultData200);
+            result200 = StatusMessageOfObject.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1052,7 +2379,7 @@ export class AccountsClient extends APIBase implements IAccountsClient {
         return _observableOf(null as any);
     }
 
-    accountIns(profile: AccountClientProfileModel): Observable<StatusMessage> {
+    accountIns(profile: AccountClientProfileModel): Observable<StatusMessageOfObject> {
         let url_ = this.baseUrl + "/api/Accounts/AccountIns";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1077,14 +2404,14 @@ export class AccountsClient extends APIBase implements IAccountsClient {
                 try {
                     return this.processAccountIns(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<StatusMessage>;
+                    return _observableThrow(e) as any as Observable<StatusMessageOfObject>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<StatusMessage>;
+                return _observableThrow(response_) as any as Observable<StatusMessageOfObject>;
         }));
     }
 
-    protected processAccountIns(response: HttpResponseBase): Observable<StatusMessage> {
+    protected processAccountIns(response: HttpResponseBase): Observable<StatusMessageOfObject> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1095,7 +2422,7 @@ export class AccountsClient extends APIBase implements IAccountsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = StatusMessage.fromJS(resultData200);
+            result200 = StatusMessageOfObject.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1106,7 +2433,7 @@ export class AccountsClient extends APIBase implements IAccountsClient {
         return _observableOf(null as any);
     }
 
-    updateAccount(account: Account): Observable<StatusMessage> {
+    updateAccount(account: Account): Observable<StatusMessageOfObject> {
         let url_ = this.baseUrl + "/api/Accounts/UpdateAccount";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1131,14 +2458,14 @@ export class AccountsClient extends APIBase implements IAccountsClient {
                 try {
                     return this.processUpdateAccount(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<StatusMessage>;
+                    return _observableThrow(e) as any as Observable<StatusMessageOfObject>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<StatusMessage>;
+                return _observableThrow(response_) as any as Observable<StatusMessageOfObject>;
         }));
     }
 
-    protected processUpdateAccount(response: HttpResponseBase): Observable<StatusMessage> {
+    protected processUpdateAccount(response: HttpResponseBase): Observable<StatusMessageOfObject> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1149,7 +2476,7 @@ export class AccountsClient extends APIBase implements IAccountsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = StatusMessage.fromJS(resultData200);
+            result200 = StatusMessageOfObject.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1160,7 +2487,7 @@ export class AccountsClient extends APIBase implements IAccountsClient {
         return _observableOf(null as any);
     }
 
-    deleteAccount(id: string): Observable<StatusMessage> {
+    deleteAccount(id: string): Observable<StatusMessageOfObject> {
         let url_ = this.baseUrl + "/api/Accounts/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1184,14 +2511,14 @@ export class AccountsClient extends APIBase implements IAccountsClient {
                 try {
                     return this.processDeleteAccount(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<StatusMessage>;
+                    return _observableThrow(e) as any as Observable<StatusMessageOfObject>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<StatusMessage>;
+                return _observableThrow(response_) as any as Observable<StatusMessageOfObject>;
         }));
     }
 
-    protected processDeleteAccount(response: HttpResponseBase): Observable<StatusMessage> {
+    protected processDeleteAccount(response: HttpResponseBase): Observable<StatusMessageOfObject> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1202,7 +2529,7 @@ export class AccountsClient extends APIBase implements IAccountsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = StatusMessage.fromJS(resultData200);
+            result200 = StatusMessageOfObject.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1216,7 +2543,10 @@ export class AccountsClient extends APIBase implements IAccountsClient {
 
 export interface IMenuPermissionsClient {
     getListMenu(): Observable<SysMenu[]>;
-    getAllListMenus(): Observable<SysMenu>;
+    getListMenuV2(): Observable<SysMenu[]>;
+    listMenuTreeView(): Observable<Sys_Menu_Tree_View_MODEL[]>;
+    listMenuById(p: Sys_Menu_Tree_View_MODEL): Observable<Sys_Menu_Tree_View_MODEL[]>;
+    getAllListMenu(): Observable<SysMenu>;
 }
 
 @Injectable()
@@ -1232,7 +2562,7 @@ export class MenuPermissionsClient extends APIBase implements IMenuPermissionsCl
     }
 
     getListMenu(): Observable<SysMenu[]> {
-        let url_ = this.baseUrl + "/api/MenuPermissions";
+        let url_ = this.baseUrl + "/api/MenuPermissions/list_menu_get";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1288,8 +2618,8 @@ export class MenuPermissionsClient extends APIBase implements IMenuPermissionsCl
         return _observableOf(null as any);
     }
 
-    getAllListMenus(): Observable<SysMenu> {
-        let url_ = this.baseUrl + "/api/MenuPermissions";
+    getListMenuV2(): Observable<SysMenu[]> {
+        let url_ = this.baseUrl + "/api/MenuPermissions/sys_menu_get";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1301,13 +2631,188 @@ export class MenuPermissionsClient extends APIBase implements IMenuPermissionsCl
         };
 
         return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
-            return this.http.request("get", url_, transformedOptions_);
+            return this.http.request("post", url_, transformedOptions_);
         })).pipe(_observableMergeMap((response_: any) => {
-            return this.processGetAllListMenus(response_);
+            return this.processGetListMenuV2(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetAllListMenus(response_ as any);
+                    return this.processGetListMenuV2(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SysMenu[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SysMenu[]>;
+        }));
+    }
+
+    protected processGetListMenuV2(response: HttpResponseBase): Observable<SysMenu[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(SysMenu.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    listMenuTreeView(): Observable<Sys_Menu_Tree_View_MODEL[]> {
+        let url_ = this.baseUrl + "/api/MenuPermissions/list_menu_tree_view";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processListMenuTreeView(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processListMenuTreeView(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Sys_Menu_Tree_View_MODEL[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Sys_Menu_Tree_View_MODEL[]>;
+        }));
+    }
+
+    protected processListMenuTreeView(response: HttpResponseBase): Observable<Sys_Menu_Tree_View_MODEL[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Sys_Menu_Tree_View_MODEL.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    listMenuById(p: Sys_Menu_Tree_View_MODEL): Observable<Sys_Menu_Tree_View_MODEL[]> {
+        let url_ = this.baseUrl + "/api/MenuPermissions/list_menu_by_id";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(p);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processListMenuById(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processListMenuById(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Sys_Menu_Tree_View_MODEL[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Sys_Menu_Tree_View_MODEL[]>;
+        }));
+    }
+
+    protected processListMenuById(response: HttpResponseBase): Observable<Sys_Menu_Tree_View_MODEL[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Sys_Menu_Tree_View_MODEL.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getAllListMenu(): Observable<SysMenu> {
+        let url_ = this.baseUrl + "/api/MenuPermissions/list_menu_get_all";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processGetAllListMenu(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllListMenu(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<SysMenu>;
                 }
@@ -1316,7 +2821,7 @@ export class MenuPermissionsClient extends APIBase implements IMenuPermissionsCl
         }));
     }
 
-    protected processGetAllListMenus(response: HttpResponseBase): Observable<SysMenu> {
+    protected processGetAllListMenu(response: HttpResponseBase): Observable<SysMenu> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1340,8 +2845,8 @@ export class MenuPermissionsClient extends APIBase implements IMenuPermissionsCl
 }
 
 export interface IUserInfoesClient {
-    userIns(userInfo: UserInfo): Observable<StatusMessage>;
-    updUser(userInfo: UserInfo): Observable<StatusMessage>;
+    userIns(userInfo: UserInfo): Observable<StatusMessageOfObject>;
+    updUser(userInfo: UserInfo): Observable<StatusMessageOfObject>;
     getMyUser(): Observable<UserInfo>;
     getLstUser(): Observable<UserInfo[]>;
     getUserInformation(username?: string | null | undefined): Observable<UserInformationClientGetUser>;
@@ -1360,7 +2865,7 @@ export class UserInfoesClient extends APIBase implements IUserInfoesClient {
         this.baseUrl = baseUrl ?? this.getBaseUrl("");
     }
 
-    userIns(userInfo: UserInfo): Observable<StatusMessage> {
+    userIns(userInfo: UserInfo): Observable<StatusMessageOfObject> {
         let url_ = this.baseUrl + "/api/UserInfoes";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1385,14 +2890,14 @@ export class UserInfoesClient extends APIBase implements IUserInfoesClient {
                 try {
                     return this.processUserIns(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<StatusMessage>;
+                    return _observableThrow(e) as any as Observable<StatusMessageOfObject>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<StatusMessage>;
+                return _observableThrow(response_) as any as Observable<StatusMessageOfObject>;
         }));
     }
 
-    protected processUserIns(response: HttpResponseBase): Observable<StatusMessage> {
+    protected processUserIns(response: HttpResponseBase): Observable<StatusMessageOfObject> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1403,7 +2908,7 @@ export class UserInfoesClient extends APIBase implements IUserInfoesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = StatusMessage.fromJS(resultData200);
+            result200 = StatusMessageOfObject.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1414,7 +2919,7 @@ export class UserInfoesClient extends APIBase implements IUserInfoesClient {
         return _observableOf(null as any);
     }
 
-    updUser(userInfo: UserInfo): Observable<StatusMessage> {
+    updUser(userInfo: UserInfo): Observable<StatusMessageOfObject> {
         let url_ = this.baseUrl + "/api/UserInfoes/UpdateUser";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1439,14 +2944,14 @@ export class UserInfoesClient extends APIBase implements IUserInfoesClient {
                 try {
                     return this.processUpdUser(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<StatusMessage>;
+                    return _observableThrow(e) as any as Observable<StatusMessageOfObject>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<StatusMessage>;
+                return _observableThrow(response_) as any as Observable<StatusMessageOfObject>;
         }));
     }
 
-    protected processUpdUser(response: HttpResponseBase): Observable<StatusMessage> {
+    protected processUpdUser(response: HttpResponseBase): Observable<StatusMessageOfObject> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1457,7 +2962,7 @@ export class UserInfoesClient extends APIBase implements IUserInfoesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = StatusMessage.fromJS(resultData200);
+            result200 = StatusMessageOfObject.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1879,6 +3384,1078 @@ export class CommonContronllerClient extends APIBase implements ICommonContronll
     }
 }
 
+export class StatusMessageOfSysAction implements IStatusMessageOfSysAction {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysAction | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfSysAction) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            this.data = _data["data"] ? SysAction.fromJS(_data["data"]) : <any>undefined;
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfSysAction {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfSysAction();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfSysAction {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysAction | undefined;
+    currentID?: string | undefined;
+}
+
+export class SysAction implements ISysAction {
+    code?: string | undefined;
+    nameVn?: string | undefined;
+    nameOther?: string | undefined;
+    icon?: string | undefined;
+    color?: string | undefined;
+    backgroundColor?: string | undefined;
+    isDisable?: boolean | undefined;
+    description?: string | undefined;
+    url_1?: string | undefined;
+    url_2?: string | undefined;
+    url_3?: string | undefined;
+    url_4?: string | undefined;
+    isClocked?: boolean | undefined;
+    codeGroup?: string | undefined;
+    orderNo?: number | undefined;
+
+    constructor(data?: ISysAction) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"];
+            this.nameVn = _data["nameVn"];
+            this.nameOther = _data["nameOther"];
+            this.icon = _data["icon"];
+            this.color = _data["color"];
+            this.backgroundColor = _data["backgroundColor"];
+            this.isDisable = _data["isDisable"];
+            this.description = _data["description"];
+            this.url_1 = _data["url_1"];
+            this.url_2 = _data["url_2"];
+            this.url_3 = _data["url_3"];
+            this.url_4 = _data["url_4"];
+            this.isClocked = _data["isClocked"];
+            this.codeGroup = _data["codeGroup"];
+            this.orderNo = _data["orderNo"];
+        }
+    }
+
+    static fromJS(data: any): SysAction {
+        data = typeof data === 'object' ? data : {};
+        let result = new SysAction();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        data["nameVn"] = this.nameVn;
+        data["nameOther"] = this.nameOther;
+        data["icon"] = this.icon;
+        data["color"] = this.color;
+        data["backgroundColor"] = this.backgroundColor;
+        data["isDisable"] = this.isDisable;
+        data["description"] = this.description;
+        data["url_1"] = this.url_1;
+        data["url_2"] = this.url_2;
+        data["url_3"] = this.url_3;
+        data["url_4"] = this.url_4;
+        data["isClocked"] = this.isClocked;
+        data["codeGroup"] = this.codeGroup;
+        data["orderNo"] = this.orderNo;
+        return data;
+    }
+}
+
+export interface ISysAction {
+    code?: string | undefined;
+    nameVn?: string | undefined;
+    nameOther?: string | undefined;
+    icon?: string | undefined;
+    color?: string | undefined;
+    backgroundColor?: string | undefined;
+    isDisable?: boolean | undefined;
+    description?: string | undefined;
+    url_1?: string | undefined;
+    url_2?: string | undefined;
+    url_3?: string | undefined;
+    url_4?: string | undefined;
+    isClocked?: boolean | undefined;
+    codeGroup?: string | undefined;
+    orderNo?: number | undefined;
+}
+
+export class StatusMessageOfObject implements IStatusMessageOfObject {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: any | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfObject) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            this.data = _data["data"];
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfObject {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfObject();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        data["data"] = this.data;
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfObject {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: any | undefined;
+    currentID?: string | undefined;
+}
+
+export class StatusMessageOfSysDropDownAction implements IStatusMessageOfSysDropDownAction {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysDropDownAction | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfSysDropDownAction) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            this.data = _data["data"] ? SysDropDownAction.fromJS(_data["data"]) : <any>undefined;
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfSysDropDownAction {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfSysDropDownAction();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfSysDropDownAction {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysDropDownAction | undefined;
+    currentID?: string | undefined;
+}
+
+export class SysDropDownAction implements ISysDropDownAction {
+    code?: string | undefined;
+    codeAction?: string | undefined;
+    orderNo?: number | undefined;
+    description?: string | undefined;
+    isClocked?: boolean | undefined;
+
+    constructor(data?: ISysDropDownAction) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"];
+            this.codeAction = _data["codeAction"];
+            this.orderNo = _data["orderNo"];
+            this.description = _data["description"];
+            this.isClocked = _data["isClocked"];
+        }
+    }
+
+    static fromJS(data: any): SysDropDownAction {
+        data = typeof data === 'object' ? data : {};
+        let result = new SysDropDownAction();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        data["codeAction"] = this.codeAction;
+        data["orderNo"] = this.orderNo;
+        data["description"] = this.description;
+        data["isClocked"] = this.isClocked;
+        return data;
+    }
+}
+
+export interface ISysDropDownAction {
+    code?: string | undefined;
+    codeAction?: string | undefined;
+    orderNo?: number | undefined;
+    description?: string | undefined;
+    isClocked?: boolean | undefined;
+}
+
+export class StatusMessageOfListOfSysAction implements IStatusMessageOfListOfSysAction {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysAction[] | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfListOfSysAction) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(SysAction.fromJS(item));
+            }
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfListOfSysAction {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfListOfSysAction();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfListOfSysAction {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysAction[] | undefined;
+    currentID?: string | undefined;
+}
+
+export class SysGroupAction implements ISysGroupAction {
+    code?: string | undefined;
+    codeAction?: string | undefined;
+    orderNo?: number | undefined;
+    description?: string | undefined;
+    isClocked?: boolean | undefined;
+    isDropDown?: boolean | undefined;
+    listChildAction?: SysAction[] | undefined;
+
+    constructor(data?: ISysGroupAction) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"];
+            this.codeAction = _data["codeAction"];
+            this.orderNo = _data["orderNo"];
+            this.description = _data["description"];
+            this.isClocked = _data["isClocked"];
+            this.isDropDown = _data["isDropDown"];
+            if (Array.isArray(_data["listChildAction"])) {
+                this.listChildAction = [] as any;
+                for (let item of _data["listChildAction"])
+                    this.listChildAction!.push(SysAction.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): SysGroupAction {
+        data = typeof data === 'object' ? data : {};
+        let result = new SysGroupAction();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        data["codeAction"] = this.codeAction;
+        data["orderNo"] = this.orderNo;
+        data["description"] = this.description;
+        data["isClocked"] = this.isClocked;
+        data["isDropDown"] = this.isDropDown;
+        if (Array.isArray(this.listChildAction)) {
+            data["listChildAction"] = [];
+            for (let item of this.listChildAction)
+                data["listChildAction"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ISysGroupAction {
+    code?: string | undefined;
+    codeAction?: string | undefined;
+    orderNo?: number | undefined;
+    description?: string | undefined;
+    isClocked?: boolean | undefined;
+    isDropDown?: boolean | undefined;
+    listChildAction?: SysAction[] | undefined;
+}
+
+export class StatusMessageOfSysGenRowTable implements IStatusMessageOfSysGenRowTable {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysGenRowTable | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfSysGenRowTable) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            this.data = _data["data"] ? SysGenRowTable.fromJS(_data["data"]) : <any>undefined;
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfSysGenRowTable {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfSysGenRowTable();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfSysGenRowTable {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysGenRowTable | undefined;
+    currentID?: string | undefined;
+}
+
+export class SysGenRowTable implements ISysGenRowTable {
+    id?: string | undefined;
+    table_name?: string | undefined;
+    dataField?: string | undefined;
+    caption?: string | undefined;
+    caption_VN?: string | undefined;
+    name?: string | undefined;
+    dataType?: string | undefined;
+    format?: string | undefined;
+    width?: number | undefined;
+    visible?: boolean | undefined;
+    minWidth?: number | undefined;
+    alignment?: string | undefined;
+    allowEditing?: boolean | undefined;
+    allowFiltering?: boolean | undefined;
+    allowFixing?: boolean | undefined;
+    allowGrouping?: boolean | undefined;
+    allowHeaderFiltering?: boolean | undefined;
+    allowHiding?: boolean | undefined;
+    allowSearch?: boolean | undefined;
+    allowSorting?: boolean | undefined;
+    autoExpandGroup?: boolean | undefined;
+    columns?: SysGenRowTable[] | undefined;
+    column_child?: string | undefined;
+    cssClass?: string | undefined;
+    create_date?: Date | undefined;
+    update_date?: Date | undefined;
+    companyCode?: string | undefined;
+    orderNo?: number | undefined;
+
+    constructor(data?: ISysGenRowTable) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.table_name = _data["table_name"];
+            this.dataField = _data["dataField"];
+            this.caption = _data["caption"];
+            this.caption_VN = _data["caption_VN"];
+            this.name = _data["name"];
+            this.dataType = _data["dataType"];
+            this.format = _data["format"];
+            this.width = _data["width"];
+            this.visible = _data["visible"];
+            this.minWidth = _data["minWidth"];
+            this.alignment = _data["alignment"];
+            this.allowEditing = _data["allowEditing"];
+            this.allowFiltering = _data["allowFiltering"];
+            this.allowFixing = _data["allowFixing"];
+            this.allowGrouping = _data["allowGrouping"];
+            this.allowHeaderFiltering = _data["allowHeaderFiltering"];
+            this.allowHiding = _data["allowHiding"];
+            this.allowSearch = _data["allowSearch"];
+            this.allowSorting = _data["allowSorting"];
+            this.autoExpandGroup = _data["autoExpandGroup"];
+            if (Array.isArray(_data["columns"])) {
+                this.columns = [] as any;
+                for (let item of _data["columns"])
+                    this.columns!.push(SysGenRowTable.fromJS(item));
+            }
+            this.column_child = _data["column_child"];
+            this.cssClass = _data["cssClass"];
+            this.create_date = _data["create_date"] ? new Date(_data["create_date"].toString()) : <any>undefined;
+            this.update_date = _data["update_date"] ? new Date(_data["update_date"].toString()) : <any>undefined;
+            this.companyCode = _data["companyCode"];
+            this.orderNo = _data["orderNo"];
+        }
+    }
+
+    static fromJS(data: any): SysGenRowTable {
+        data = typeof data === 'object' ? data : {};
+        let result = new SysGenRowTable();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["table_name"] = this.table_name;
+        data["dataField"] = this.dataField;
+        data["caption"] = this.caption;
+        data["caption_VN"] = this.caption_VN;
+        data["name"] = this.name;
+        data["dataType"] = this.dataType;
+        data["format"] = this.format;
+        data["width"] = this.width;
+        data["visible"] = this.visible;
+        data["minWidth"] = this.minWidth;
+        data["alignment"] = this.alignment;
+        data["allowEditing"] = this.allowEditing;
+        data["allowFiltering"] = this.allowFiltering;
+        data["allowFixing"] = this.allowFixing;
+        data["allowGrouping"] = this.allowGrouping;
+        data["allowHeaderFiltering"] = this.allowHeaderFiltering;
+        data["allowHiding"] = this.allowHiding;
+        data["allowSearch"] = this.allowSearch;
+        data["allowSorting"] = this.allowSorting;
+        data["autoExpandGroup"] = this.autoExpandGroup;
+        if (Array.isArray(this.columns)) {
+            data["columns"] = [];
+            for (let item of this.columns)
+                data["columns"].push(item.toJSON());
+        }
+        data["column_child"] = this.column_child;
+        data["cssClass"] = this.cssClass;
+        data["create_date"] = this.create_date ? this.create_date.toISOString() : <any>undefined;
+        data["update_date"] = this.update_date ? this.update_date.toISOString() : <any>undefined;
+        data["companyCode"] = this.companyCode;
+        data["orderNo"] = this.orderNo;
+        return data;
+    }
+}
+
+export interface ISysGenRowTable {
+    id?: string | undefined;
+    table_name?: string | undefined;
+    dataField?: string | undefined;
+    caption?: string | undefined;
+    caption_VN?: string | undefined;
+    name?: string | undefined;
+    dataType?: string | undefined;
+    format?: string | undefined;
+    width?: number | undefined;
+    visible?: boolean | undefined;
+    minWidth?: number | undefined;
+    alignment?: string | undefined;
+    allowEditing?: boolean | undefined;
+    allowFiltering?: boolean | undefined;
+    allowFixing?: boolean | undefined;
+    allowGrouping?: boolean | undefined;
+    allowHeaderFiltering?: boolean | undefined;
+    allowHiding?: boolean | undefined;
+    allowSearch?: boolean | undefined;
+    allowSorting?: boolean | undefined;
+    autoExpandGroup?: boolean | undefined;
+    columns?: SysGenRowTable[] | undefined;
+    column_child?: string | undefined;
+    cssClass?: string | undefined;
+    create_date?: Date | undefined;
+    update_date?: Date | undefined;
+    companyCode?: string | undefined;
+    orderNo?: number | undefined;
+}
+
+export class StatusMessageOfListOfSysGenRowTable implements IStatusMessageOfListOfSysGenRowTable {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysGenRowTable[] | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfListOfSysGenRowTable) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(SysGenRowTable.fromJS(item));
+            }
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfListOfSysGenRowTable {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfListOfSysGenRowTable();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfListOfSysGenRowTable {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysGenRowTable[] | undefined;
+    currentID?: string | undefined;
+}
+
+export class StatusMessageOfSysVoucherFormColumn implements IStatusMessageOfSysVoucherFormColumn {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysVoucherFormColumn | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfSysVoucherFormColumn) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            this.data = _data["data"] ? SysVoucherFormColumn.fromJS(_data["data"]) : <any>undefined;
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfSysVoucherFormColumn {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfSysVoucherFormColumn();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfSysVoucherFormColumn {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysVoucherFormColumn | undefined;
+    currentID?: string | undefined;
+}
+
+export class SysVoucherFormColumn implements ISysVoucherFormColumn {
+    id?: string | undefined;
+    table_name?: string | undefined;
+    code?: string | undefined;
+    labelModel?: string | undefined;
+    edit?: boolean | undefined;
+    labelControl?: string | undefined;
+    labelRequired?: boolean | undefined;
+    visible?: boolean | undefined;
+    disabled?: boolean | undefined;
+    readOnly?: boolean | undefined;
+    required?: boolean | undefined;
+    showClearButton?: boolean | undefined;
+    label?: string | undefined;
+    placeholder?: string | undefined;
+    mode?: string | undefined;
+    mask?: string | undefined;
+    maskRules?: string | undefined;
+    groupId?: string | undefined;
+    create_date?: Date | undefined;
+    update_date?: Date | undefined;
+    companyCode?: string | undefined;
+    createBy?: string | undefined;
+    typeControl?: string | undefined;
+    format?: string | undefined;
+
+    constructor(data?: ISysVoucherFormColumn) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.table_name = _data["table_name"];
+            this.code = _data["code"];
+            this.labelModel = _data["labelModel"];
+            this.edit = _data["edit"];
+            this.labelControl = _data["labelControl"];
+            this.labelRequired = _data["labelRequired"];
+            this.visible = _data["visible"];
+            this.disabled = _data["disabled"];
+            this.readOnly = _data["readOnly"];
+            this.required = _data["required"];
+            this.showClearButton = _data["showClearButton"];
+            this.label = _data["label"];
+            this.placeholder = _data["placeholder"];
+            this.mode = _data["mode"];
+            this.mask = _data["mask"];
+            this.maskRules = _data["maskRules"];
+            this.groupId = _data["groupId"];
+            this.create_date = _data["create_date"] ? new Date(_data["create_date"].toString()) : <any>undefined;
+            this.update_date = _data["update_date"] ? new Date(_data["update_date"].toString()) : <any>undefined;
+            this.companyCode = _data["companyCode"];
+            this.createBy = _data["createBy"];
+            this.typeControl = _data["typeControl"];
+            this.format = _data["format"];
+        }
+    }
+
+    static fromJS(data: any): SysVoucherFormColumn {
+        data = typeof data === 'object' ? data : {};
+        let result = new SysVoucherFormColumn();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["table_name"] = this.table_name;
+        data["code"] = this.code;
+        data["labelModel"] = this.labelModel;
+        data["edit"] = this.edit;
+        data["labelControl"] = this.labelControl;
+        data["labelRequired"] = this.labelRequired;
+        data["visible"] = this.visible;
+        data["disabled"] = this.disabled;
+        data["readOnly"] = this.readOnly;
+        data["required"] = this.required;
+        data["showClearButton"] = this.showClearButton;
+        data["label"] = this.label;
+        data["placeholder"] = this.placeholder;
+        data["mode"] = this.mode;
+        data["mask"] = this.mask;
+        data["maskRules"] = this.maskRules;
+        data["groupId"] = this.groupId;
+        data["create_date"] = this.create_date ? this.create_date.toISOString() : <any>undefined;
+        data["update_date"] = this.update_date ? this.update_date.toISOString() : <any>undefined;
+        data["companyCode"] = this.companyCode;
+        data["createBy"] = this.createBy;
+        data["typeControl"] = this.typeControl;
+        data["format"] = this.format;
+        return data;
+    }
+}
+
+export interface ISysVoucherFormColumn {
+    id?: string | undefined;
+    table_name?: string | undefined;
+    code?: string | undefined;
+    labelModel?: string | undefined;
+    edit?: boolean | undefined;
+    labelControl?: string | undefined;
+    labelRequired?: boolean | undefined;
+    visible?: boolean | undefined;
+    disabled?: boolean | undefined;
+    readOnly?: boolean | undefined;
+    required?: boolean | undefined;
+    showClearButton?: boolean | undefined;
+    label?: string | undefined;
+    placeholder?: string | undefined;
+    mode?: string | undefined;
+    mask?: string | undefined;
+    maskRules?: string | undefined;
+    groupId?: string | undefined;
+    create_date?: Date | undefined;
+    update_date?: Date | undefined;
+    companyCode?: string | undefined;
+    createBy?: string | undefined;
+    typeControl?: string | undefined;
+    format?: string | undefined;
+}
+
+export class StatusMessageOfListOfSysVoucherFormColumn implements IStatusMessageOfListOfSysVoucherFormColumn {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysVoucherFormColumn[] | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfListOfSysVoucherFormColumn) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(SysVoucherFormColumn.fromJS(item));
+            }
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfListOfSysVoucherFormColumn {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfListOfSysVoucherFormColumn();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfListOfSysVoucherFormColumn {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysVoucherFormColumn[] | undefined;
+    currentID?: string | undefined;
+}
+
+export class StatusMessageOfSysVoucherFormGroup implements IStatusMessageOfSysVoucherFormGroup {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysVoucherFormGroup | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfSysVoucherFormGroup) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            this.data = _data["data"] ? SysVoucherFormGroup.fromJS(_data["data"]) : <any>undefined;
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfSysVoucherFormGroup {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfSysVoucherFormGroup();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfSysVoucherFormGroup {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysVoucherFormGroup | undefined;
+    currentID?: string | undefined;
+}
+
+export class SysVoucherFormGroup implements ISysVoucherFormGroup {
+    id?: string | undefined;
+    table_name?: string | undefined;
+    code?: string | undefined;
+    name?: string | undefined;
+    number_order?: number | undefined;
+    group_id?: string | undefined;
+    create_date?: Date | undefined;
+    update_date?: Date | undefined;
+    companyCode?: string | undefined;
+
+    constructor(data?: ISysVoucherFormGroup) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.table_name = _data["table_name"];
+            this.code = _data["code"];
+            this.name = _data["name"];
+            this.number_order = _data["number_order"];
+            this.group_id = _data["group_id"];
+            this.create_date = _data["create_date"] ? new Date(_data["create_date"].toString()) : <any>undefined;
+            this.update_date = _data["update_date"] ? new Date(_data["update_date"].toString()) : <any>undefined;
+            this.companyCode = _data["companyCode"];
+        }
+    }
+
+    static fromJS(data: any): SysVoucherFormGroup {
+        data = typeof data === 'object' ? data : {};
+        let result = new SysVoucherFormGroup();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["table_name"] = this.table_name;
+        data["code"] = this.code;
+        data["name"] = this.name;
+        data["number_order"] = this.number_order;
+        data["group_id"] = this.group_id;
+        data["create_date"] = this.create_date ? this.create_date.toISOString() : <any>undefined;
+        data["update_date"] = this.update_date ? this.update_date.toISOString() : <any>undefined;
+        data["companyCode"] = this.companyCode;
+        return data;
+    }
+}
+
+export interface ISysVoucherFormGroup {
+    id?: string | undefined;
+    table_name?: string | undefined;
+    code?: string | undefined;
+    name?: string | undefined;
+    number_order?: number | undefined;
+    group_id?: string | undefined;
+    create_date?: Date | undefined;
+    update_date?: Date | undefined;
+    companyCode?: string | undefined;
+}
+
+export class StatusMessageOfListOfSysVoucherFormGroup implements IStatusMessageOfListOfSysVoucherFormGroup {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysVoucherFormGroup[] | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfListOfSysVoucherFormGroup) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(SysVoucherFormGroup.fromJS(item));
+            }
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfListOfSysVoucherFormGroup {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfListOfSysVoucherFormGroup();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfListOfSysVoucherFormGroup {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: SysVoucherFormGroup[] | undefined;
+    currentID?: string | undefined;
+}
+
 export class CurrentJobPosition implements ICurrentJobPosition {
     id?: string | undefined;
     date?: Date | undefined;
@@ -1935,13 +4512,6 @@ export class CurrentJobPosition implements ICurrentJobPosition {
         data["currentProjects"] = this.currentProjects;
         data["goalsAndDevelopment"] = this.goalsAndDevelopment;
         return data;
-    }
-
-    clone(): CurrentJobPosition {
-        const json = this.toJSON();
-        let result = new CurrentJobPosition();
-        result.init(json);
-        return result;
     }
 }
 
@@ -2057,13 +4627,6 @@ export class SalaryAndBenefits implements ISalaryAndBenefits {
         data["allowancesAndAids3"] = this.allowancesAndAids3;
         return data;
     }
-
-    clone(): SalaryAndBenefits {
-        const json = this.toJSON();
-        let result = new SalaryAndBenefits();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ISalaryAndBenefits {
@@ -2153,13 +4716,6 @@ export class WorkHistory implements IWorkHistory {
         data["reasonForChange"] = this.reasonForChange;
         return data;
     }
-
-    clone(): WorkHistory {
-        const json = this.toJSON();
-        let result = new WorkHistory();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IWorkHistory {
@@ -2176,64 +4732,9 @@ export interface IWorkHistory {
     reasonForChange?: string | undefined;
 }
 
-export class StatusMessage implements IStatusMessage {
-    status?: number | undefined;
-    msg?: string | undefined;
-    data?: any | undefined;
-    currentID?: string | undefined;
-
-    constructor(data?: IStatusMessage) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.status = _data["status"];
-            this.msg = _data["msg"];
-            this.data = _data["data"];
-            this.currentID = _data["currentID"];
-        }
-    }
-
-    static fromJS(data: any): StatusMessage {
-        data = typeof data === 'object' ? data : {};
-        let result = new StatusMessage();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["status"] = this.status;
-        data["msg"] = this.msg;
-        data["data"] = this.data;
-        data["currentID"] = this.currentID;
-        return data;
-    }
-
-    clone(): StatusMessage {
-        const json = this.toJSON();
-        let result = new StatusMessage();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IStatusMessage {
-    status?: number | undefined;
-    msg?: string | undefined;
-    data?: any | undefined;
-    currentID?: string | undefined;
-}
-
 export class AccountClientLoginParamsModel implements IAccountClientLoginParamsModel {
-    account?: string;
-    password?: string;
+    account?: string | undefined;
+    password?: string | undefined;
     email?: string | undefined;
     phone?: string | undefined;
     companyCode?: string | undefined;
@@ -2318,18 +4819,11 @@ export class AccountClientLoginParamsModel implements IAccountClientLoginParamsM
         data["longitude"] = this.longitude;
         return data;
     }
-
-    clone(): AccountClientLoginParamsModel {
-        const json = this.toJSON();
-        let result = new AccountClientLoginParamsModel();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IAccountClientLoginParamsModel {
-    account?: string;
-    password?: string;
+    account?: string | undefined;
+    password?: string | undefined;
     email?: string | undefined;
     phone?: string | undefined;
     companyCode?: string | undefined;
@@ -2386,13 +4880,6 @@ export class AccountClientProfileModel implements IAccountClientProfileModel {
         data["token"] = this.token ? this.token.toJSON() : <any>undefined;
         return data;
     }
-
-    clone(): AccountClientProfileModel {
-        const json = this.toJSON();
-        let result = new AccountClientProfileModel();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IAccountClientProfileModel {
@@ -2412,6 +4899,7 @@ export class Account implements IAccount {
     codePermision?: string | undefined;
     companyCode?: string | undefined;
     namePermision?: string | undefined;
+    language?: string | undefined;
 
     constructor(data?: IAccount) {
         if (data) {
@@ -2434,6 +4922,7 @@ export class Account implements IAccount {
             this.codePermision = _data["codePermision"];
             this.companyCode = _data["companyCode"];
             this.namePermision = _data["namePermision"];
+            this.language = _data["language"];
         }
     }
 
@@ -2456,14 +4945,8 @@ export class Account implements IAccount {
         data["codePermision"] = this.codePermision;
         data["companyCode"] = this.companyCode;
         data["namePermision"] = this.namePermision;
+        data["language"] = this.language;
         return data;
-    }
-
-    clone(): Account {
-        const json = this.toJSON();
-        let result = new Account();
-        result.init(json);
-        return result;
     }
 }
 
@@ -2478,6 +4961,7 @@ export interface IAccount {
     codePermision?: string | undefined;
     companyCode?: string | undefined;
     namePermision?: string | undefined;
+    language?: string | undefined;
 }
 
 export class UserInfo implements IUserInfo {
@@ -2560,13 +5044,6 @@ export class UserInfo implements IUserInfo {
         data["avatar32"] = this.avatar32;
         data["avatar64"] = this.avatar64;
         return data;
-    }
-
-    clone(): UserInfo {
-        const json = this.toJSON();
-        let result = new UserInfo();
-        result.init(json);
-        return result;
     }
 }
 
@@ -2687,13 +5164,6 @@ export class TOKEN implements ITOKEN {
         data["connectionSignalID"] = this.connectionSignalID;
         return data;
     }
-
-    clone(): TOKEN {
-        const json = this.toJSON();
-        let result = new TOKEN();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ITOKEN {
@@ -2726,11 +5196,20 @@ export class SysMenu implements ISysMenu {
     menuid?: string | undefined;
     url?: string | undefined;
     name?: string | undefined;
+    nameVN?: string | undefined;
+    icon?: string | undefined;
     active?: boolean | undefined;
     isParent?: boolean | undefined;
     menuIDParent?: string | undefined;
     defaultActive?: boolean | undefined;
     moduleApp?: string | undefined;
+    action1?: string | undefined;
+    action2?: string | undefined;
+    action3?: string | undefined;
+    action4?: string | undefined;
+    action5?: string | undefined;
+    action6?: string | undefined;
+    action7?: string | undefined;
 
     constructor(data?: ISysMenu) {
         if (data) {
@@ -2746,11 +5225,20 @@ export class SysMenu implements ISysMenu {
             this.menuid = _data["menuid"];
             this.url = _data["url"];
             this.name = _data["name"];
+            this.nameVN = _data["nameVN"];
+            this.icon = _data["icon"];
             this.active = _data["active"];
             this.isParent = _data["isParent"];
             this.menuIDParent = _data["menuIDParent"];
             this.defaultActive = _data["defaultActive"];
             this.moduleApp = _data["moduleApp"];
+            this.action1 = _data["action1"];
+            this.action2 = _data["action2"];
+            this.action3 = _data["action3"];
+            this.action4 = _data["action4"];
+            this.action5 = _data["action5"];
+            this.action6 = _data["action6"];
+            this.action7 = _data["action7"];
         }
     }
 
@@ -2766,19 +5254,21 @@ export class SysMenu implements ISysMenu {
         data["menuid"] = this.menuid;
         data["url"] = this.url;
         data["name"] = this.name;
+        data["nameVN"] = this.nameVN;
+        data["icon"] = this.icon;
         data["active"] = this.active;
         data["isParent"] = this.isParent;
         data["menuIDParent"] = this.menuIDParent;
         data["defaultActive"] = this.defaultActive;
         data["moduleApp"] = this.moduleApp;
+        data["action1"] = this.action1;
+        data["action2"] = this.action2;
+        data["action3"] = this.action3;
+        data["action4"] = this.action4;
+        data["action5"] = this.action5;
+        data["action6"] = this.action6;
+        data["action7"] = this.action7;
         return data;
-    }
-
-    clone(): SysMenu {
-        const json = this.toJSON();
-        let result = new SysMenu();
-        result.init(json);
-        return result;
     }
 }
 
@@ -2786,11 +5276,73 @@ export interface ISysMenu {
     menuid?: string | undefined;
     url?: string | undefined;
     name?: string | undefined;
+    nameVN?: string | undefined;
+    icon?: string | undefined;
     active?: boolean | undefined;
     isParent?: boolean | undefined;
     menuIDParent?: string | undefined;
     defaultActive?: boolean | undefined;
     moduleApp?: string | undefined;
+    action1?: string | undefined;
+    action2?: string | undefined;
+    action3?: string | undefined;
+    action4?: string | undefined;
+    action5?: string | undefined;
+    action6?: string | undefined;
+    action7?: string | undefined;
+}
+
+export class Sys_Menu_Tree_View_MODEL extends SysMenu implements ISys_Menu_Tree_View_MODEL {
+    items?: Sys_Menu_Tree_View_MODEL[] | undefined;
+    expanded?: boolean | undefined;
+    selected?: boolean | undefined;
+    account?: string | undefined;
+
+    constructor(data?: ISys_Menu_Tree_View_MODEL) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(Sys_Menu_Tree_View_MODEL.fromJS(item));
+            }
+            this.expanded = _data["expanded"];
+            this.selected = _data["selected"];
+            this.account = _data["account"];
+        }
+    }
+
+    static override fromJS(data: any): Sys_Menu_Tree_View_MODEL {
+        data = typeof data === 'object' ? data : {};
+        let result = new Sys_Menu_Tree_View_MODEL();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["expanded"] = this.expanded;
+        data["selected"] = this.selected;
+        data["account"] = this.account;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface ISys_Menu_Tree_View_MODEL extends ISysMenu {
+    items?: Sys_Menu_Tree_View_MODEL[] | undefined;
+    expanded?: boolean | undefined;
+    selected?: boolean | undefined;
+    account?: string | undefined;
 }
 
 export class UserInformationClientGetUser implements IUserInformationClientGetUser {
@@ -2818,7 +5370,7 @@ export class UserInformationClientGetUser implements IUserInformationClientGetUs
     nameBrach?: string | undefined;
     codeDepartment?: string | undefined;
     codeName?: string | undefined;
-    tokens?: TOKEN[];
+    tokens?: TOKEN[] | undefined;
 
     constructor(data?: IUserInformationClientGetUser) {
         if (data) {
@@ -2903,13 +5455,6 @@ export class UserInformationClientGetUser implements IUserInformationClientGetUs
         }
         return data;
     }
-
-    clone(): UserInformationClientGetUser {
-        const json = this.toJSON();
-        let result = new UserInformationClientGetUser();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IUserInformationClientGetUser {
@@ -2937,7 +5482,7 @@ export interface IUserInformationClientGetUser {
     nameBrach?: string | undefined;
     codeDepartment?: string | undefined;
     codeName?: string | undefined;
-    tokens?: TOKEN[];
+    tokens?: TOKEN[] | undefined;
 }
 
 export class Company implements ICompany {
@@ -2991,13 +5536,6 @@ export class Company implements ICompany {
         data["notes"] = this.notes;
         return data;
     }
-
-    clone(): Company {
-        const json = this.toJSON();
-        let result = new Company();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ICompany {
@@ -3050,13 +5588,6 @@ export class SysStatus implements ISysStatus {
         data["accept_login"] = this.accept_login;
         return data;
     }
-
-    clone(): SysStatus {
-        const json = this.toJSON();
-        let result = new SysStatus();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ISysStatus {
@@ -3107,13 +5638,6 @@ export class SysPermission implements ISysPermission {
         data["order_number"] = this.order_number;
         data["codeCompany"] = this.codeCompany;
         return data;
-    }
-
-    clone(): SysPermission {
-        const json = this.toJSON();
-        let result = new SysPermission();
-        result.init(json);
-        return result;
     }
 }
 

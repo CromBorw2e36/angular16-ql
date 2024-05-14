@@ -33,13 +33,17 @@
             "styles": [
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "node_modules/devextreme/dist/css/dx.light.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/assets/css/styles.scss"
             ],
             "scripts": [
               "node_modules/face-api.js/dist/face-api.js"
             ],
             "serviceWorker": true,
-            "ngswConfigPath": "ngsw-config.json"
+            "ngswConfigPath": "ngsw-config.json",
+            "allowedCommonJsDependencies": [
+              "moment"
+           ]
           },
           "configurations": {
             "production": {

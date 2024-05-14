@@ -24,5 +24,5 @@ export class LoadPanelDevextremeComponent implements OnChanges {
       }
     }
   }
-  @Input() InputMaster: boolean = false;
+  @Input() InputMaster: boolean = !false;
 }

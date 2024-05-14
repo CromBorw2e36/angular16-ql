@@ -1,0 +1,54 @@
+<dx-tree-view
+  *ngIf="propertiedTreeView"
+  #dxTreeViewComponent
+  [id]="id"
+  [dataSource]="InputMaster"
+  [keyExpr]="propertiedTreeView.keyExpr!"
+  [parentIdExpr]="propertiedTreeView.parentIdExpr!"
+  [hasItemsExpr]="propertiedTreeView.hasItemsExpr!"
+  [width]="propertiedTreeView.width!"
+  [height]="propertiedTreeView.height!"
+  (onItemClick)="handleItemClick($event)"
+  [itemTemplate]="propertiedTreeView.itemTemplate"
+  (onItemContextMenu)="treeViewItemContextMenu($event)"
+  [selectionMode]="'single'"
+  [selectByClick]="true"
+  [focusStateEnabled]="false"
+  [activeStateEnabled]="true"
+>
+  <div *dxTemplate="let itemData of 'item-icon'; let index = index">
+    <div class="item-template-container">
+      <div class="item-template-title">
+        <span
+          *ngIf="itemData?.icon"
+          [ngClass]="itemData.icon"
+          class="dx-icon"
+        ></span>
+        <span class="dx-menu-item-text">{{ itemData.text }}</span>
+      </div>
+      <!-- <div
+        class="item-template-option-button dx-treeview-item-overflow"
+        *ngIf="inputContextMenu?.length !== 0"
+      >
+        <span class="dx-icon dx-icon-overflow"></span>
+      </div> -->
+    </div>
+  </div>
+  <!-- For menu item -->
+  <div *dxTemplate="let itemData of 'item-menu'; let index = index">
+    <div class="item-menu-card" [id]="itemData.menuid">
+      <div class="item-menu-title">
+        <span
+          *ngIf="itemData?.icon"
+          [ngClass]="itemData.icon"
+          class="dx-icon"
+        ></span>
+        <span class="item-menu-title-text">{{ itemData.name }}</span>
+      </div>
+    </div>
+  </div>
+</dx-tree-view>
+
+<!-- Need Property tree view component  -->
+
+<div *ngIf="!propertiedTreeView">Need Property tree view component</div>

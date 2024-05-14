@@ -1,0 +1,20 @@
+.form-control {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+
+  .form-title {
+    width: 100%;
+    min-width: min-content;
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .control-input {
+    width: calc(100% / 3 - 10px);
+    margin-right: 10px;
+    margin-top: 10px;
+  }
+}

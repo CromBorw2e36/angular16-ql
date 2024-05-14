@@ -1,0 +1,33 @@
+<dx-data-grid
+  #dxDataGridComponent
+  [dataSource]="dataSource"
+  (onRowClick)="onRowClick.emit($event)"
+  (onRowDblClick)="onRowDblClick.emit($event)"
+  [focusedRowEnabled]="true"
+  [wordWrapEnabled]="true"
+  [hoverStateEnabled]="true"
+  [activeStateEnabled]="true"
+>
+  <dxi-column
+    *ngFor="let item of columns; let i = index"
+    [dataField]="item.dataField"
+    [caption]="item.caption"
+    [dataType]="item.dataType"
+    [width]="item.width"
+    [alignment]="item.alignment"
+    [visible]="item.visible"
+    [allowSorting]="item.allowSorting"
+    [allowFiltering]="item.allowFiltering"
+    [allowHiding]="item.allowHiding"
+    [allowResizing]="item.allowResizing"
+    [allowReordering]="item.allowReordering"
+    [allowGrouping]="item.allowGrouping"
+    [groupIndex]="item.groupIndex"
+    [fixed]="item.fixed"
+    [fixedPosition]="item.fixedPosition"
+    [sortOrder]="item.sortOrder"
+    [sortIndex]="item.sortIndex"
+    [filterValue]="item.filterValue"
+    [type]="item.type"
+  ></dxi-column>
+</dx-data-grid>

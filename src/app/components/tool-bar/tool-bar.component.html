@@ -1,0 +1,39 @@
+<!-- <dx-button
+  *ngFor="let item of dataSource; let i = index"
+  stylingMode="text"
+  [text]="getTextTranslate(item)"
+  type="normal"
+  [width]="120"
+  [disabled]="item.isDisable ?? false"
+>
+</dx-button> -->
+
+<div id="tool_bar_component" class="toolbar-container">
+  <button
+    class="toolbar-btn-icon-text"
+    mat-button
+    color="primary"
+    *ngFor="let item of dataSource; let i = index"
+    data-bs-toggle="tooltip"
+    data-bs-placement="top"
+    title="{{ item.description ?? '' }}"
+    style="min-width: 120px"
+    (click)="handleClick($event, item)"
+  >
+    <mat-icon *ngIf="item.icon">{{ item.icon }}</mat-icon>
+    <span class="toolbar-name">{{ getTextTranslate(item) }}</span>
+  </button>
+
+  <button
+    class="toolbar-btn-icon"
+    *ngFor="let item of dataSource; let i = index"
+    mat-icon-button
+    color="primary"
+    data-bs-toggle="tooltip"
+    data-bs-placement="top"
+    title="{{ item.description ?? '' }}"
+    (click)="handleClick($event, item)"
+  >
+    <mat-icon>{{ item.icon ?? "help" }}</mat-icon>
+  </button>
+</div>
