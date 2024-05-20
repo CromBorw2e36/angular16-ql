@@ -148,9 +148,8 @@ export class LoginFormComponent extends LayoutComponentBase implements OnInit, O
             const data: Account = res.data.account as Account;
             const user: UserInfo = res.data.user as UserInfo;
             this.cookieService.set('TOKEN', data.token ?? '', this.expireTime);
-            localStorage.removeItem('userInfo');
+            this.setUserInfo({ ...data, ...user } as any);
             this.sysLogin.removeIsTypeSwitchLogin();
-            localStorage.setItem('userInfo', JSON.stringify({ ...data, ...user }));
             this.sysLogin.setLogin(true); // Đăng nhập thành công
             this.showMessageSuccess(res.msg);
           } else {
@@ -164,12 +163,12 @@ export class LoginFormComponent extends LayoutComponentBase implements OnInit, O
               'Try connect again'
             )
           );
-      this.showCursorLoading()
-      this.isLoading = false;
+          this.showCursorLoading()
+          this.isLoading = false;
         },
         () => {
-      this.showCursorLoading()
-      this.isLoading = false;
+          this.showCursorLoading()
+          this.isLoading = false;
         }
       );
   }

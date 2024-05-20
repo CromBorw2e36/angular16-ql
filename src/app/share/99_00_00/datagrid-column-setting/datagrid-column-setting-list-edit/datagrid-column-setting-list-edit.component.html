@@ -6,7 +6,7 @@
   [action]="typeAction"
 >
   <div class="form-control">
-    <div class="form-title">{{translate('Cấu hình', 'Config')}}</div>
+    <div class="form-title">{{ translate("Cấu hình", "Config") }}</div>
     <!-- table_name -->
     <div class="control-input">
       <control-text-box-component
@@ -45,16 +45,6 @@
         [(value)]="InputMaster.dataType"
       ></control-select-box-component>
     </div>
-    <!-- format -->
-    <div class="control-input">
-      <control-select-box-component
-        [dataSource]="getDataSourceByKey('format')"
-        [displayExpr]="'name'"
-        [valueExpr]="'code'"
-        [label]="getColumnNameByCode('format')"
-        [(value)]="InputMaster.format"
-      ></control-select-box-component>
-    </div>
     <!-- visible -->
     <div class="control-input">
       <control-check-box-component
@@ -90,7 +80,7 @@
     </div>
   </div>
   <div class="form-control">
-    <div class="form-title">{{translate('Kích thước', 'Weight/Height')}}</div>
+    <div class="form-title">{{ translate("Kích thước", "Weight/Height") }}</div>
     <!-- width -->
     <div class="control-input">
       <control-number-box-component
@@ -108,7 +98,40 @@
     </div>
   </div>
   <div class="form-control">
-    <div class="form-title">{{translate('Thuộc tính', 'AD')}}</div>
+    <div class="form-title">{{ translate("Format display", "Format display") }}</div>
+    <!-- format -->
+    <div class="control-input">
+      <control-select-box-component
+        [dataSource]="getDataSourceByKey('format')"
+        [displayExpr]="'name'"
+        [valueExpr]="'code'"
+        [label]="getColumnNameByCode('format')"
+        [(value)]="InputMaster.format"
+      ></control-select-box-component>
+    </div>
+    <!-- format -->
+    <!-- <div class="control-input">
+      <control-select-box-component
+        [dataSource]="getDataSourceByKey('type')"
+        [displayExpr]="'name'"
+        [valueExpr]="'code'"
+        [label]="getColumnNameByCode('type')"
+        [(value)]="InputMaster.type"
+      ></control-select-box-component>
+    </div> -->
+    <!-- displayFormat -->
+    <!-- <div class="control-input">
+      <control-select-box-component
+        [dataSource]="getDataSourceByKey('displayFormat')"
+        [displayExpr]="'name'"
+        [valueExpr]="'code'"
+        [label]="getColumnNameByCode('displayFormat')"
+        [(value)]="InputMaster.displayFormat"
+      ></control-select-box-component>
+    </div> -->
+  </div>
+  <div class="form-control">
+    <div class="form-title">{{ translate("Thuộc tính", "AD") }}</div>
     <!-- allowEditing -->
     <div class="control-input">
       <control-check-box-component
@@ -174,7 +197,7 @@
     </div>
   </div>
   <div class="form-control">
-    <div class="form-title">{{translate('Khác', 'More')}}</div>
+    <div class="form-title">{{ translate("Khác", "More") }}</div>
     <!-- column_child -->
     <div class="control-input">
       <control-text-box-component

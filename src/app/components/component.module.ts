@@ -10,10 +10,12 @@ import { CookieService } from 'ngx-cookie-service';
 import { ConfigServerService } from '../system/server/config/config-server.service';
 import {
   AccountsClient,
+  CommonContronllerClient,
   MenuPermissionsClient,
   SysActionClient,
   SysGenRowTablesClient,
   SysGroupAction,
+  SysVoucherFormClient,
 } from '../system/server/api_share';
 import { SysLoginService } from '../system/service/sys-login/sys-login.service';
 import { MatMenuModule } from '@angular/material/menu';
@@ -37,8 +39,16 @@ import { BreadcrumbComponent } from './common/breadcrumb/breadcrumb.component';
 import { PopupComponent } from './js-devextreme/popup/popup.component';
 import dxScrollView from 'devextreme/ui/scroll_view';
 import { SelectBoxComponent } from './js-devextreme/editor/select-box/select-box.component';
+import { VoucherFormColItemComponent } from './form/voucher-form/voucher-form-col-item/voucher-form-col-item.component';
+import { VoucherFormGroupItemComponent } from './form/voucher-form/voucher-form-group-item/voucher-form-group-item.component';
+import { VoucherFormComponent } from './form/voucher-form/voucher-form/voucher-form.component';
+import { FileUploaderComponent } from './editor/file-uploader/file-uploader.component';
+import { NgxBootstrapIconsModule, box, folder2 } from 'ngx-bootstrap-icons';
 
-
+const icons = {
+  box,
+  folder2
+};
 @NgModule({
   declarations: [
     LoadPanelDevextremeComponent,
@@ -58,6 +68,10 @@ import { SelectBoxComponent } from './js-devextreme/editor/select-box/select-box
     BreadcrumbComponent,
     PopupComponent,
     SelectBoxComponent,
+    VoucherFormColItemComponent,
+    VoucherFormGroupItemComponent,
+    VoucherFormComponent,
+    FileUploaderComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -83,6 +97,7 @@ import { SelectBoxComponent } from './js-devextreme/editor/select-box/select-box
     DxPopupModule,
     DxScrollViewModule,
     DxSelectBoxModule,
+    NgxBootstrapIconsModule.pick(icons)
   ],
   providers: [
     CookieService,
@@ -92,6 +107,8 @@ import { SelectBoxComponent } from './js-devextreme/editor/select-box/select-box
     SysLoginService,
     SysGenRowTablesClient,
     SysActionClient,
+    SysVoucherFormClient,
+    CommonContronllerClient
   ],
   exports: [
     LoadPanelDevextremeComponent,
@@ -109,6 +126,7 @@ import { SelectBoxComponent } from './js-devextreme/editor/select-box/select-box
     ToolBarComponent,
     BreadcrumbComponent,
     PopupComponent,
+    VoucherFormComponent,
   ],
 })
 export class ComponentModule { }

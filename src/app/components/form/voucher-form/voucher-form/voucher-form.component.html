@@ -1,0 +1,53 @@
+<div
+  class="form-control-v2"
+  style="background-color: none !important"
+  *ngIf="
+    dataSourceVoucherFormGroup.length == 0 &&
+    dataSourceVoucherFormColumns.length > 0
+  "
+>
+  <div
+    class="control-input"
+    *ngFor="
+      let itemVoucherFormCol of dataSourceVoucherFormColumns;
+      let i = index;
+      trackBy: trackByFunc
+    "
+  >
+    <app-voucher-form-col-item
+      [InputConfig]="itemVoucherFormCol"
+      [value]="InputMaster?.[itemVoucherFormCol.code!] ?? undefined"
+      (valueChange)="handleValueChange($event)"
+    ></app-voucher-form-col-item>
+  </div>
+</div>
+
+<div
+  class="form-control-v2 group-item"
+  style="background-color: none !important"
+  *ngFor="
+    let itemVoucherFormGroup of dataSourceVoucherFormGroup;
+    let i = index;
+    trackBy: trackByFunc
+  "
+>
+  <div class="form-title">
+    {{ translate(itemVoucherFormGroup.name2, itemVoucherFormGroup.name1) }}
+  </div>
+  <div
+    class="control-input"
+    *ngFor="
+      let itemVoucherFormCol of getVoucherFormByGroup(
+        itemVoucherFormGroup.code!
+      );
+      let i = index;
+      trackBy: trackByFunc
+    "
+  >
+    <app-voucher-form-col-item
+      [InputConfig]="itemVoucherFormCol"
+      [value]="InputMaster?.[itemVoucherFormCol.code!] ?? undefined"
+      (valueChange)="handleValueChange($event)"
+    ></app-voucher-form-col-item>
+  </div>
+</div>

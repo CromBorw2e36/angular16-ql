@@ -23,9 +23,19 @@ export class PopupComponent extends LayoutComponentBase implements OnChanges {
       closeOnOutsideClick: true,
     }
 
-  }
-  ngOnChanges(changes: SimpleChanges): void {
 
+    this.fullButton = {
+      text: 'Đóng',
+      type: 'default',
+      icon: 'close',
+      onClick: () => {
+        this.visible = false;
+      }
+    }
+  }
+
+
+  ngOnChanges(changes: SimpleChanges): void {
     if ('listAction' in changes) {
       const currentValue = changes['listAction'].currentValue;
       if (currentValue.length > 0) {
@@ -53,10 +63,10 @@ export class PopupComponent extends LayoutComponentBase implements OnChanges {
     }
   }
 
-
-
   actions: ToolbarItem[] = []
   visible: boolean = false;
+
+  fullButton: DxButtonTypes.Properties;
 
   @Input() action: Action_Type_Enum | undefined = undefined;
   @Input() title!: string;
@@ -68,8 +78,13 @@ export class PopupComponent extends LayoutComponentBase implements OnChanges {
 
 
   setShow(state: boolean) {
-    this.visible = state;
-    if(this.popupComponent) this.popupComponent.instance._refresh();
+    if (state) this.popupComponent?.instance.show();
+    else this.popupComponent?.instance.hide();
+    if (this.popupComponent && this.popupComponent.fullScreen !== undefined) {
+      this.popupComponent.fullScreen = false;
+      if (window.innerWidth < 900) this.popupComponent.fullScreen = true;
+    }
+    if (this.popupComponent) this.popupComponent.instance._refresh();
   }
 
   handleHidden(ev: any) {
@@ -116,6 +131,7 @@ export class PopupComponent extends LayoutComponentBase implements OnChanges {
         toolbar: 'bottom',
         location: 'after',
         visible: true,
+        cssClass: findItemInDataSourceConfig?.code,
         options: {
           text: this.translate(findItemInDataSourceConfig?.textVN ?? '', findItemInDataSourceConfig?.text || ""),
           stylingMode: findItemInDataSourceConfig ? findItemInDataSourceConfig.stylingMode : 'contained',
@@ -123,9 +139,37 @@ export class PopupComponent extends LayoutComponentBase implements OnChanges {
           onClick: this.handleClickAction.bind(this, { code: item })
         } as DxButtonTypes.Properties
       })
+
     });
+
+    this.actions.push({
+      widget: 'dxButton',
+      toolbar: 'top',
+      location: 'after',
+      visible: true,
+      cssClass: "SIZE_WINDOW",
+      options: {
+        icon: this.popupComponent?.fullScreen ? 'copy' : 'fullscreen',
+        stylingMode: 'text',
+        onClick: this.handleClickFullScreen.bind(this)
+      } as DxButtonTypes.Properties
+    })
   }
+
+  handleClickFullScreen() {
+    if (this.popupComponent && this.popupComponent.fullScreen !== undefined) {
+      this.popupComponent.fullScreen = !this.popupComponent?.fullScreen;
+      this.popupComponent?.instance._refresh();
+      this.genListAction()
+      this.popupComponent?.instance.option({
+        toolbarItems: this.actions
+      })
+      this.popupComponent?.instance._refresh();
+    }
+  }
+
 }
+
 
 
 const dateSourceButton = [

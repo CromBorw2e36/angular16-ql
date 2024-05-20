@@ -42,13 +42,13 @@ export class DatagridColumnSettingListEditComponent extends LayoutComponentBase 
         case Action_Type_Enum.ADD: {
           this.InputMaster = new SysGenRowTable();
           this.InputMaster.allowEditing = false;
-          this.InputMaster.allowFiltering = false;
+          this.InputMaster.allowFiltering = true;
           this.InputMaster.allowFixing = false;
           this.InputMaster.allowGrouping = false;
-          this.InputMaster.allowHeaderFiltering = false;
+          this.InputMaster.allowHeaderFiltering = true;
           this.InputMaster.allowHiding = false;
-          this.InputMaster.allowSearch = false;
-          this.InputMaster.allowSorting = false;
+          this.InputMaster.allowSearch = true;
+          this.InputMaster.allowSorting = true;
           this.InputMaster.autoExpandGroup = false;
           this.InputMaster.create_date = new Date();
           this.InputMaster.update_date = new Date();
@@ -58,7 +58,8 @@ export class DatagridColumnSettingListEditComponent extends LayoutComponentBase 
           this.InputMaster.minWidth = 100;
           this.InputMaster.alignment = "left";
           this.InputMaster.dataType = "string";
-          // this.InputMaster.table_name = JSON.parse(sessionStorage.getItem('needTableInsert') ?? "");
+          this.InputMaster.table_name = JSON.parse(sessionStorage.getItem('needTableInsertTableName') ?? "");
+          this.InputMaster.orderNo = JSON.parse(sessionStorage.getItem('needTableInsertOrderNo') ?? "0") + 5;
           break;
         }
         case Action_Type_Enum.COPY:
@@ -71,12 +72,13 @@ export class DatagridColumnSettingListEditComponent extends LayoutComponentBase 
               const findData = res.data.find(x => x.id == currentValue.id);
               if (findData) {
                 this.InputMaster = findData;
-                switch(this.typeAction) {
+                switch (this.typeAction) {
                   case Action_Type_Enum.COPY: {
                     this.InputMaster.id = undefined;
                     this.InputMaster.dataField = undefined;
                     this.InputMaster.caption = undefined;
                     this.InputMaster.caption_VN = undefined;
+                    this.InputMaster.orderNo = (this.InputMaster.orderNo ?? 0) + 5;
                     break;
                   }
                 }
@@ -157,6 +159,12 @@ export class DatagridColumnSettingListEditComponent extends LayoutComponentBase 
       case 'dataType': {
         return this.dataGirdColumnSettingsService.dataSourceDataType;
       }
+      case 'type': {
+        return this.dataGirdColumnSettingsService.dataSourceTypeDateBox;
+      }
+      case 'displayFormat': {
+        return this.dataGirdColumnSettingsService.dataSourceDisplayFormat;
+      }
       default:
         return []
     }
@@ -188,8 +196,11 @@ export class DatagridColumnSettingListEditComponent extends LayoutComponentBase 
         this.showMessageSuccess(res.msg);
         this.uploadDataSource.emit();
         this.setShowPopup({ state: false, data: res.data, typeAction: Action_Type_Enum.EDIT });
-        sessionStorage.removeItem('needTableInsert');
-        sessionStorage.setItem('needTableInsert', JSON.stringify(res.data?.table_name));
+        sessionStorage.removeItem('needTableInsertTableName');
+        sessionStorage.setItem('needTableInsertTableName', JSON.stringify(res.data?.table_name));
+
+        sessionStorage.removeItem('needTableInsertOrderNo');
+        sessionStorage.setItem('needTableInsertOrderNo', JSON.stringify(res.data?.orderNo ?? 0));
       } else {
         this.showMessageError(res.msg);
       }

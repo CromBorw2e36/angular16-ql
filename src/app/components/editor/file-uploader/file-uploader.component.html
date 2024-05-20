@@ -1,0 +1,53 @@
+<input
+  #inputTypeFile
+  type="file"
+  name="{{ nameTag }}"
+  id="{{ nameTag }}"
+  (change)="handleUploadFile($event)"
+  [multiple]="property.multiple"
+  [accept]="property.accept"
+  [disabled]="property.disabled"
+  class="d-none"
+  (drop)="handleDropFile($event)"
+  (drag)="handleDragFile($event)"
+/>
+
+<!-- <label
+  class="block-upload-file"
+  [attr.for]="nameTag"
+  (dragover)="handleDragOver($event)"
+  (drop)="handleDropFile($event)"
+>
+  <img
+    src="../../../../assets/image/icon-upload-file/upload-file-2.png"
+    alt="icon upload file"
+  />
+</label> -->
+
+<div class="block-upload-file-v2">
+  <label
+    class="upload-file-label"
+    [attr.for]="nameTag"
+    (dragover)="handleDragOver($event)"
+    (drop)="handleDropFile($event)"
+  >
+    <div class="around-input">{{ translate("Chọn", "Upload") }}</div>
+    <div class="label-input">{{ label }}</div>
+  </label>
+
+  <div class="show-list-file" *ngIf="InputMaster.length > 0">
+    <div class="item-file" *ngFor="let item of InputMaster; let i = index">
+      <div class="item-file-name limited-1-line">
+        <i-bs class="me-1" name="folder2"></i-bs>
+        {{ item.name }}
+      </div>
+      <div class="item-file-remove">
+        <dx-button
+          icon="remove"
+          (onClick)="handleRemoveItemByIndex(i)"
+        ></dx-button>
+      </div>
+      <!-- <div class="item-file-size">{{ item.size }}</div> -->
+    </div>
+  </div>
+</div>

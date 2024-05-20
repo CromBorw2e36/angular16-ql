@@ -57,11 +57,11 @@ export class MenuV2Component extends LayoutComponentBase implements OnInit, OnCh
     const getMenuLV1 = this.menuV2Service.getMenuSelectedByLv('1');
     const getMenuLV2 = this.menuV2Service.getMenuSelectedByLv('2');
 
-    console.log(getMenuLV1, getMenuLV2)
+    // console.log(getMenuLV1, getMenuLV2)
 
     if (getMenuLV2 && getMenuLV2.menuid) {
       const findIdx = this.InputMaster.findIndex(x => x.menuid === getMenuLV2.menuIDParent);
-      const geValueCurrentIdx = this.InputMaster[findIdx].items;
+      const geValueCurrentIdx = this.InputMaster[findIdx]?.items;
       if (findIdx !== -1 && geValueCurrentIdx) {
         const findIdx2 = geValueCurrentIdx.findIndex(x => x.menuid === getMenuLV2.menuid);
         console.log(this.InputMaster[findIdx].items)
@@ -92,10 +92,10 @@ export class MenuV2Component extends LayoutComponentBase implements OnInit, OnCh
   handleClickMenu(p: ItemClickEvent | any) {
     const menu = p.itemData as Sys_Menu_Tree_View_MODEL;
     if (menu.menuid !== this.getMenuSelected().menuid) { // Check same menu
-      if (menu?.url)
-        this.setNavigator(menu.url, menu);
       this.itemSelected = menu;
       this.menuV2Service.setMenuSelected(menu);
+      if (menu?.url)
+        this.setNavigator(menu.url, menu);
     }
   }
 

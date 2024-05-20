@@ -1,11 +1,14 @@
+import { Properties } from 'devextreme/ui/popup';
 import { Component, EventEmitter, Input, Output, ViewChild, Inject, Injector, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { DxDataGridComponent, DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
 import { MenuV2Service } from '../../menu-v2/service/menu-v2.service';
 import { SysGenRowTable, SysGenRowTablesClient } from 'src/app/system/server/api_share';
 import LayoutComponentBase from 'src/app/share/layoutBase/LayoutComponentBase';
+import { DxoHeaderFilterComponent, DxoHeaderFilterModule } from 'devextreme-angular/ui/nested';
+import { HeaderFilter, HeaderFilterSearchConfig } from 'devextreme/common/grids';
 
 export interface IDataGridComponent {
-  tableName: string;
+  _tableName: string;
   propertyDataGrid: DxDataGridTypes.Properties;
   dataGridComponent: DataGridComponent | undefined;
 }
@@ -26,7 +29,7 @@ export class DataGridComponent extends LayoutComponentBase implements OnInit, On
 
     this.propertyDataGrid = {
       keyExpr: '',
-      height: '64vh',
+      height: window.innerHeight - 46,
       scrolling: {
         mode: 'infinite'
       },
@@ -51,9 +54,19 @@ export class DataGridComponent extends LayoutComponentBase implements OnInit, On
     this.getRowSelectedData.bind(this);
     this.getRowSelectedKeys.bind(this);
 
+    this.headerFilter = {
+      visible: true,
+      search: {
+        enabled: true,
+        placeholder: this.translate('Tìm kiếm...', 'Search...'),
+        mode: 'contains',
+      } as HeaderFilterSearchConfig
+    }
+
   }
 
 
+  headerFilter: HeaderFilter;
 
   @Input() propertyDataGrid: DxDataGridTypes.Properties | undefined;
   @Input() dataSource: any = [];
@@ -90,11 +103,13 @@ export class DataGridComponent extends LayoutComponentBase implements OnInit, On
       companyCode: this.getUserInfo().codeCompany,
     } as SysGenRowTable;
     this.sysGenRowTableClient.genRowTableSearch(paramObj).subscribe(x => {
-      if (x.data) {
+      if (x.status == 0) {
         this.columns = x.data;
         if (this.propertyDataGrid !== undefined) {
           this.propertyDataGrid.columns = this.columns;
         }
+      } else {
+        this.showMessageError(x.msg!)
       }
     }, error => {
       if (error.status == 401 || error.status == 403) this.setLogin(false);

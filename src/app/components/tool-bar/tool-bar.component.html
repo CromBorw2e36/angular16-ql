@@ -9,6 +9,21 @@
 </dx-button> -->
 
 <div id="tool_bar_component" class="toolbar-container">
+
+  <button
+    class="toolbar-btn-icon-text ms-1"
+    mat-flat-button
+    color="primary"
+    data-bs-toggle="tooltip"
+    data-bs-placement="top"
+    title="button back to page"
+    style="min-width: 120px"
+    (click)="handleClickBack()"
+  >
+    <mat-icon>arrow_back</mat-icon>
+    <span class="toolbar-name">{{ translate('Trở lại', 'Back') }}</span>
+  </button>
+
   <button
     class="toolbar-btn-icon-text"
     mat-button

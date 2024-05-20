@@ -1,3 +1,4 @@
+import { CategoryCommonClient, CommonContronllerClient } from './../system/server/api_share';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
@@ -9,7 +10,7 @@ import {
 } from '@angular/router';
 import { QlTaiKhoanComponent } from './99_00_00/ql-tai-khoan/ql-tai-khoan.component';
 import { CookieService } from 'ngx-cookie-service';
-import { AccountsClient, MenuPermissionsClient, SysVoucherFormClient, UserInfoesClient } from '../system/server/api_share';
+import { AccountsClient, MenuPermissionsClient, SysMenusClient, SysVoucherFormClient, UserInfoesClient } from '../system/server/api_share';
 import { ConfigServerService } from '../system/server/config/config-server.service';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { HttpClientModule } from '@angular/common/http';
@@ -24,18 +25,36 @@ import { MatBadgeModule } from '@angular/material/badge';
 import {MatTabsModule} from '@angular/material/tabs';
 import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
 import routes from './share.routes';
-import { NgxBootstrapIconsModule, alarm, alarmFill, alignBottom, pencilSquare } from 'ngx-bootstrap-icons';
+import { NgxBootstrapIconsModule, alarm, alarmFill, alignBottom, fullscreen, fullscreenExit, pencilSquare } from 'ngx-bootstrap-icons';
 import { VoucherFormColumnSettingsListComponent } from './99_00_00/voucher-form-column-settings/voucher-form-column-settings-list/voucher-form-column-settings-list.component';
 import { VoucherFormColumnSettingsEditComponent } from './99_00_00/voucher-form-column-settings/voucher-form-column-settings-edit/VoucherFormColumnSettingsEditComponent';
 import { DatagridColumnSettingListComponent } from './99_00_00/datagrid-column-setting/datagrid-column-setting-list/datagrid-column-setting-list.component';
 import { DatagridColumnSettingListEditComponent } from './99_00_00/datagrid-column-setting/datagrid-column-setting-list-edit/datagrid-column-setting-list-edit.component';
 import { DatagridColumnSettingListFilterComponent } from './99_00_00/datagrid-column-setting/datagrid-column-setting-list-filter/datagrid-column-setting-list-filter.component';
+import { VoucherFormGroupTabSettingListComponent } from './99_00_00/voucher-form-group_tab-settings/voucher-form-group-tab-setting-list/voucher-form-group-tab-setting-list.component';
+import { VoucherFormGroupTabSettingEditComponent } from './99_00_00/voucher-form-group_tab-settings/voucher-form-group-tab-setting-edit/voucher-form-group-tab-setting-edit.component';
+import { SystemMenuSettingsListComponent } from './99_00_00/system-menu-settings/system-menu-settings-list/system-menu-settings-list.component';
+import { SystemMenuSettingsEditComponent } from './99_00_00/system-menu-settings/system-menu-settings-edit/system-menu-settings-edit.component';
+import { CategoryCommonListComponent } from './99_00_00/category-common/category-common-list/category-common-list.component';
+import { CategoryCommonEditComponent } from './99_00_00/category-common/category-common-edit/category-common-edit.component';
+import { VoucherFormGroupTabListComponent } from './99_00_00/99_22_00/voucher-form-group-tab/voucher-form-group-tab-list/voucher-form-group-tab-list.component';
+import { VoucherFormGroupTabEditComponent } from './99_00_00/99_22_00/voucher-form-group-tab/voucher-form-group-tab-edit/voucher-form-group-tab-edit.component';
+import { PermissionListComponent } from './99_00_00/99_23_00/99_23_01/permission-list/permission-list.component';
+import { PermissionEditComponent } from './99_00_00/99_23_00/99_23_01/permission-edit/permission-edit.component';
+import { TypeAccountListComponent } from './99_00_00/99_23_00/99_23_02/type-account-list/type-account-list.component';
+import { TypeAccountEditComponent } from './99_00_00/99_23_00/99_23_02/type-account-edit/type-account-edit.component';
+import { NationalAndLanguageListComponent } from './99_00_00/99_23_00/99_23_03/national-and-language-list/national-and-language-list.component';
+import { NationalAndLanguageEditComponent } from './99_00_00/99_23_00/99_23_03/national-and-language-edit/national-and-language-edit.component';
+import { StatusListComponent } from './99_00_00/99_23_00/99_23_05/status-list/status-list.component';
+import { StatusEditComponent } from './99_00_00/99_23_00/99_23_05/status-edit/status-edit.component';
 
 const icons = {
   alarm,
   alarmFill,
   alignBottom,
-  pencilSquare
+  pencilSquare,
+  fullscreenExit,
+  fullscreen
 };
 @NgModule({
   declarations: [
@@ -46,6 +65,22 @@ const icons = {
     DatagridColumnSettingListComponent,
     DatagridColumnSettingListEditComponent,
     DatagridColumnSettingListFilterComponent,
+    VoucherFormGroupTabSettingListComponent,
+    VoucherFormGroupTabSettingEditComponent,
+    SystemMenuSettingsListComponent,
+    SystemMenuSettingsEditComponent,
+    CategoryCommonListComponent,
+    CategoryCommonEditComponent,
+    VoucherFormGroupTabListComponent,
+    VoucherFormGroupTabEditComponent,
+    PermissionListComponent,
+    PermissionEditComponent,
+    TypeAccountListComponent,
+    TypeAccountEditComponent,
+    NationalAndLanguageListComponent,
+    NationalAndLanguageEditComponent,
+    StatusListComponent,
+    StatusEditComponent,
   ],
   providers: [
     CookieService,
@@ -55,6 +90,9 @@ const icons = {
     DeviceDetectorService,
     UserInfoesClient,
     SysVoucherFormClient,
+    SysMenusClient,
+    CommonContronllerClient,
+    CategoryCommonClient,
    ],
   exports: [QlTaiKhoanComponent],
   imports: [

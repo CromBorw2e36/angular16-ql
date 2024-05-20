@@ -18,9 +18,14 @@ export class BreadcrumbComponent extends LayoutComponentBase {
 
   get getListMenu() {
     const arr: Array<Sys_Menu_Tree_View_MODEL> = []
-    if (this.menuV2Service.itemSelectedMenuLv1) arr.push(this.menuV2Service.itemSelectedMenuLv1)
-    if (this.menuV2Service.itemSelectedMenuLv2) arr.push(this.menuV2Service.itemSelectedMenuLv2)
-    if (this.menuV2Service.itemSelectedMenuLv3) arr.push(this.menuV2Service.itemSelectedMenuLv3)
+    // if (this.menuV2Service.getMenuSelectedByLv('1')) arr.push(this.menuV2Service.itemSelectedMenuLv1)
+    if (this.menuV2Service.getMenuSelectedByLv('2')) arr.push(this.menuV2Service.itemSelectedMenuLv2)
+    if (this.menuV2Service.getMenuSelectedByLv('3')) arr.push(this.menuV2Service.itemSelectedMenuLv3)
+    console.log(arr)
     return arr;
+  }
+
+  handleClickMenu(p: Sys_Menu_Tree_View_MODEL) {
+    this.setNavigator(p.url)
   }
 }

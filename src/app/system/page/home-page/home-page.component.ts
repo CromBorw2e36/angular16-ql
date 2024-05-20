@@ -47,15 +47,14 @@ export class HomePageComponent extends LayoutComponentBase implements OnInit, On
 
 
   ngOnInit(): void {
-    this.setTitleWebsite(this.translate('quản trị', 'management'))
+    // this.setTitleWebsite(this.translate('Quản trị', 'management'), true)
     this.homepageService.setLoading(true);
-    
+
     this.menuPermissionsClient.listMenuTreeView().subscribe(
       (res) => {
         this.setLstMenu(res);
         this.menuPermissions = res;
-        // this.menuPermissions = this._sysMenuService.buildMenuList(res); 
-      },
+       },
       (err) => {
         if (err.status === 401) {
           this.setLogin();

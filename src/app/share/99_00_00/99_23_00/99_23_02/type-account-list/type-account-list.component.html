@@ -1,0 +1,10 @@
+<tool-bar-component
+  [action_type]="action_type_toolbar"
+  (onActionClick)="handleActionClick($event)"
+></tool-bar-component>
+<data-grid-component
+  #dataGridComponent
+  [tableName]="_tableName"
+  [propertyDataGrid]="propertyDataGrid"
+  [dataSource]="InputMaster"
+></data-grid-component>

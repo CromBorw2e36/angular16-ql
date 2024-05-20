@@ -2,6 +2,13 @@ import LayoutComponentBase from 'src/app/share/layoutBase/LayoutComponentBase';
 import { MenuV2Service } from '../menu-v2/service/menu-v2.service';
 import { SysAction, SysActionClient, SysGroupAction } from './../../system/server/api_share';
 import { Component, Input, Injector, EventEmitter, Output } from '@angular/core';
+import { Location } from '@angular/common';
+
+
+export interface IToolBarComponent {
+  action_type_toolbar: '1' | '2' | '3' | '4' | '5' | '6' | '7';
+  handleActionClick(ev: I_ToolbarComponent_ActionClick): void
+}
 
 export interface I_ToolbarComponent_ActionClick {
   code: string;
@@ -20,6 +27,7 @@ export class ToolBarComponent extends LayoutComponentBase {
   constructor(
     private sysActionClient: SysActionClient,
     private menuV2Service: MenuV2Service,
+    private location: Location,
     injector: Injector
   ) {
     super(injector);
@@ -37,8 +45,10 @@ export class ToolBarComponent extends LayoutComponentBase {
 
   onLoadData() {
     const paramObj = {
-      code: this.menuV2Service.itemSelectedMenu[`action${this.action_type!}`]
+      code: this.menuV2Service.getMenuSelected()[`action${this.action_type!}`]
     } as SysGroupAction;
+    console.log(this.menuV2Service.getMenuSelected())
+    // if (paramObj.code) {
     this.sysActionClient.getListActionByGroupCode(paramObj).subscribe(res => {
       if (res.status == 0) {
         if (res.data) {
@@ -51,6 +61,7 @@ export class ToolBarComponent extends LayoutComponentBase {
       if (error.status == 401 || error.status == 403) this.setLogin(false);
       else if (error.status == 500) this.showMessageError(error.msg)
     })
+    // }
   }
 
   getTextTranslate(item: SysAction) {
@@ -66,6 +77,10 @@ export class ToolBarComponent extends LayoutComponentBase {
     }
     this.onActionClick.emit(obj)
     // console.log(obj)
+  }
+
+  handleClickBack() {
+    this.location.back();
   }
 
 }

@@ -23,17 +23,18 @@ export class ListPageMenuComponent extends LayoutComponentBase implements OnInit
   ) {
     super(injector);
     this.InputMaster = [];
+    this.itemSelected = this.menuV2Service.getMenuSelectedByLv('2');
 
     this.router.events.subscribe(x => {
       if (x instanceof Scroll && x.routerEvent.url === '/menu') {
         this.onLoadMenu();
-        this.itemSelected = this.menuV2Service.itemSelectedMenuLv2;
+        this.itemSelected = this.menuV2Service.getMenuSelectedByLv('2');
       }
     })
 
   }
 
-  itemSelected: Sys_Menu_Tree_View_MODEL = new Sys_Menu_Tree_View_MODEL();
+  itemSelected: Sys_Menu_Tree_View_MODEL;
 
   InputMaster: Array<SysMenu>;
 
@@ -42,7 +43,7 @@ export class ListPageMenuComponent extends LayoutComponentBase implements OnInit
   }
 
   onLoadMenu() {
-    const obj = this.menuV2Service.itemSelectedMenuLv2;
+    const obj = this.menuV2Service.getMenuSelectedByLv('2');
     console.log("I see menu selected is: ", obj.menuid!);
     if (obj) {
       this.homePageService.setLoading(true);
@@ -57,7 +58,7 @@ export class ListPageMenuComponent extends LayoutComponentBase implements OnInit
   }
 
   GenValue(p: any) {
-    return p ?? "";
+    return this.translate(p.nameVN, p.name);
   }
 
   GentItemIcon(p: Sys_Menu_Tree_View_MODEL | any) {

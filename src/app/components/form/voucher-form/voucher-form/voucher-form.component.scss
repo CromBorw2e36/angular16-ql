@@ -1,0 +1,39 @@
+.form-control-v2 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 10px;
+  margin-bottom: 10px;
+
+  margin: 10px;
+
+  .form-title {
+    width: 100%;
+    min-width: min-content;
+    font-weight: 500;
+  }
+
+  .control-input {
+    width: calc(100% / 3 - 10px);
+    margin-right: 10px;
+    margin-top: 10px;
+  }
+
+  @media screen and (max-width: 1100px) {
+    .control-input {
+      width: calc(100% / 2 - 10px);
+    }
+  }
+
+  @media screen and (max-width: 900px) {
+    .control-input {
+      width: calc(100% - 10px);
+    }
+  }
+}
+
+.group-item {
+  border: 0.7px solid #8080805c;
+  border-radius: 5px;
+  background: white;
+}

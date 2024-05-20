@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { DxDateBoxComponent, DxDateBoxTypes } from 'devextreme-angular/ui/date-box';
+import { ValueChangedEvent } from 'devextreme/ui/date_box';
 import * as moment from 'moment';
 
 @Component({
@@ -13,8 +14,8 @@ export class DateBoxComponent {
     this.propertyControl = {
       placeholder: 'Enter text here',
       showClearButton: true,
-      inputAttr: { 'aria-label': 'Full Name' }
-    };
+      inputAttr: { 'aria-label': 'Full Name' },
+    } as DxDateBoxTypes.Properties;
   }
 
   ngAfterViewInit(): void {
@@ -24,10 +25,11 @@ export class DateBoxComponent {
   }
 
   @Input() propertyControl: DxDateBoxTypes.Properties;
-  @Input() value!: string | number | Date | undefined;
+  @Input() value!: string | number | Date;
   @Input() label!: string;
 
-  @Output() valueChange = new EventEmitter<string | Number | Date | undefined>();
+  @Output() valueChange = new EventEmitter<string | Number | Date >();
 
   @ViewChild('dxDateBox') dxDateBoxComponent: DxDateBoxComponent | undefined;
+
 }

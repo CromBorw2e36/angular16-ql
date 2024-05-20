@@ -32,6 +32,8 @@ export class DatagridColumnSettingsService {
     { code: 'column_child', name: 'column_child', nameVN: 'column_child' },
     { code: 'cssClass', name: 'cssClass', nameVN: 'cssClass' },
     { code: 'orderNo', name: 'Order no', nameVN: 'Thứ tự' },
+    { code: 'type', name: 'Type (date box)', nameVN: 'Type (date box)' },
+    { code: 'displayFormat', name: 'displayFormat (date box)', nameVN: 'displayFormat (date box)' },
   ]
 
 
@@ -56,8 +58,22 @@ export class DatagridColumnSettingsService {
     { code: 'percent', name: 'percent', nameVN: 'percent' },
     { code: 'date', name: 'date', nameVN: 'date' },
     { code: 'time', name: 'time', nameVN: 'time' },
+    { code: 'dd-MM-yyyy HH:mm:ss', name: 'dd-MM-yyyy HH:mm:ss', nameVN: 'dd-MM-yyyy HH:mm:ss' },
+    { code: 'dd-MM-yyyy', name: 'dd-MM-yyyy', nameVN: 'dd-MM-yyyy' },
     { code: ',##0.###', name: ',##0.###', nameVN: ',##0.###' }
   ]
+
+  dataSourceDisplayFormat = [
+    { code: 'dd-MM-yyyy HH:mm:ss', name: 'dd-MM-yyyy HH:mm:ss', nameVN: 'dd-MM-yyyy HH:mm:ss' },
+    { code: 'dd-MM-yyyy', name: 'dd-MM-yyyy', nameVN: 'dd-MM-yyyy' },
+  ]
+
+  dataSourceTypeDateBox = [
+    {code: 'date', name: 'date', nameVN: 'date'},
+    {code: 'datetime', name: 'datetime', nameVN: 'datetime'},
+    {code: 'time', name: 'time', nameVN: 'time'},
+  ]
+  
 
   getColumnByCode(code: string) {
     return this.columnSettings.find(x => x.code === code);

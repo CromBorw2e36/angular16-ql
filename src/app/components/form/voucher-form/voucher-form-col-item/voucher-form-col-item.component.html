@@ -1,0 +1,46 @@
+<div [ngSwitch]="InputMaster.typeControl">
+  <div *ngSwitchCase="typeComponent.textBox">
+    <control-text-box-component
+      [propertyControl]="GenValueConfig"
+      [label]="InputMaster.labelControl ?? ''"
+      [value]="value"
+      (valueChange)="handleValueChange($event)"
+    ></control-text-box-component>
+  </div>
+  <div *ngSwitchCase="typeComponent.checkBox">
+    <control-check-box-component
+      [propertyControl]="GenValueConfig"
+      [label]="InputMaster.labelControl ?? ''"
+      [value]="value"
+      (valueChange)="handleValueChange($event)"
+    ></control-check-box-component>
+  </div>
+  <div *ngSwitchCase="typeComponent.dateBox">
+    <control-date-box-component
+      [propertyControl]="GenValueConfigDate"
+      [label]="InputMaster.labelControl ?? ''"
+      [value]="value"
+      (valueChange)="handleValueChange($event)"
+    ></control-date-box-component>
+  </div>
+  <div *ngSwitchCase="typeComponent.numberBox">
+    <control-number-box-component
+      [propertyControl]="GenValueConfigNumber"
+      [label]="InputMaster.labelControl ?? ''"
+      [value]="value"
+      (valueChange)="handleValueChange($event)"
+    ></control-number-box-component>
+  </div>
+  <div *ngSwitchCase="typeComponent.comboBox">
+    <control-select-box-component
+      [label]="InputMaster.labelControl ?? ''"
+      [dataSource]="dataSourceItems"
+      [value]="value"
+      (valueChange)="handleValueChange($event)"
+      [displayExpr]="'name'"
+      [valueExpr]="'code'"
+    ></control-select-box-component>
+  </div>
+  <div *ngSwitchCase="typeComponent.textArea">not exists</div>
+  <div *ngSwitchDefault></div>
+</div>

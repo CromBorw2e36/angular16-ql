@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Sys_Menu_Tree_View_MODEL } from 'src/app/system/server/api_share';
 
 @Injectable({
@@ -7,7 +8,7 @@ import { Sys_Menu_Tree_View_MODEL } from 'src/app/system/server/api_share';
 export class MenuV2Service {
 
   constructor() {
-    this.itemSelectedMenu = JSON.parse(sessionStorage.getItem('MenuV2Service_itemSelectedMenu') ?? "{}");
+    this.itemSelectedMenu = JSON.parse(sessionStorage.getItem('MenuV2Service_itemSelectedSave') ?? "{}");
 
   }
 
@@ -37,7 +38,7 @@ export class MenuV2Service {
 
   // get theo level 1 2 ở tree view
   getMenuSelected(): Sys_Menu_Tree_View_MODEL {
-    return this.setItemSelected();
+    return this.setItemSelected(undefined);
   }
 
   getMenuSelectedByLv(lv: string): Sys_Menu_Tree_View_MODEL {
@@ -48,9 +49,9 @@ export class MenuV2Service {
   protected setMenuSelected_2(p: Sys_Menu_Tree_View_MODEL) {
     this.itemSelectedMenu = p;
     try {
-      sessionStorage.removeItem('MenuV2Service_itemSelectedMenu');
+      sessionStorage.removeItem('MenuV2Service_itemSelectedSave');
     } catch { }
-    sessionStorage.setItem('MenuV2Service_itemSelectedMenu', JSON.stringify(p));
+    sessionStorage.setItem('MenuV2Service_itemSelectedSave', JSON.stringify(p));
   }
 
   //set theo level 1 2 ở tree view

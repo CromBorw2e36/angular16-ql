@@ -24,7 +24,7 @@ export class NumberBoxComponent {
   }
 
   @Input() propertyControl: DxNumberBoxTypes.Properties;
-  @Input() value!: number | undefined;
+  @Input() value!: number | undefined | any;
   @Input() label!: string;
 
   @Output() valueChange = new EventEmitter<number>();

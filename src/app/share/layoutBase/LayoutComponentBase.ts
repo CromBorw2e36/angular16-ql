@@ -1,5 +1,5 @@
 import { Inject, Injectable, Injector } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router, Scroll } from '@angular/router';
 import * as moment from 'moment';
 import { CookieService } from 'ngx-cookie-service';
 import { Account, SysMenu, Sys_Menu_Tree_View_MODEL, UserInfo } from 'src/app/system/server/api_share';
@@ -7,6 +7,8 @@ import { SysLoginService } from 'src/app/system/service/sys-login/sys-login.serv
 import notify from 'devextreme/ui/notify';
 import { ConfigServerService } from 'src/app/system/server/config/config-server.service';
 import { HomePageService } from 'src/app/system/page/home-page/service/home-page.service';
+import { Action_Type_Enum } from 'src/app/components/js-devextreme/popup/enum_action';
+import { MenuV2Service } from 'src/app/components/menu-v2/service/menu-v2.service';
 
 interface ICol_Title_Model {
   id: number,
@@ -46,8 +48,13 @@ export default class LayoutComponentBase {
   listMenu: SysMenu[];
   configService: ConfigServerService;
   sysLoginService: SysLoginService;
-  title_website: string = this.translate('Quản lí doanh nghiệp', '2K')
+  title_website: string = this.translate('Quản trị doanh nghiệp', '2K')
   col_title: ICol_Title_Model[] = _col_title;
+  route: ActivatedRoute;
+  _menuV2Service: MenuV2Service;
+
+  _tableName: string = '';
+  _urlVoucherFormEdit: string = ''; // URL Voucher Form Edit - Set value in router-outlet
 
   constructor(
     injector: Injector,
@@ -58,14 +65,38 @@ export default class LayoutComponentBase {
     this.listMenu = [];
     this.configService = injector.get(ConfigServerService);
     this.sysLoginService = injector.get(SysLoginService);
-    document.title = this.title_website
+    this.route = injector.get(ActivatedRoute);
+    this._menuV2Service = injector.get(MenuV2Service);
+
+    // document.title = this.title_website
+
+    this.route.data.subscribe(data => {
+      this._tableName = data['table_name'];
+      this._urlVoucherFormEdit = data['url_voucher_form_edit'];
+    });
+
+    (this.router as Router).events.subscribe(event => {
+      if (event instanceof Scroll) {
+        const data2 = this._menuV2Service.getMenuSelected();
+        this.setTitleWebsite(this.translate(data2?.nameVN, data2?.name), true);
+      }
+
+    })
   }
 
   translate(
     message_vn: string | undefined,
     message_other: string | undefined
   ): string {
-    return message_vn ? message_vn : '';
+    const languageUser = (this.getUserInfo() as Account).language;
+    switch (languageUser) {
+      case "vi-VN":
+        return message_vn ?? "";
+      case "ORTHER":
+        return message_other ?? "";
+      default:
+        return message_vn ?? "";
+    }
   }
 
   setNavigator(url: string = '', data: any = undefined) {
@@ -82,13 +113,35 @@ export default class LayoutComponentBase {
     }
   }
 
+  setRouter(url: string, data: any, action_type?: string) {
+    try {
+      if (url?.length > 0) {
+        const obj = {
+          data: data,
+          action_type: action_type,
+        }
+        this.router.navigate([url], { state: { data: obj } });
+      }
+    } catch (e) {
+      this.router.navigate(['page-not-found']);
+    }
+  }
+
+  getRouterState<T>() {
+    const state = window.history.state;
+    return state?.data as { data: T, action_type?: Action_Type_Enum } | undefined;
+  }
+
   setLogin(status: boolean = false) {
     this.loginService.setLogin(status);
   }
 
   public setTitleWebsite(text: string, replace: boolean = false) {
-    !replace ? document.title = `${this.title_website}${text.length > 0 ? '-' : ''}${text}`
-      : document.title = text;
+    if (replace) {
+      document.title = text;
+    } else {
+      document.title = `${this.title_website}${text.length > 0 ? ' - ' : ''}${text}`
+    }
   }
 
   public setLstMenu(p: SysMenu[]) {
@@ -97,11 +150,19 @@ export default class LayoutComponentBase {
     sessionStorage.setItem('listMenu', JSON.stringify(p));
   }
 
+  public setUserInfo(p: any) {
+    const data = this.getUserInfo();
+    if (data) sessionStorage.removeItem('user_info');
+    sessionStorage.setItem('user_info', JSON.stringify(p));
+  }
+
   public getUserInfo() {
-    const userInfo = JSON.parse(
-      localStorage.getItem('userInfo') ?? '{}'
-    ) as any;
-    return userInfo as UserInfo;
+    try {
+      const userInfo = JSON.parse(sessionStorage.getItem('user_info') ?? "{}") as any;
+      return userInfo as Account | UserInfo | any;
+    } catch {
+      return {} as Account | UserInfo | any;
+    }
   }
 
   public getLstMenu(): Sys_Menu_Tree_View_MODEL[] {
@@ -215,6 +276,12 @@ export default class LayoutComponentBase {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
     return text;
+  }
+
+  getRouteData(route: ActivatedRoute): any {
+    const routeSnapshot = route.snapshot;
+    const routeData = routeSnapshot.data;
+    return routeData;
   }
 
 }

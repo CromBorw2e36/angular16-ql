@@ -7,6 +7,9 @@
   [wordWrapEnabled]="true"
   [hoverStateEnabled]="true"
   [activeStateEnabled]="true"
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [headerFilter]="headerFilter"
 >
   <dxi-column
     *ngFor="let item of columns; let i = index"
@@ -16,6 +19,7 @@
     [width]="item.width"
     [alignment]="item.alignment"
     [visible]="item.visible"
+    [allowFixing]="item.allowFixing"
     [allowSorting]="item.allowSorting"
     [allowFiltering]="item.allowFiltering"
     [allowHiding]="item.allowHiding"
@@ -23,11 +27,13 @@
     [allowReordering]="item.allowReordering"
     [allowGrouping]="item.allowGrouping"
     [groupIndex]="item.groupIndex"
-    [fixed]="item.fixed"
+    [fixed]="item.allowFixing"
     [fixedPosition]="item.fixedPosition"
     [sortOrder]="item.sortOrder"
     [sortIndex]="item.sortIndex"
     [filterValue]="item.filterValue"
     [type]="item.type"
+    [allowSearch]="true"
+    [format]="item.format"
   ></dxi-column>
 </dx-data-grid>

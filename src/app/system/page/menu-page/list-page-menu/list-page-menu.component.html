@@ -1,5 +1,5 @@
 <div class="list-menu title-menu-parent">
-  <span>{{ GenValue(itemSelected.name) }}</span>
+  <span>{{ GenValue(itemSelected) }}</span>
 </div>
 
 <ul class="list-menu">
@@ -9,6 +9,6 @@
       [src]="GentItemIcon(item)"
       (error)="onLoadImageError($event)"
     />
-    <div class="item-title limited-2-line">{{ GenValue(item.name) }}</div>
+    <div class="item-title limited-2-line">{{ GenValue(item) }}</div>
   </li>
 </ul>
