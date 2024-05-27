@@ -1,0 +1,35 @@
+.round_avatar_container {
+  position: relative;
+  width: fit-content;
+
+  img {
+    width: 128px;
+    height: 128px;
+    border-radius: 100%;
+  }
+
+  .button_upload_file {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: medium;
+    font-weight: 500;
+    user-select: none;
+    width: 42px;
+    height: 42px;
+    background-image: url("../../../../assets/icons/camera.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 3px solid white;
+    border-radius: 100%;
+
+    :active {
+      cursor: wait;
+    }
+  }
+}

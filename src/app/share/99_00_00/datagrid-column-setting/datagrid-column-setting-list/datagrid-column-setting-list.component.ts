@@ -30,14 +30,19 @@ export class DatagridColumnSettingListComponent extends LayoutComponentBase impl
         mode: 'virtual'
       },
       pager: {
-        allowedPageSizes: [10, 20, 50, 100],
-        displayMode: 'full'
+        displayMode: 'adaptive',
+        showNavigationButtons: true,
+        showPageSizeSelector: true,
+        visible: true,
       },
       selection: {
         mode: 'multiple',
-        selectAllMode: 'allPages'
+        selectAllMode: 'page',
+        allowSelectAll: true,
+        showCheckBoxesMode: 'onClick'
       }
     }
+
   }
 
   propertiesPopupComponent?: Properties | undefined;

@@ -44,6 +44,7 @@ import { VoucherFormGroupItemComponent } from './form/voucher-form/voucher-form-
 import { VoucherFormComponent } from './form/voucher-form/voucher-form/voucher-form.component';
 import { FileUploaderComponent } from './editor/file-uploader/file-uploader.component';
 import { NgxBootstrapIconsModule, box, folder2 } from 'ngx-bootstrap-icons';
+import { AvatarImageComponent } from './editor/avatar-image/avatar-image.component';
 
 const icons = {
   box,
@@ -72,6 +73,7 @@ const icons = {
     VoucherFormGroupItemComponent,
     VoucherFormComponent,
     FileUploaderComponent,
+    AvatarImageComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -127,6 +129,7 @@ const icons = {
     BreadcrumbComponent,
     PopupComponent,
     VoucherFormComponent,
+    AvatarImageComponent
   ],
 })
 export class ComponentModule { }

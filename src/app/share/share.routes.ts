@@ -19,6 +19,12 @@ import { NationalAndLanguageListComponent } from "./99_00_00/99_23_00/99_23_03/n
 import { NationalAndLanguageEditComponent } from "./99_00_00/99_23_00/99_23_03/national-and-language-edit/national-and-language-edit.component";
 import { StatusEditComponent } from "./99_00_00/99_23_00/99_23_05/status-edit/status-edit.component";
 import { StatusListComponent } from "./99_00_00/99_23_00/99_23_05/status-list/status-list.component";
+import { AccountListComponent } from "./99_00_00/99_10_00/99_10_01/account-list/account-list.component";
+import { AccountEditComponent } from "./99_00_00/99_10_00/99_10_01/account-edit/account-edit.component";
+import { AccountRegisterListComponent } from "./99_00_00/99_10_00/99_10_04/account-register-list/account-register-list.component";
+import { RoleMenuListComponent } from "./99_00_00/99_10_00/99_10_02/role-menu-list/role-menu-list.component";
+import { RoleMenuEditComponent } from "./99_00_00/99_10_00/99_10_02/role-menu-edit/role-menu-edit.component";
+import { AccountAddEditComponent } from "./99_00_00/99_10_00/99_10_01/account-add-edit/account-add-edit.component";
 
 const routes: Routes = [
   { path: 'ql-tai-khoan', component: QlTaiKhoanComponent },
@@ -43,7 +49,7 @@ const routes: Routes = [
   { path: 'voucher-form-group-tab-list', component: VoucherFormGroupTabListComponent, data: { table_name: "99.20.02_SysVoucherFormGroup", url_voucher_form_edit: 'voucher-form-group-tab-edit' } },
   { path: 'voucher-form-group-tab-edit', component: VoucherFormGroupTabEditComponent, data: { table_name: "99.20.02_SysVoucherFormGroup" } },
 
-  
+
   { path: 'permission-list', component: PermissionListComponent, data: { table_name: "99.23.01_SysPermission", url_voucher_form_edit: 'permission-edit' } },
   { path: 'permission-edit', component: PermissionEditComponent, data: { table_name: "99.23.01_SysPermission" } },
 
@@ -56,6 +62,15 @@ const routes: Routes = [
   { path: 'status-list', component: StatusListComponent, data: { table_name: "99.23.05_SysStatus", url_voucher_form_edit: 'status-edit' } },
   { path: 'status-edit', component: StatusEditComponent, data: { table_name: "99.23.05_SysStatus" } },
 
+  { path: 'list-account', component: AccountListComponent, data: { table_name: "99.10.01_AccountList", url_voucher_form_edit2: ['account-edit', 'add-new-account'] } },
+  { path: 'account-edit', component: AccountEditComponent, data: { table_name2: ["99.10.01_UserInfoVoucherForm", "99.10.01_AccountVoucherForm", "99.10.01_UpdatePasswordVoucherForm"] } },
+  { path: 'add-new-account', component: AccountAddEditComponent, data: { table_name2: ["99.10.01_UserInfoVoucherForm_AddNewAccount", "99.10.01_AccountVoucherForm_AddNewAccount", "99.10.01_UpdatePasswordVoucherForm_AddNewAccount"] } },
+
+  { path: 'account-register-list', component: AccountRegisterListComponent, data: { table_name: "99.10.01_AccountList", url_voucher_form_edit: 'account-edit' } },
+  { path: 'account-edit', component: AccountEditComponent, data: { table_name2: ["99.10.01_UserInfoVoucherForm", "99.10.01_AccountVoucherForm", "99.10.01_UpdatePasswordVoucherForm"] } },
+
+  { path: 'list-role', component: RoleMenuListComponent, data: { table_name: "99.10.01_AccountList", url_voucher_form_edit: 'role-edit' } },
+  { path: 'role-edit', component: RoleMenuEditComponent, data: { table_name2: ["99.10.02_RoleMenuList", "99.10.02_RoleMenuList2"] } },
 
   { path: '**', component: NotFoundPageComponent },
 ];

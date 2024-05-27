@@ -4,7 +4,7 @@ import { DataGridComponent, IDataGridComponent } from 'src/app/components/js-dev
 import { Action_Type_Enum } from 'src/app/components/js-devextreme/popup/enum_action';
 import { IToolBarComponent, I_ToolbarComponent_ActionClick } from 'src/app/components/tool-bar/tool-bar.component';
 import LayoutComponentBase from 'src/app/share/layoutBase/LayoutComponentBase';
-import { CategoryCommonClient, CategoryCommonModel, CommonContronllerClient } from 'src/app/system/server/api_share';
+import { CategoryCommonClient, CategoryCommonModel, CommonContronllerClient, UploadFileModel } from 'src/app/system/server/api_share';
 
 @Component({
   selector: 'app-category-common-list',
@@ -28,12 +28,16 @@ export class CategoryCommonListComponent extends LayoutComponentBase implements 
         mode: 'virtual'
       },
       pager: {
-        allowedPageSizes: [10, 20, 50, 100],
-        displayMode: 'full'
+        displayMode: 'adaptive',
+        showNavigationButtons: true,
+        showPageSizeSelector: true,
+        visible: true,
       },
       selection: {
         mode: 'multiple',
-        selectAllMode: 'allPages'
+        selectAllMode: 'page',
+        allowSelectAll: true,
+        showCheckBoxesMode: 'onClick'
       }
     }
   }
@@ -103,6 +107,7 @@ export class CategoryCommonListComponent extends LayoutComponentBase implements 
       else if (error.status == 500) this.showMessageError(error.msg)
     });
   }
+
 
 
 }

@@ -9,6 +9,8 @@ import { ConfigServerService } from 'src/app/system/server/config/config-server.
 import { HomePageService } from 'src/app/system/page/home-page/service/home-page.service';
 import { Action_Type_Enum } from 'src/app/components/js-devextreme/popup/enum_action';
 import { MenuV2Service } from 'src/app/components/menu-v2/service/menu-v2.service';
+import { Observable } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 interface ICol_Title_Model {
   id: number,
@@ -52,9 +54,13 @@ export default class LayoutComponentBase {
   col_title: ICol_Title_Model[] = _col_title;
   route: ActivatedRoute;
   _menuV2Service: MenuV2Service;
+  _httpGlobal: HttpClient;
 
   _tableName: string = '';
+  _tableName2: string[] = []; // Case have any  voucher form edit
   _urlVoucherFormEdit: string = ''; // URL Voucher Form Edit - Set value in router-outlet
+  _urlVoucherFormEdit2: string[] = []; // Case have any  voucher form edit
+  _pathGetFile: string = ``;
 
   constructor(
     injector: Injector,
@@ -67,11 +73,14 @@ export default class LayoutComponentBase {
     this.sysLoginService = injector.get(SysLoginService);
     this.route = injector.get(ActivatedRoute);
     this._menuV2Service = injector.get(MenuV2Service);
+    this._httpGlobal = injector.get(HttpClient);
 
     // document.title = this.title_website
 
     this.route.data.subscribe(data => {
       this._tableName = data['table_name'];
+      this._tableName2 = data['table_name2'];
+      this._urlVoucherFormEdit2 = data['url_voucher_form_edit2'];
       this._urlVoucherFormEdit = data['url_voucher_form_edit'];
     });
 
@@ -82,6 +91,9 @@ export default class LayoutComponentBase {
       }
 
     })
+
+
+    this._pathGetFile = `${this.configService.BASE_URL_SERVER}/api/CommonContronller/GetFile`
   }
 
   translate(
@@ -95,7 +107,7 @@ export default class LayoutComponentBase {
       case "ORTHER":
         return message_other ?? "";
       default:
-        return message_vn ?? "";
+        return message_other ?? "";
     }
   }
 
@@ -134,6 +146,9 @@ export default class LayoutComponentBase {
 
   setLogin(status: boolean = false) {
     this.loginService.setLogin(status);
+    if (!status) {
+      this.clearUserInfo();
+    }
   }
 
   public setTitleWebsite(text: string, replace: boolean = false) {
@@ -150,15 +165,23 @@ export default class LayoutComponentBase {
     sessionStorage.setItem('listMenu', JSON.stringify(p));
   }
 
+  public clearUserInfo() {
+    localStorage.removeItem('user_info');
+    localStorage.removeItem('listMenu');
+    localStorage.removeItem('listMenuLV3');
+    localStorage.removeItem('navigatorMenu');
+    this.cookieService.delete('TOKEN');
+  }
+
   public setUserInfo(p: any) {
     const data = this.getUserInfo();
-    if (data) sessionStorage.removeItem('user_info');
-    sessionStorage.setItem('user_info', JSON.stringify(p));
+    if (data) localStorage.removeItem('user_info');
+    localStorage.setItem('user_info', JSON.stringify(p));
   }
 
   public getUserInfo() {
     try {
-      const userInfo = JSON.parse(sessionStorage.getItem('user_info') ?? "{}") as any;
+      const userInfo = JSON.parse(localStorage.getItem('user_info') ?? "{}") as any;
       return userInfo as Account | UserInfo | any;
     } catch {
       return {} as Account | UserInfo | any;
@@ -284,6 +307,19 @@ export default class LayoutComponentBase {
     return routeData;
   }
 
+  getFile(filePath: string) {
+    const params = new HttpParams().set('filePath', filePath);
+    const token = this.cookieService.get('TOKEN');
+    const result = this._httpGlobal.get(this._pathGetFile, {
+      params, responseType: 'blob', headers: {
+        'Token': token,
+      }
+    },);
+    const res = result.toPromise()
+    return res;
+  }
+
+
 }
 
 
@@ -333,7 +369,7 @@ const _col_title: ICol_Title_Model[] = [
   }, {
     id: 8,
     code: "",
-    name: ['ERP-12/23 - Phiên bản thử nghiệm 0.1', 'ERP-12/23 - Version beta 0.1'],
+    name: ['ERP-12/23 - Version alpha 0.1', 'ERP-12/23 - Version alpha 0.1'],
     placeholder: undefined,
     required: false,
   },

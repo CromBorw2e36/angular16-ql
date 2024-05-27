@@ -64,7 +64,7 @@ export class NationalAndLanguageEditComponent  extends LayoutComponentBase imple
   }
 
   onLoadData(model: National) {
-    this.categoryCommonClient.sysPermissionSearch(model).subscribe(res => {
+    this.categoryCommonClient.nationalLanguageSearch(model).subscribe(res => {
       if (res.status == 0) {
         if (res.data && res.data.length > 0) {
           this.InputMaster = res.data[0]!;

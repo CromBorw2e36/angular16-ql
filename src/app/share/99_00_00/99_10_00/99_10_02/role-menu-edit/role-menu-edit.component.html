@@ -1,0 +1,24 @@
+<tool-bar-component
+  [action_type]="action_type_toolbar"
+  (onActionClick)="handleActionClick($event)"
+></tool-bar-component>
+<voucher-form-component
+  [InputMaster]="InputMaster_VoucherFormEdit"
+  [table_name]="_tableName2[0]"
+></voucher-form-component>
+
+<voucher-form-component [table_name]="_tableName2[1]">
+  <tool-bar-component
+    [button_back]="false"
+    action_type="3"
+    (onActionClick)="handleActionClick($event)"
+  ></tool-bar-component>
+  <data-grid-component
+    #dataGridComponent
+    [tableName]="_tableName2[0]"
+    [propertyDataGrid]="propertyDataGrid"
+    [dataSource]="InputMaster_DataGrid"
+  ></data-grid-component>
+</voucher-form-component>
+
+<role-menu-popup #roleMenuPopup [state_account]="InputMaster_VoucherFormEdit" (onDataSelected)="InsertListMenu($event)"  ></role-menu-popup>

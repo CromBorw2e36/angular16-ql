@@ -2,7 +2,7 @@ import { Component, EventEmitter, Injector, Output, ViewChild } from '@angular/c
 import { Action_Type_Enum, IPopupComponent } from 'src/app/components/js-devextreme/popup/enum_action';
 import { PopupComponent } from 'src/app/components/js-devextreme/popup/popup.component';
 import LayoutComponentBase from 'src/app/share/layoutBase/LayoutComponentBase';
-import { SysGenRowTable, SysGenRowTablesClient } from 'src/app/system/server/api_share';
+import { CommonContronllerClient, QueryCommonModel, SysGenRowTable, SysGenRowTablesClient } from 'src/app/system/server/api_share';
 import { DatagridColumnSettingsService } from '../service/datagrid-column-settings.service';
 import { HomePageService } from 'src/app/system/page/home-page/service/home-page.service';
 
@@ -18,7 +18,8 @@ export class DatagridColumnSettingListEditComponent extends LayoutComponentBase 
     injector: Injector,
     private dataGirdColumnSettingsService: DatagridColumnSettingsService,
     private sysGenRowTablesClient: SysGenRowTablesClient,
-    private homePageService: HomePageService
+    private homePageService: HomePageService,
+    private commonClient: CommonContronllerClient
   ) {
     super(injector)
     this.titlePopUp = this.translate(this.getMenuSelected().nameVN ?? '', this.getMenuSelected().name ?? '')
@@ -38,6 +39,7 @@ export class DatagridColumnSettingListEditComponent extends LayoutComponentBase 
     this.typeAction = ev.typeAction;
     if (this.popupComponent) this.popupComponent.setShow(ev.state);
     if (ev.state) {
+      this.getDataSourceSelectBox();
       switch (this.typeAction) {
         case Action_Type_Enum.ADD: {
           this.InputMaster = new SysGenRowTable();
@@ -244,6 +246,22 @@ export class DatagridColumnSettingListEditComponent extends LayoutComponentBase 
       if (err.status == 401 || err.status == 403) this.Authorization();
     }
     )
+  }
+
+  string_query_data_source_table_name: string = "select * from CategoryCommon where group_id like '99.21.01_TableName'";
+  data_source_table_name: any = [];
+
+  getDataSourceSelectBox() {
+    if (this.data_source_table_name.length != 0) return;
+    const obj = {
+      string_query: this.string_query_data_source_table_name,
+    } as QueryCommonModel
+    this.commonClient.excuteQueryString(obj).subscribe(res => {
+      this.data_source_table_name = res;
+    }, error => {
+      if (error.status == 401 || error.status == 403) this.setLogin(false);
+      else if (error.status == 500) this.showMessageError(error.msg)
+    })
   }
 
 }

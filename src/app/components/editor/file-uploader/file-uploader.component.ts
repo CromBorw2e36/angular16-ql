@@ -1,5 +1,7 @@
-import { Component, ElementRef, HostListener, Injector, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import LayoutComponentBase from 'src/app/share/layoutBase/LayoutComponentBase';
+import { APIBase } from 'src/app/system/server/APIBase';
+import { API_BASE_URL, CommonContronllerClient, UploadFileModel } from 'src/app/system/server/api_share';
 
 export interface I_Data_Source_File_Model {
   id?: string;
@@ -7,6 +9,12 @@ export interface I_Data_Source_File_Model {
   url?: string;
   name?: string;
 }
+
+export interface I_EventValueChange {
+  data: I_Data_Source_File_Model[];
+  value: I_Data_Source_File_Model | I_Data_Source_File_Model[];
+}
+
 
 export interface I_Properties_Model {
   multiple?: boolean;
@@ -21,7 +29,10 @@ export interface I_Properties_Model {
 })
 export class FileUploaderComponent extends LayoutComponentBase implements OnChanges {
 
-  constructor(injector: Injector) {
+  constructor(
+    injector: Injector,
+    private commonClient: CommonContronllerClient
+  ) {
     super(injector)
 
     this.property = {
@@ -29,17 +40,19 @@ export class FileUploaderComponent extends LayoutComponentBase implements OnChan
       accept: '*',
       disabled: false,
     }
-
+    this.apiBase = new APIBase(injector);
   }
 
 
   nameTag: string = `input_file${this.random_key_string(10)}`;
+  apiBase: APIBase;
+  InputMaster: Array<I_Data_Source_File_Model> = [];
 
   @Input() disabled: boolean = false;
   @Input() property: I_Properties_Model = {}
-  @Input() label!: string | undefined;
+  @Input() label: string | undefined = this.translate("Tải tập tin ở đây !", "Here you can upload files here!");
 
-  InputMaster: Array<I_Data_Source_File_Model> = [];
+  @Output() onValueChange = new EventEmitter();
 
   @ViewChild('inputTypeFile') inputTypeFile: ElementRef<HTMLInputElement> | undefined;
 
@@ -104,15 +117,24 @@ export class FileUploaderComponent extends LayoutComponentBase implements OnChan
   }
 
   EventInsertFile(files: Array<File>) {
+    const arr: I_Data_Source_File_Model[] = [];
+
     files.forEach(file => {
-      const visit = this.InputMaster.length;
-      this.InputMaster.push({
+      const obj = {
         id: this.random_key_string(10),
         file: file,
         url: ''
-      });
+      }
+      const visit = this.InputMaster.length;
+      this.InputMaster.push(obj);
       this.readFile(file, visit);
+      arr.push(this.InputMaster[visit]);
     })
+
+    this.onValueChange.emit({
+      data: this.InputMaster,
+      value: arr,
+    } as I_EventValueChange);
   }
 
   readFile(file: File, visit: number) {
@@ -138,5 +160,33 @@ export class FileUploaderComponent extends LayoutComponentBase implements OnChan
 
   getValue() {
     return this.InputMaster;
+  }
+
+
+  handleGetUploadFileParam(p: UploadFileModel): FormData {
+    const formData = new FormData();
+    this.InputMaster.forEach(x => {
+      formData.append('files', x.file as File); // fileModel.file type file
+    })
+    formData.append('table_name', p.table_name ? p.table_name : '');
+    formData.append('col_name', p.col_name ? p.col_name : '');
+    return formData;
+  }
+
+  UploadFileVersion12(uploadParams: UploadFileModel) {
+    const formDataArray = this.handleGetUploadFileParam(uploadParams);
+    let url_ = this.configService.BASE_URL_SERVER + "/api/CommonContronller/UploadFileVersion12";
+    const token = this.cookieService.get('TOKEN');
+
+    return fetch(url_, {
+      method: 'POST',
+      body: formDataArray,
+      headers: {
+        'Token': token,
+        'Authorization': `${this.apiBase.authToken}`
+      }
+    })
+      .then((x) => Promise.resolve(x));
+    // const result = await response.json();
   }
 }

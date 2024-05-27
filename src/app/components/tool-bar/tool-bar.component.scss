@@ -5,7 +5,7 @@ div#tool_bar_component {
   align-items: stretch;
   padding: 5px 0;
   width: 100%;
- 
+
 
   .toolbar-btn-icon {
     display: none;
@@ -26,4 +26,11 @@ div#tool_bar_component {
 
   }
 
+}
+
+
+.toolbar-fixed {
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }

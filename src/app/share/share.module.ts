@@ -47,6 +47,14 @@ import { NationalAndLanguageListComponent } from './99_00_00/99_23_00/99_23_03/n
 import { NationalAndLanguageEditComponent } from './99_00_00/99_23_00/99_23_03/national-and-language-edit/national-and-language-edit.component';
 import { StatusListComponent } from './99_00_00/99_23_00/99_23_05/status-list/status-list.component';
 import { StatusEditComponent } from './99_00_00/99_23_00/99_23_05/status-edit/status-edit.component';
+import { AccountListComponent } from './99_00_00/99_10_00/99_10_01/account-list/account-list.component';
+import { AccountEditComponent } from './99_00_00/99_10_00/99_10_01/account-edit/account-edit.component';
+import { AccountRegisterListComponent } from './99_00_00/99_10_00/99_10_04/account-register-list/account-register-list.component';
+import { AccountRegisterEditComponent } from './99_00_00/99_10_00/99_10_04/account-register-edit/account-register-edit.component';
+import { RoleMenuListComponent } from './99_00_00/99_10_00/99_10_02/role-menu-list/role-menu-list.component';
+import { RoleMenuEditComponent } from './99_00_00/99_10_00/99_10_02/role-menu-edit/role-menu-edit.component';
+import { RoleMenuPopupComponent } from './99_00_00/99_10_00/99_10_02/role-menu-edit/role-menu-popup/role-menu-popup.component';
+import { AccountAddEditComponent } from './99_00_00/99_10_00/99_10_01/account-add-edit/account-add-edit.component';
 
 const icons = {
   alarm,
@@ -81,6 +89,14 @@ const icons = {
     NationalAndLanguageEditComponent,
     StatusListComponent,
     StatusEditComponent,
+    AccountListComponent,
+    AccountEditComponent,
+    AccountRegisterListComponent,
+    AccountRegisterEditComponent,
+    RoleMenuListComponent,
+    RoleMenuEditComponent,
+    RoleMenuPopupComponent,
+    AccountAddEditComponent,
   ],
   providers: [
     CookieService,

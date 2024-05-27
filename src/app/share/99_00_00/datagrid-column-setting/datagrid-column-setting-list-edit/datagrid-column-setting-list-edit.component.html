@@ -9,11 +9,19 @@
     <div class="form-title">{{ translate("Cấu hình", "Config") }}</div>
     <!-- table_name -->
     <div class="control-input">
-      <control-text-box-component
+      <!-- <control-text-box-component
         [(value)]="InputMaster.table_name"
         [label]="getColumnNameByCode('table_name')"
-      ></control-text-box-component>
+      ></control-text-box-component> -->
+      <control-select-box-component
+        [label]="getColumnNameByCode('table_name')"
+        [dataSource]="data_source_table_name"
+        [(value)]="InputMaster.table_name"
+        [displayExpr]="'name'"
+        [valueExpr]="'code'"
+      ></control-select-box-component>
     </div>
+
     <!-- dataField -->
     <div class="control-input">
       <control-text-box-component
@@ -98,7 +106,9 @@
     </div>
   </div>
   <div class="form-control">
-    <div class="form-title">{{ translate("Format display", "Format display") }}</div>
+    <div class="form-title">
+      {{ translate("Format display", "Format display") }}
+    </div>
     <!-- format -->
     <div class="control-input">
       <control-select-box-component

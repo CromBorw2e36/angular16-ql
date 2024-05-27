@@ -1,0 +1,19 @@
+<tool-bar-component
+  [action_type]="action_type_toolbar"
+  [fixed]="true"
+  (onActionClick)="handleActionClick($event)"
+></tool-bar-component>
+<voucher-form-component
+  [InputMaster]="InputMaster_UserInfo"
+  [table_name]="_tableName2[0]"
+></voucher-form-component>
+
+<voucher-form-component
+  [InputMaster]="InputMaster_Account"
+  [table_name]="_tableName2[1]"
+></voucher-form-component>
+<voucher-form-component
+  [InputMaster]="InputMaster_AccountChangePassword"
+  [table_name]="_tableName2[2]"
+>
+</voucher-form-component>

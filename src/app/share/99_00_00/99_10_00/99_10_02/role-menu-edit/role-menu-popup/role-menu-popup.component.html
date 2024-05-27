@@ -1,0 +1,14 @@
+<popup-component
+  #popupComponent
+  [listAction]="listDialogAction"
+  [title]="titlePopUp"
+  (actionClick)="onActionClick_PopupComponent($event)"
+  [action]="typeAction"
+>
+    <data-grid-component
+    #dataGridComponent
+    [tableName]="_tableName2[0]"
+    [propertyDataGrid]="propertyDataGrid"
+    [dataSource]="InputMaster"
+    ></data-grid-component>
+</popup-component>

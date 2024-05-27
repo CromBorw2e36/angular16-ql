@@ -55,6 +55,9 @@ export class CategoryCommonEditComponent extends LayoutComponentBase implements 
 
   onInitActionAdd() {
     this.InputMaster = new CategoryCommonModel();
+    if(this._tableName == '99.21.01_TableName'){
+      this.InputMaster.group_id = '99.21.01_TableName';
+    }
   }
 
 
@@ -70,6 +73,9 @@ export class CategoryCommonEditComponent extends LayoutComponentBase implements 
           this.InputMaster = res.data[0]!;
           if (this.action_type == Action_Type_Enum.COPY) {
             this.InputMaster.number_order = (this.InputMaster.number_order ?? 0) + 5;
+            if(this._tableName == '99.21.01_TableName'){
+              this.InputMaster.group_id = '99.21.01_TableName';
+            }
           }
         }
         else

@@ -72,7 +72,6 @@ export class VoucherFormColumnSettingsEditComponent extends LayoutComponentBase 
           this.InputMaster = res.data[0]!;
           if (this.action_type == Action_Type_Enum.COPY) {
             this.InputMaster.id = undefined
-            this.InputMaster.code = undefined;
             this.InputMaster.number_order = (this.InputMaster.number_order ?? 0) + 5
           };
         }

@@ -71,7 +71,7 @@ export class PopupComponent extends LayoutComponentBase implements OnChanges {
   @Input() action: Action_Type_Enum | undefined = undefined;
   @Input() title!: string;
   @Input() property: DxPopupTypes.Properties;
-  @Input() listAction: Action_Type_Enum[] = []
+  @Input() listAction: Action_Type_Enum[] = [];
 
   @Output() actionClick = new EventEmitter<{ code: string }>();
   @ViewChild('popupComponent') popupComponent: DxPopupComponent | undefined;

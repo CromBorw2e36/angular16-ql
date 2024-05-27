@@ -1,0 +1,15 @@
+<div class="round_avatar_container">
+  <img
+    loading="eager"
+    [src]="InputMaster"
+    alt="avatar component"
+  />
+  <label class="button_upload_file" [attr.for]="nameTag"></label>
+</div>
+
+<file-uploader-component
+  class="d-none"
+  #uploadFile
+  [property]="propertyUploadFile"
+  (onValueChange)="handleValueChange($event)"
+></file-uploader-component>

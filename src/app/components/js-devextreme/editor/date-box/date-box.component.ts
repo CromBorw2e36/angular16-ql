@@ -15,6 +15,7 @@ export class DateBoxComponent {
       placeholder: 'Enter text here',
       showClearButton: true,
       inputAttr: { 'aria-label': 'Full Name' },
+      displayFormat: 'DD/MM/YYYY',
     } as DxDateBoxTypes.Properties;
   }
 

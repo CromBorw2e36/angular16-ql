@@ -40,7 +40,7 @@ label.block-upload-file {
   width: fit-content;
   //   border: 0.8px solid;
 //   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  padding: 10px;
+  padding: 4px;
   border-radius: 6px;
   background: white;
   width: 100%;
@@ -49,6 +49,9 @@ label.block-upload-file {
     display: flex;
     align-items: center;
     width: 100%;
+    border: 0.7px solid gray;
+    padding: 10px;
+    border-radius: 7px;
 
     .label-input {
       margin-left: 5px;

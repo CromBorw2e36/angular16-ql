@@ -35,11 +35,15 @@ export class DataGridComponent extends LayoutComponentBase implements OnInit, On
       },
       selection: {
         mode: 'multiple',
-        selectAllMode: 'allPages'
+        selectAllMode: 'page',
+        allowSelectAll: true,
+        showCheckBoxesMode: 'onClick'
       },
       pager: {
         allowedPageSizes: [10, 20, 50, 100],
-        displayMode: 'full'
+        displayMode: 'adaptive',
+        showNavigationButtons: true,
+        showPageSizeSelector: true,
       },
       // editing: {
       //   allowAdding: true,

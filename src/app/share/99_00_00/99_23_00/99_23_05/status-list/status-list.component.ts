@@ -20,7 +20,7 @@ export class StatusListComponent  extends LayoutComponentBase implements OnInit,
     super(injector);
 
     this.propertyDataGrid = {
-      keyExpr: 'code',
+      keyExpr: 'id',
       height: window.innerHeight - 46,
       width: '100%',
       columnAutoWidth: true,
@@ -28,12 +28,16 @@ export class StatusListComponent  extends LayoutComponentBase implements OnInit,
         mode: 'virtual'
       },
       pager: {
-        allowedPageSizes: [10, 20, 50, 100],
-        displayMode: 'full'
+        displayMode: 'adaptive',
+        showNavigationButtons: true,
+        showPageSizeSelector: true,
+        visible: true,
       },
       selection: {
         mode: 'multiple',
-        selectAllMode: 'allPages'
+        selectAllMode: 'page',
+        allowSelectAll: true,
+        showCheckBoxesMode: 'onClick'
       }
     }
   }

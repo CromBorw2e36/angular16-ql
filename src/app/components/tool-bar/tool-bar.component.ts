@@ -12,9 +12,9 @@ export interface IToolBarComponent {
 
 export interface I_ToolbarComponent_ActionClick {
   code: string;
-  itemData: SysAction,
-  time: Date;
-  event: PointerEvent;
+  itemData?: SysAction,
+  time?: Date;
+  event?: PointerEvent;
 }
 
 @Component({
@@ -32,11 +32,11 @@ export class ToolBarComponent extends LayoutComponentBase {
   ) {
     super(injector);
   }
-
-  @Input() action_type!: '1' | '2' | '3' | '4' | '5' | '6' | '7'
-
   dataSource: SysAction[] = [];
 
+  @Input() action_type!: '1' | '2' | '3' | '4' | '5' | '6' | '7'
+  @Input() fixed: boolean = false;
+  @Input() button_back: boolean = true;
   @Output() onActionClick = new EventEmitter<I_ToolbarComponent_ActionClick>();
 
   ngAfterViewInit(): void {

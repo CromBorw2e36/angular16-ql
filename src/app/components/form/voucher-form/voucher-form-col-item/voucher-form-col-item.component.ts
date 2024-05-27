@@ -84,7 +84,8 @@ export class VoucherFormColItemComponent extends LayoutComponentBase implements 
       this.dataSourceItems = res;
     }, error => {
       if (error.status == 401 || error.status == 403) this.setLogin(false);
-      else if (error.status == 500) this.showMessageError(error.msg)
+      else if (error.status == 500) this.showMessageError(this.translate(`Không thể tải dữ liệu của  ${this.InputMaster.labelControlVN}`, `Cannot load data of ${this.InputMaster.labelControl}`));
+      this.dataSourceItems = [];
     })
   }
 

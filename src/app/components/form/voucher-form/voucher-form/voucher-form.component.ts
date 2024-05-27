@@ -31,7 +31,6 @@ export class VoucherFormComponent extends LayoutComponentBase implements OnInit 
   @Output() valueChanged = new EventEmitter<any>();
 
   ngOnInit(): void {
-    this.OnLoadVoucherFormColumns();
     this.OnLoadVoucherFormGroups();
   }
 
@@ -45,10 +44,11 @@ export class VoucherFormComponent extends LayoutComponentBase implements OnInit 
     this.sysVoucherFormClient.voucherFormGroupSearch(requestParam).subscribe(res => {
       if (res.status == 0) {
         this.dataSourceVoucherFormGroup = res.data!;
-        console.log(this.dataSourceVoucherFormGroup)
+        // console.log(this.dataSourceVoucherFormGroup)
       } else {
         this.showMessageError(res.msg!);
       }
+      this.OnLoadVoucherFormColumns();
     })
   }
 
@@ -83,12 +83,12 @@ export class VoucherFormComponent extends LayoutComponentBase implements OnInit 
 
   getVoucherFormByGroup(group_id: string) {
     const data = this.dataSourceVoucherFormColumns.filter(x => x.groupId == group_id);
-    console.log(data)
+    // console.log(data)
     return data;
   }
 
 
   _refresh() {
-    this.OnLoadVoucherFormColumns();
+    this.OnLoadVoucherFormGroups();
   }
 }
