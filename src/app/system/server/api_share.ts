@@ -7008,8 +7008,10 @@ export interface ICommonContronllerClient {
     getStatusByModule(pSysStatus: SysStatus): Observable<SysStatus[]>;
     getPermissionByCompany(): Observable<SysPermission[]>;
     excuteQueryString(model: QueryCommonModel): Observable<any[]>;
+    excuteQueryStringV2(model: QueryCommonModel): Observable<StatusMessageOfString>;
     uploadFileVersion11(table_name?: string | null | undefined, col_name?: string | null | undefined, create_date?: Date | null | undefined, create_by?: string | null | undefined, id?: string | null | undefined, file_name?: string | null | undefined, file_type?: string | null | undefined, file_size?: number | null | undefined, file_path?: string | null | undefined, description?: string | null | undefined, company_code?: string | null | undefined, enabled?: boolean | null | undefined, file?: any | null | undefined, files?: FileParameter[] | null | undefined, file2?: FileParameter | null | undefined): Observable<StatusMessageOfListOfUploadFileModel>;
     uploadFileVersion12(): Observable<StatusMessageOfListOfUploadFileModel>;
+    viewFile(fileID?: string | undefined): Observable<FileResponse>;
 }
 
 @Injectable()
@@ -7260,6 +7262,60 @@ export class CommonContronllerClient extends APIBase implements ICommonContronll
         return _observableOf(null as any);
     }
 
+    excuteQueryStringV2(model: QueryCommonModel): Observable<StatusMessageOfString> {
+        let url_ = this.baseUrl + "/api/CommonContronller/ExcuteQueryStringV2";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processExcuteQueryStringV2(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processExcuteQueryStringV2(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfString>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfString>;
+        }));
+    }
+
+    protected processExcuteQueryStringV2(response: HttpResponseBase): Observable<StatusMessageOfString> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfString.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     uploadFileVersion11(table_name?: string | null | undefined, col_name?: string | null | undefined, create_date?: Date | null | undefined, create_by?: string | null | undefined, id?: string | null | undefined, file_name?: string | null | undefined, file_type?: string | null | undefined, file_size?: number | null | undefined, file_path?: string | null | undefined, description?: string | null | undefined, company_code?: string | null | undefined, enabled?: boolean | null | undefined, file?: any | null | undefined, files?: FileParameter[] | null | undefined, file2?: FileParameter | null | undefined): Observable<StatusMessageOfListOfUploadFileModel> {
         let url_ = this.baseUrl + "/api/CommonContronller/UploadFileVersion11?";
         if (table_name !== undefined && table_name !== null)
@@ -7385,6 +7441,64 @@ export class CommonContronllerClient extends APIBase implements ICommonContronll
             result200 = StatusMessageOfListOfUploadFileModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    viewFile(fileID?: string | undefined): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/CommonContronller/ViewFile?";
+        if (fileID === null)
+            throw new Error("The parameter 'fileID' cannot be null.");
+        else if (fileID !== undefined)
+            url_ += "fileID=" + encodeURIComponent("" + fileID) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("get", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processViewFile(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processViewFile(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileResponse>;
+        }));
+    }
+
+    protected processViewFile(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
@@ -12283,6 +12397,54 @@ export interface IQueryCommonModel {
     table_name?: string | undefined;
     action?: string | undefined;
     string_query?: string | undefined;
+}
+
+export class StatusMessageOfString implements IStatusMessageOfString {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: string | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfString) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            this.data = _data["data"];
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfString {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfString();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        data["data"] = this.data;
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfString {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: string | undefined;
+    currentID?: string | undefined;
 }
 
 export class StatusMessageOfListOfUploadFileModel implements IStatusMessageOfListOfUploadFileModel {
