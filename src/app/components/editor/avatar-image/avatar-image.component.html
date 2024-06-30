@@ -3,6 +3,7 @@
     loading="eager"
     [src]="InputMaster"
     alt="avatar component"
+    (error)="eventErrorLoading($event)"
   />
   <label class="button_upload_file" [attr.for]="nameTag"></label>
 </div>

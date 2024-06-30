@@ -3,7 +3,11 @@
     <!-- Logo websites -->
     <div class="logo-container">
       <!-- <img [src]="userInfo.avatar ?? avatar" class="logo" /> -->
-      <img src="../../../../assets/image/load-image-error.jpg" alt="" class="logo">
+      <img
+        src="../../../../assets/image/load-image-error.jpg"
+        alt=""
+        class="logo"
+      />
       <div class="title">
         {{ userInfo.name ?? "Tài khoản không xác định" }}
       </div>
@@ -68,4 +72,7 @@
 >
   Toggle sidenav
 </button>
-<app-load-panel-devextreme  [InputMaster]="PageLoading" ></app-load-panel-devextreme>
+
+<display-load-panel-devextreme
+  [InputMaster]="_loading"
+></display-load-panel-devextreme>

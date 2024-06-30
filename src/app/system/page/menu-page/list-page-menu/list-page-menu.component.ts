@@ -44,13 +44,13 @@ export class ListPageMenuComponent extends LayoutComponentBase implements OnInit
 
   onLoadMenu() {
     const obj = this.menuV2Service.getMenuSelectedByLv('2');
-    console.log("I see menu selected is: ", obj.menuid!);
+    // console.log("I see menu selected is: ", obj.menuid!);
     if (obj) {
-      this.homePageService.setLoading(true);
+      // this.homePageService.setLoading(true); // Loading khi select menu level 1
       obj.account = this.getUserInfo().id as string;
       this.menuPermissionsClient.listMenuById(obj).subscribe(x => {
         this.InputMaster = x;
-        this.homePageService.setLoading(false);
+        // this.homePageService.setLoading(false); // Loading khi select menu level 1
       });
     } else {
       this.setNavigator("**")

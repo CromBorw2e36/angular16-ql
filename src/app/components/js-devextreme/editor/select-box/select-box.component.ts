@@ -35,7 +35,7 @@ export class SelectBoxComponent {
 
   handleValueChange(ev: ValueChangedEvent) {
     const data = ev.value;
-    console.log(ev);
+    // console.log(ev);
     this.onValueChanged.emit(ev);
     this.valueChange.emit(data);
   }

@@ -25,11 +25,15 @@ import { AccountRegisterListComponent } from "./99_00_00/99_10_00/99_10_04/accou
 import { RoleMenuListComponent } from "./99_00_00/99_10_00/99_10_02/role-menu-list/role-menu-list.component";
 import { RoleMenuEditComponent } from "./99_00_00/99_10_00/99_10_02/role-menu-edit/role-menu-edit.component";
 import { AccountAddEditComponent } from "./99_00_00/99_10_00/99_10_01/account-add-edit/account-add-edit.component";
+import { GenresListComponent } from "./20_00_00/20_01_00/20_01_01/genres-list/genres-list.component";
+import { GenresEditComponent } from "./20_00_00/20_01_00/20_01_01/genres-edit/genres-edit.component";
+import { MovieListComponent } from "./20_00_00/20_01_00/20_04_00/20_04_01/movie-list/movie-list.component";
+import { MovieEditComponent } from "./20_00_00/20_01_00/20_04_00/20_04_01/movie-edit/movie-edit.component";
 
 const routes: Routes = [
   { path: 'ql-tai-khoan', component: QlTaiKhoanComponent },
 
-  { path: 'voucher-form-column-settings', component: VoucherFormColumnSettingsListComponent, data: { table_name: "99_00_00_VoucherForm" } },
+  { path: 'voucher-form-column-settings', component: VoucherFormColumnSettingsListComponent, data: { table_name2: ['99_00_00_VoucherForm', 'SysVoucherFormColumn'] } },
   { path: 'app-voucher-form-column-settings-edit', component: VoucherFormColumnSettingsEditComponent, data: { table_name: "SysVoucherFormColumn" } },
 
   { path: 'datagrid-column-setting', component: DatagridColumnSettingListComponent },
@@ -71,6 +75,12 @@ const routes: Routes = [
 
   { path: 'list-role', component: RoleMenuListComponent, data: { table_name: "99.10.01_AccountList", url_voucher_form_edit: 'role-edit' } },
   { path: 'role-edit', component: RoleMenuEditComponent, data: { table_name2: ["99.10.02_RoleMenuList", "99.10.02_RoleMenuList2"] } },
+
+  { path: 'genres-list', component: GenresListComponent, data: { table_name: "20.01.01_MovieGenres", url_voucher_form_edit: 'genres-edit' } },
+  { path: 'genres-edit', component: GenresEditComponent, data: { table_name: "20.01.01_MovieGenres" } },
+
+  { path: 'movie-list', component: MovieListComponent, data: { table_name: "20.04.01_Movie", url_voucher_form_edit: 'movie-edit' } },
+  { path: 'movie-edit', component: MovieEditComponent, data: { table_name2: ["20.04.01_Movie", "20.04.01_Movie_2"] } },
 
   { path: '**', component: NotFoundPageComponent },
 ];

@@ -21,14 +21,14 @@ export class NationalAndLanguageListComponent extends LayoutComponentBase implem
 
     this.propertyDataGrid = {
       keyExpr: 'code',
-      height: window.innerHeight - 46,
+      height: window.innerHeight - 50,
       width: '100%',
       columnAutoWidth: true,
       scrolling: {
         mode: 'virtual'
       },
       pager: {
-        displayMode: 'adaptive',
+        displayMode: 'full',
         showNavigationButtons: true,
         showPageSizeSelector: true,
         visible: true,

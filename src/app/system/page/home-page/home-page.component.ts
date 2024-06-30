@@ -36,6 +36,8 @@ export class HomePageComponent extends LayoutComponentBase implements OnInit, On
     this.userInfo = this.getUserInfo() as UserInfo;
   }
 
+
+
   menuPermissions: Sys_Menu_Tree_View_MODEL[];
   showFiller = true;
   userInfo: UserInfo = new UserInfo();
@@ -48,27 +50,23 @@ export class HomePageComponent extends LayoutComponentBase implements OnInit, On
 
   ngOnInit(): void {
     // this.setTitleWebsite(this.translate('Quản trị', 'management'), true)
-    this.homepageService.setLoading(true);
-
+    this._loading = true;
     this.menuPermissionsClient.listMenuTreeView().subscribe(
       (res) => {
         this.setLstMenu(res);
         this.menuPermissions = res;
-       },
+        this._loading = false;
+      },
       (err) => {
         if (err.status === 401) {
           this.setLogin();
         }
-      },
-      () => {
-        this.homepageService.setLoading(false);
-      }
-    );
+        this._loading = false;
+      },);
   }
 
-  get PageLoading(): boolean {
-    return this.homepageService.loading;
-  }
+
+
 
   onClickDrawer() {
     this.is_show_hidden_menu = !this.is_show_hidden_menu;
@@ -76,7 +74,7 @@ export class HomePageComponent extends LayoutComponentBase implements OnInit, On
   }
 
   ngOnDestroy(): void {
-    alert('Destroy');
+    // alert('Destroy');
   }
 
   onLogout() {

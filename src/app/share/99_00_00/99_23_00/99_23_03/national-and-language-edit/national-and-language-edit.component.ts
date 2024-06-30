@@ -31,7 +31,7 @@ export class NationalAndLanguageEditComponent  extends LayoutComponentBase imple
 
   ngOnInit(): void {
     const state = this.getRouterState<National>();
-    // console.log(state)
+    //console.log(state)
 
     if (state) {
       this.action_type = state?.action_type;

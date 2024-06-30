@@ -12,7 +12,7 @@ export class SessionStorageServiceService {
       localStorage.setItem(key, value);
     }
     catch {
-      console.log('Not found sessionStorage');
+      // console.log('Not found sessionStorage');
     }
   }
 
@@ -21,7 +21,7 @@ export class SessionStorageServiceService {
       const data = localStorage.getItem(key);
       return data ? data : null;
     } catch {
-      console.log('Not found sessionStorage');
+      // console.log('Not found sessionStorage');
       return null;
     }
   }

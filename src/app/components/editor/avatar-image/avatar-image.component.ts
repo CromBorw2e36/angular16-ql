@@ -43,7 +43,7 @@ export class AvatarImageComponent extends LayoutComponentBase implements OnChang
         blob => {
           if (blob) {
             const url = window.URL.createObjectURL(blob);
-            console.log(url)
+            // console.log(url)
             this.InputMaster = url; // Set the URL to the imageUrl property
           }
         },

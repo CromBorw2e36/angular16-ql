@@ -29,7 +29,7 @@ export class DataGridComponent extends LayoutComponentBase implements OnInit, On
 
     this.propertyDataGrid = {
       keyExpr: '',
-      height: window.innerHeight - 46,
+      height: window.innerHeight - 50,
       scrolling: {
         mode: 'infinite'
       },
@@ -40,10 +40,11 @@ export class DataGridComponent extends LayoutComponentBase implements OnInit, On
         showCheckBoxesMode: 'onClick'
       },
       pager: {
-        allowedPageSizes: [10, 20, 50, 100],
-        displayMode: 'adaptive',
+        allowedPageSizes: [15],
+        displayMode: 'compact',
         showNavigationButtons: true,
         showPageSizeSelector: true,
+        visible: true,
       },
       // editing: {
       //   allowAdding: true,
@@ -124,7 +125,7 @@ export class DataGridComponent extends LayoutComponentBase implements OnInit, On
   getRowSelectedData<T>() {
     if (this.dxDataGridComponent) {
       const rowSelect = this.dxDataGridComponent.instance.getSelectedRowsData();
-      console.log(rowSelect)
+      // console.log(rowSelect)
       return rowSelect as T[];
     }
     return [];

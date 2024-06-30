@@ -38,7 +38,7 @@ export class VoucherFormColItemComponent extends LayoutComponentBase implements 
   dataSourceItems: any[] = [];
 
   @Input('InputConfig') InputMaster: SysVoucherFormColumn = new SysVoucherFormColumn();
-  @Input() value: any = undefined;
+  @Input() value!: any;
   @Output() valueChange = new EventEmitter<any>();
 
   ngOnChanges(changes: SimpleChanges): void {

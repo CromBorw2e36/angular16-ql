@@ -3,14 +3,19 @@
   [fixed]="true"
   (onActionClick)="handleActionClick($event)"
 ></tool-bar-component>
-<component-avatar-image
-  #avatarImageComponent
-  [InputMaster]="InputMaster_UserInfo.avatar64"
-></component-avatar-image>
+
+<div class="round_avatar_image_component">
+  <component-avatar-image
+    #avatarImageComponent
+    [InputMaster]="InputMaster_UserInfo.avatar64"
+  ></component-avatar-image>
+</div>
+
 <voucher-form-component
   [InputMaster]="InputMaster_UserInfo"
   [table_name]="_tableName2[0]"
-></voucher-form-component>
+>
+</voucher-form-component>
 
 <voucher-form-component
   [InputMaster]="InputMaster_Account"

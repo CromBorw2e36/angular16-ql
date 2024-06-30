@@ -47,6 +47,7 @@ export class FileUploaderComponent extends LayoutComponentBase implements OnChan
   nameTag: string = `input_file${this.random_key_string(10)}`;
   apiBase: APIBase;
   InputMaster: Array<I_Data_Source_File_Model> = [];
+  isEdit: boolean = false;
 
   @Input() disabled: boolean = false;
   @Input() property: I_Properties_Model = {}
@@ -65,37 +66,36 @@ export class FileUploaderComponent extends LayoutComponentBase implements OnChan
   }
 
 
-  handleUploadFile(event: Event) {
+  protected handleUploadFile(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files) {
-      // console.log('Files selected:', input.files);
+      //console.log('Files selected:', input.files);
       const files: File[] = Array.from(input.files || []);
       this.EventInsertFile(files);
-
     }
   }
 
-  handleDropFile(event: DragEvent) {
+  protected handleDropFile(event: DragEvent) {
     event.preventDefault();
     const files: File[] = Array.from(event.dataTransfer?.files || []);
     if (files) {
-      // console.log('Files dropped:', files);
+      //console.log('Files dropped:', files);
       this.EventInsertFile(files);
     }
   }
 
-  handleDragFile(event: DragEvent) {
+  protected handleDragFile(event: DragEvent) {
     event.preventDefault();
     // Optionally handle any drag-specific logic here
   }
 
-  handleDragOver(event: DragEvent) {
+  protected handleDragOver(event: DragEvent) {
     event.preventDefault();
     // Optionally handle any drag-specific logic here
   }
 
   @HostListener('paste', ['$event'])
-  onPaste(event: ClipboardEvent) {
+  protected onPaste(event: ClipboardEvent) {
     const items = event.clipboardData?.items;
     if (items) {
       const arr = [];
@@ -111,12 +111,12 @@ export class FileUploaderComponent extends LayoutComponentBase implements OnChan
     }
   }
 
-  handlePasteFile(file: Array<File>) {
-    // console.log('Handling pasted file:', file);
+  protected handlePasteFile(file: Array<File>) {
+    //console.log('Handling pasted file:', file);
     this.EventInsertFile(file);
   }
 
-  EventInsertFile(files: Array<File>) {
+  private EventInsertFile(files: Array<File>) {
     const arr: I_Data_Source_File_Model[] = [];
 
     files.forEach(file => {
@@ -135,45 +135,48 @@ export class FileUploaderComponent extends LayoutComponentBase implements OnChan
       data: this.InputMaster,
       value: arr,
     } as I_EventValueChange);
+    this.isEdit = true;
   }
 
-  readFile(file: File, visit: number) {
+  public readFile(file: File, visit: number) {
     const fileURL = URL.createObjectURL(file);
     this.InputMaster[visit].url = fileURL;
     this.InputMaster[visit].name = file.name;
     // this.InputMaster[visit].size = file.name;
   }
 
-  _refresh() { // Refresh tag input file
+  public _refresh() { // Refresh tag input file
     if (this.inputTypeFile) {
       this.inputTypeFile.nativeElement.value = '';
     }
   }
 
-  handleSave() {
-    console.log(this.InputMaster)
+  public handleSave() {
+    // console.log(this.InputMaster)
   }
 
-  handleRemoveItemByIndex(index: number) {
+  protected handleRemoveItemByIndex(index: number) {
     this.InputMaster.splice(index, 1);
+    this.isEdit = true;
   }
 
-  getValue() {
+  public getValue() {
     return this.InputMaster;
   }
 
 
-  handleGetUploadFileParam(p: UploadFileModel): FormData {
+  private handleGetUploadFileParam(p: UploadFileModel): FormData {
     const formData = new FormData();
     this.InputMaster.forEach(x => {
-      formData.append('files', x.file as File); // fileModel.file type file
+      if (x.file) formData.append('files', x.file as File); // fileModel.file type file
     })
     formData.append('table_name', p.table_name ? p.table_name : '');
     formData.append('col_name', p.col_name ? p.col_name : '');
     return formData;
   }
 
-  UploadFileVersion12(uploadParams: UploadFileModel) {
+  public UploadFileVersion12(uploadParams: UploadFileModel) {
+    if (this.InputMaster.length == 0) return Promise.resolve(undefined);
     const formDataArray = this.handleGetUploadFileParam(uploadParams);
     let url_ = this.configService.BASE_URL_SERVER + "/api/CommonContronller/UploadFileVersion12";
     const token = this.cookieService.get('TOKEN');
@@ -189,4 +192,26 @@ export class FileUploaderComponent extends LayoutComponentBase implements OnChan
       .then((x) => Promise.resolve(x));
     // const result = await response.json();
   }
+
+  onLoadDataSource(fileID: Array<string>) {
+    this.commonClient.fileSearch2(fileID).subscribe(res => {
+      if (res.status == 0) {
+        const data: UploadFileModel[] | undefined = res.data;
+        if (data) {
+          data.forEach(item => {
+            const obj = {
+              id: item.id,
+              name: item.file_name,
+              file: undefined,
+              url: undefined,
+            } as I_Data_Source_File_Model;
+            this.InputMaster.push(obj);
+          });
+        }
+      }
+    }, err => {
+      if (err.status == 401 || err.status == 403) this.Authorization();
+    })
+  }
+
 }

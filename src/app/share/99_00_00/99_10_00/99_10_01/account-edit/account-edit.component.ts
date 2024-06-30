@@ -39,7 +39,7 @@ export class AccountEditComponent extends LayoutComponentBase implements OnInit,
 
   ngOnInit(): void {
     const state = this.getRouterState<AccountClientProfileModel>();
-    // console.log(state)
+    //console.log(state)
 
     if (state) {
       this.action_type = state?.action_type;
@@ -136,7 +136,7 @@ export class AccountEditComponent extends LayoutComponentBase implements OnInit,
   }
 
   UpdateData() {
-    if (this.avatarImageComponent) {
+    if (this.avatarImageComponent && this.avatarImageComponent.uploadFile?.isEdit) {
       const uploadParams: UploadFileModel = {
         table_name: this.tableNameSQL,
         col_name: "avatar",
@@ -146,13 +146,13 @@ export class AccountEditComponent extends LayoutComponentBase implements OnInit,
 
       if (result) {
         result.then(res => {
-          if (res.status == 200) {
+          if (res && res.status == 200) {
             res.json().then((data: StatusMessageOfListOfUploadFileModel) => {
 
-              this.InputMaster_UserInfo.avatar = data.data![0].file_path as string;
-              this.InputMaster_UserInfo.avatar16 = data.data![0].file_path as string;
-              this.InputMaster_UserInfo.avatar32 = data.data![0].file_path as string;
-              this.InputMaster_UserInfo.avatar64 = data.data![0].file_path as string;
+              this.InputMaster_UserInfo.avatar = data.data![0].id as string;
+              this.InputMaster_UserInfo.avatar16 = data.data![0].id as string;
+              this.InputMaster_UserInfo.avatar32 = data.data![0].id as string;
+              this.InputMaster_UserInfo.avatar64 = data.data![0].id as string;
 
               const obj = {
                 account: this.InputMaster_Account,

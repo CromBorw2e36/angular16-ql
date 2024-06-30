@@ -129,7 +129,8 @@ const icons = {
     BreadcrumbComponent,
     PopupComponent,
     VoucherFormComponent,
-    AvatarImageComponent
+    AvatarImageComponent,
+    FileUploaderComponent,
   ],
 })
 export class ComponentModule { }

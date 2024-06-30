@@ -33,7 +33,7 @@ export class VoucherFormColumnSettingsEditComponent extends LayoutComponentBase 
 
   ngOnInit(): void {
     const state = this.getRouterState<SysVoucherFormColumn>();
-    // console.log(state)
+    //console.log(state)
 
     if (state) {
       this.action_type = state?.action_type;
@@ -62,7 +62,7 @@ export class VoucherFormColumnSettingsEditComponent extends LayoutComponentBase 
 
 
   ValueChangedEventVoucherForm(event: any): void {
-
+    this.InputMaster = event;
   }
 
   onLoadData(model: SysVoucherFormColumn) {

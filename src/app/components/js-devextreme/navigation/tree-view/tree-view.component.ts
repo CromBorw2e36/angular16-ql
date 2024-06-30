@@ -52,7 +52,7 @@ export class TreeViewComponent extends LayoutComponentBase implements OnInit {
   }
 
   handleItemClick(e: ItemClickEvent | any) {
-    // console.log('handleItemClick/treeViewItemContextMenu ', e)
+    //console.log('handleItemClick/treeViewItemContextMenu ', e)
     this.selectedTreeItem = e.itemData;
     this.KeepSelectCurrentSelectedItem(e);
     this.onItemClick.emit(e);
@@ -68,7 +68,7 @@ export class TreeViewComponent extends LayoutComponentBase implements OnInit {
   }
 
   treeViewItemContextMenu(e: DxTreeViewTypes.ItemContextMenuEvent) {
-    // console.log('treeViewItemContextMenu ', e)
+    //console.log('treeViewItemContextMenu ', e)
     this.selectedTreeItem = e.itemData;
     this.KeepSelectCurrentSelectedItem(e);
   }
@@ -78,7 +78,7 @@ export class TreeViewComponent extends LayoutComponentBase implements OnInit {
       contextMenuValue: e,
       selectedItem: this.selectedTreeItem,
     }
-    console.log(ev)
+    // console.log(ev)
     this.onContextMenuItemClick.emit(ev);
   }
 

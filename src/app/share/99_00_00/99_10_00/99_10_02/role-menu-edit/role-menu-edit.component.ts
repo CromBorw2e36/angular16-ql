@@ -30,7 +30,7 @@ export class RoleMenuEditComponent extends LayoutComponentBase implements OnInit
         mode: 'virtual'
       },
       pager: {
-        displayMode: 'adaptive',
+        displayMode: 'full',
         showNavigationButtons: true,
         showPageSizeSelector: true,
         visible: true,
@@ -111,7 +111,7 @@ export class RoleMenuEditComponent extends LayoutComponentBase implements OnInit
 
   onLoadData() {
     const state = this.getRouterState<UserInfo>()
-    console.log(state)
+    // console.log(state)
     const obj = {
       account: {
         account: state?.data.id,

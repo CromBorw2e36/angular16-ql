@@ -27,7 +27,7 @@ export class APIBase extends LayoutComponentBase {
       );
       options.headers = options.headers.append('Token', token);
     } catch {
-      console.log(`transformOptions ERROR`);
+      // console.log(`transformOptions ERROR`);
     }
     return Promise.resolve(options);
   }

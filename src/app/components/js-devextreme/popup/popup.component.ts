@@ -72,6 +72,8 @@ export class PopupComponent extends LayoutComponentBase implements OnChanges {
   @Input() title!: string;
   @Input() property: DxPopupTypes.Properties;
   @Input() listAction: Action_Type_Enum[] = [];
+  @Input() showTitleAction: boolean = false;
+  @Input() loading: boolean = false;
 
   @Output() actionClick = new EventEmitter<{ code: string }>();
   @ViewChild('popupComponent') popupComponent: DxPopupComponent | undefined;
@@ -154,6 +156,11 @@ export class PopupComponent extends LayoutComponentBase implements OnChanges {
         onClick: this.handleClickFullScreen.bind(this)
       } as DxButtonTypes.Properties
     })
+
+    if(this.popupComponent && this.showTitleAction){
+      const findActionCurrent = dateSourceButton.find(x => x.code == this.action);
+      this.popupComponent.title = this.title + ' / ' +  this.translate(findActionCurrent?.textVN?? '', findActionCurrent?.text || "");
+    }
   }
 
   handleClickFullScreen() {
@@ -177,7 +184,7 @@ const dateSourceButton = [
     code: Action_Type_Enum.ADD,
     stylingMode: 'contained',
     type: 'default',
-    textVN: 'Thêm',
+    textVN: 'Thêm mới',
     text: "Add",
   },
   {
@@ -219,8 +226,15 @@ const dateSourceButton = [
     code: Action_Type_Enum.VIEW,
     stylingMode: 'contained',
     type: 'default',
-    textVN: 'Xem',
+    textVN: 'Xem chi tiết',
     text: "View",
+  },
+  {
+    code: Action_Type_Enum.COPY,
+    stylingMode: 'contained',
+    type: 'default',
+    textVN: 'Sao chép',
+    text: "Copy",
   },
 ]
 

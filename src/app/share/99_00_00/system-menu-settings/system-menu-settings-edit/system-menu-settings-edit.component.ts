@@ -31,7 +31,7 @@ export class SystemMenuSettingsEditComponent extends LayoutComponentBase impleme
 
   ngOnInit(): void {
     const state = this.getRouterState<SysMenu>();
-    // console.log(state)
+    //console.log(state)
 
     if (state) {
       this.action_type = state?.action_type;

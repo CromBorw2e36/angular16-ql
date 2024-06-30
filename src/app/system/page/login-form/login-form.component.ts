@@ -51,7 +51,7 @@ export class LoginFormComponent extends LayoutComponentBase implements OnInit, O
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.InputMaster);
+    // console.log(this.InputMaster);
   }
 
   ngAfterViewInit(): void {
@@ -90,7 +90,8 @@ export class LoginFormComponent extends LayoutComponentBase implements OnInit, O
     }
   }
 
-  OnSubmit() {
+  OnSubmit(text: string) {
+    console.log(text)
     if (!this.InputMaster.account) {
       this.showMessageWarning(
         this.translate('Vui lòng nhập tài khoản', 'Plaese enter your account')

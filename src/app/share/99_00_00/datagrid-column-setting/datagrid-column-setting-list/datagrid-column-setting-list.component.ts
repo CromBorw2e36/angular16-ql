@@ -25,12 +25,12 @@ export class DatagridColumnSettingListComponent extends LayoutComponentBase impl
     super(injector);
     this.propertyDataGrid = {
       keyExpr: 'id',
-      height: window.innerHeight - 46,
+      height: window.innerHeight - 50,
       scrolling: {
         mode: 'virtual'
       },
       pager: {
-        displayMode: 'adaptive',
+        displayMode: 'full',
         showNavigationButtons: true,
         showPageSizeSelector: true,
         visible: true,

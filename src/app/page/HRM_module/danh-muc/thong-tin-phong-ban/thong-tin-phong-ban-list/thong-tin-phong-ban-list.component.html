@@ -1,0 +1,9 @@
+<tool-bar-component [action_type]="action_type_toolbar" (onActionClick)="handleActionClick($event)"></tool-bar-component>
+<data-grid-component
+#dataGridComponent
+[tableName]="_tableName"
+[propertyDataGrid]="propertyDataGrid"
+[dataSource]="InputMaster"
+></data-grid-component>
+<app-thong-tin-phong-ban-edit #thongTinPhongBanEditComponent [filterInput]="filterInput" (onEditSuccess)="ActionEditSuccess($event)"></app-thong-tin-phong-ban-edit>
+<display-load-panel-devextreme [InputMaster]="_loading"></display-load-panel-devextreme>

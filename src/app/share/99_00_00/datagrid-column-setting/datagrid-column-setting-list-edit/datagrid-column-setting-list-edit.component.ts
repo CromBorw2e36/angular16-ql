@@ -77,9 +77,9 @@ export class DatagridColumnSettingListEditComponent extends LayoutComponentBase 
                 switch (this.typeAction) {
                   case Action_Type_Enum.COPY: {
                     this.InputMaster.id = undefined;
-                    this.InputMaster.dataField = undefined;
-                    this.InputMaster.caption = undefined;
-                    this.InputMaster.caption_VN = undefined;
+                    // this.InputMaster.dataField = undefined;
+                    // this.InputMaster.caption = undefined;
+                    // this.InputMaster.caption_VN = undefined;
                     this.InputMaster.orderNo = (this.InputMaster.orderNo ?? 0) + 5;
                     break;
                   }
@@ -107,7 +107,7 @@ export class DatagridColumnSettingListEditComponent extends LayoutComponentBase 
   }
 
   onActionClick_PopupComponent(ev: { code: string; }): void {
-    console.log("Giá trị master: ", this.InputMaster);
+    // console.log("Giá trị master: ", this.InputMaster);
     switch (ev.code) {
       case Action_Type_Enum.CLOSE: {
         this.setShowPopup({ state: false, data: undefined });

@@ -6,6 +6,7 @@
     dataSourceVoucherFormColumns.length > 0
   "
 >
+  <ng-content select="[topContent]"></ng-content>
   <div
     class="control-input"
     *ngFor="
@@ -14,11 +15,77 @@
       trackBy: trackByFunc
     "
   >
-    <app-voucher-form-col-item
-      [InputConfig]="itemVoucherFormCol"
-      [value]="InputMaster?.[itemVoucherFormCol.code!] ?? undefined"
-      (valueChange)="handleValueChange($event)"
-    ></app-voucher-form-col-item>
+    <div [ngSwitch]="itemVoucherFormCol.typeControl">
+      <div *ngSwitchCase="typeComponent.textBox">
+        <control-text-box-component
+          [propertyControl]="GenValueConfig"
+          [label]="
+            translate(
+              itemVoucherFormCol.labelControlVN ?? '',
+              itemVoucherFormCol.labelControl ?? ''
+            )
+          "
+          [value]="InputMaster?.[itemVoucherFormCol.code!]"
+          (valueChange)="ValueChange(itemVoucherFormCol.code!, $event)"
+        ></control-text-box-component>
+      </div>
+      <div *ngSwitchCase="typeComponent.checkBox">
+        <control-check-box-component
+          [propertyControl]="GenValueConfig"
+          [label]="
+            translate(
+              itemVoucherFormCol.labelControlVN ?? '',
+              itemVoucherFormCol.labelControl ?? ''
+            )
+          "
+          [value]="InputMaster?.[itemVoucherFormCol.code!]"
+          (valueChange)="ValueChange(itemVoucherFormCol.code!, $event)"
+        ></control-check-box-component>
+      </div>
+      <div *ngSwitchCase="typeComponent.dateBox">
+        <control-date-box-component
+          [propertyControl]="GenValueConfigDate"
+          [label]="
+            translate(
+              itemVoucherFormCol.labelControlVN ?? '',
+              itemVoucherFormCol.labelControl ?? ''
+            )
+          "
+          [value]="InputMaster?.[itemVoucherFormCol.code!]"
+          (valueChange)="ValueChange(itemVoucherFormCol.code!, $event)"
+        ></control-date-box-component>
+      </div>
+      <div *ngSwitchCase="typeComponent.numberBox">
+        <control-number-box-component
+          [propertyControl]="GenValueConfigNumber"
+          [label]="
+            translate(
+              itemVoucherFormCol.labelControlVN ?? '',
+              itemVoucherFormCol.labelControl ?? ''
+            )
+          "
+          [value]="InputMaster?.[itemVoucherFormCol.code!]"
+          (valueChange)="ValueChange(itemVoucherFormCol.code!, $event)"
+        ></control-number-box-component>
+      </div>
+      <div *ngSwitchCase="typeComponent.comboBox">
+        <control-select-box-component
+          [label]="
+            translate(
+              itemVoucherFormCol.labelControlVN ?? '',
+              itemVoucherFormCol.labelControl ?? ''
+            )
+          "
+          [dataSource]="dataSourceSelectBox[itemVoucherFormCol.code!]"
+          [value]="InputMaster?.[itemVoucherFormCol.code!]"
+          (valueChange)="ValueChange(itemVoucherFormCol.code!, $event)"
+          [displayExpr]="'name'"
+          [valueExpr]="'code'"
+        ></control-select-box-component>
+      </div>
+      <div *ngSwitchCase="typeComponent.textArea">not exists</div>
+      <div *ngSwitchDefault></div>
+    </div>
   </div>
 </div>
 
@@ -34,6 +101,7 @@
   <div class="form-title">
     {{ translate(itemVoucherFormGroup.name2, itemVoucherFormGroup.name1) }}
   </div>
+
   <div
     class="control-input"
     *ngFor="
@@ -44,12 +112,83 @@
       trackBy: trackByFunc
     "
   >
-    <app-voucher-form-col-item
+    <!-- <app-voucher-form-col-item
       [InputConfig]="itemVoucherFormCol"
-      [value]="InputMaster?.[itemVoucherFormCol.code!] ?? undefined"
-      (valueChange)="handleValueChange($event)"
-    ></app-voucher-form-col-item>
-  </div>
+      [value]="InputMaster?.[itemVoucherFormCol.code!]"
+      (valueChange)="ValueChange(itemVoucherFormCol.code!, $event)"
+    ></app-voucher-form-col-item> -->
 
+    <div [ngSwitch]="itemVoucherFormCol.typeControl">
+      <div *ngSwitchCase="typeComponent.textBox">
+        <control-text-box-component
+          [propertyControl]="GenValueConfig"
+          [label]="
+            translate(
+              itemVoucherFormCol.labelControlVN ?? '',
+              itemVoucherFormCol.labelControl ?? ''
+            )
+          "
+          [value]="InputMaster?.[itemVoucherFormCol.code!]"
+          (valueChange)="ValueChange(itemVoucherFormCol.code!,  $event)"
+        ></control-text-box-component>
+      </div>
+      <div *ngSwitchCase="typeComponent.checkBox">
+        <control-check-box-component
+          [propertyControl]="GenValueConfig"
+          [label]="
+            translate(
+              itemVoucherFormCol.labelControlVN ?? '',
+              itemVoucherFormCol.labelControl ?? ''
+            )
+          "
+          [value]="InputMaster?.[itemVoucherFormCol.code!]"
+          (valueChange)="ValueChange(itemVoucherFormCol.code!, $event)"
+        ></control-check-box-component>
+      </div>
+      <div *ngSwitchCase="typeComponent.dateBox">
+        <control-date-box-component
+          [propertyControl]="GenValueConfigDate"
+          [label]="
+            translate(
+              itemVoucherFormCol.labelControlVN ?? '',
+              itemVoucherFormCol.labelControl ?? ''
+            )
+          "
+          [value]="InputMaster?.[itemVoucherFormCol.code!]"
+          (valueChange)="ValueChange(itemVoucherFormCol.code!, $event)"
+        ></control-date-box-component>
+      </div>
+      <div *ngSwitchCase="typeComponent.numberBox">
+        <control-number-box-component
+          [propertyControl]="GenValueConfigNumber"
+          [label]="
+            translate(
+              itemVoucherFormCol.labelControlVN ?? '',
+              itemVoucherFormCol.labelControl ?? ''
+            )
+          "
+          [value]="InputMaster?.[itemVoucherFormCol.code!]"
+          (valueChange)="ValueChange(itemVoucherFormCol.code!, $event)"
+        ></control-number-box-component>
+      </div>
+      <div *ngSwitchCase="typeComponent.comboBox">
+        <control-select-box-component
+          [label]="
+            translate(
+              itemVoucherFormCol.labelControlVN ?? '',
+              itemVoucherFormCol.labelControl ?? ''
+            )
+          "
+          [dataSource]="dataSourceSelectBox[itemVoucherFormCol.code!]"
+          [value]="InputMaster?.[itemVoucherFormCol.code!]"
+          (valueChange)="ValueChange(itemVoucherFormCol.code!, $event)"
+          [displayExpr]="'name'"
+          [valueExpr]="'code'"
+        ></control-select-box-component>
+      </div>
+      <div *ngSwitchCase="typeComponent.textArea">not exists</div>
+      <div *ngSwitchDefault></div>
+    </div>
+  </div>
   <ng-content></ng-content>
 </div>

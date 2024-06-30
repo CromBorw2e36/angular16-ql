@@ -31,7 +31,7 @@ export class PermissionEditComponent  extends LayoutComponentBase implements OnI
 
   ngOnInit(): void {
     const state = this.getRouterState<SysPermission>();
-    // console.log(state)
+    //console.log(state)
 
     if (state) {
       this.action_type = state?.action_type;

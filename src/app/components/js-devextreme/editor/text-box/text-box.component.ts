@@ -19,14 +19,12 @@ export class ControlTextBoxComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if ('value' in changes) {
       this.value = changes['value'].currentValue;
-      if(this.dxTextBoxViewChild){
+      if (this.dxTextBoxViewChild) {
         this.dxTextBoxViewChild.instance._refresh();
-        console.log(this.value)
       }
     }
   }
   ngOnInit(): void {
-
   }
 
   ngAfterViewInit(): void {

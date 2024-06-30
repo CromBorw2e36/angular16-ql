@@ -54,6 +54,6 @@ export class AppComponent
 
   async onNavigationCurrent(params: SysMenu) {
     this.router.navigate([params.url]);
-    console.log(params);
+    // console.log(params);
   }
 }

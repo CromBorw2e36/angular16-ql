@@ -57,14 +57,14 @@ export class MenuV2Component extends LayoutComponentBase implements OnInit, OnCh
     const getMenuLV1 = this.menuV2Service.getMenuSelectedByLv('1');
     const getMenuLV2 = this.menuV2Service.getMenuSelectedByLv('2');
 
-    // console.log(getMenuLV1, getMenuLV2)
+    //console.log(getMenuLV1, getMenuLV2)
 
     if (getMenuLV2 && getMenuLV2.menuid) {
       const findIdx = this.InputMaster.findIndex(x => x.menuid === getMenuLV2.menuIDParent);
       const geValueCurrentIdx = this.InputMaster[findIdx]?.items;
       if (findIdx !== -1 && geValueCurrentIdx) {
         const findIdx2 = geValueCurrentIdx.findIndex(x => x.menuid === getMenuLV2.menuid);
-        console.log(this.InputMaster[findIdx].items)
+        // console.log(this.InputMaster[findIdx].items)
         if (findIdx2 !== -1 && this.InputMaster[findIdx].items) {
           this.InputMaster[findIdx].items![findIdx2]!.selected = true;
         }

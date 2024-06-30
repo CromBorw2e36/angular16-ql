@@ -5,8 +5,9 @@ div#tool_bar_component {
   align-items: stretch;
   padding: 5px 0;
   width: 100%;
-
-
+  background-color: white;
+  border-bottom: 0.7px solid rgba(128, 128, 128, 0.372);
+  
   .toolbar-btn-icon {
     display: none;
   }

@@ -1581,915 +1581,6 @@ export class SysVoucherFormClient extends APIBase implements ISysVoucherFormClie
     }
 }
 
-export interface ICurrentJobPositionsClient {
-    getCurrentJobPositions(): Observable<CurrentJobPosition[]>;
-    postCurrentJobPosition(currentJobPosition: CurrentJobPosition): Observable<CurrentJobPosition>;
-    getCurrentJobPosition(id: string): Observable<CurrentJobPosition>;
-    putCurrentJobPosition(id: string, currentJobPosition: CurrentJobPosition): Observable<FileResponse>;
-    deleteCurrentJobPosition(id: string): Observable<FileResponse>;
-}
-
-@Injectable()
-export class CurrentJobPositionsClient extends APIBase implements ICurrentJobPositionsClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        super(configuration);
-        this.http = http;
-        this.baseUrl = baseUrl ?? this.getBaseUrl("");
-    }
-
-    getCurrentJobPositions(): Observable<CurrentJobPosition[]> {
-        let url_ = this.baseUrl + "/api/CurrentJobPositions";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
-            return this.http.request("get", url_, transformedOptions_);
-        })).pipe(_observableMergeMap((response_: any) => {
-            return this.processGetCurrentJobPositions(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetCurrentJobPositions(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<CurrentJobPosition[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<CurrentJobPosition[]>;
-        }));
-    }
-
-    protected processGetCurrentJobPositions(response: HttpResponseBase): Observable<CurrentJobPosition[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(CurrentJobPosition.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    postCurrentJobPosition(currentJobPosition: CurrentJobPosition): Observable<CurrentJobPosition> {
-        let url_ = this.baseUrl + "/api/CurrentJobPositions";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(currentJobPosition);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
-            return this.http.request("post", url_, transformedOptions_);
-        })).pipe(_observableMergeMap((response_: any) => {
-            return this.processPostCurrentJobPosition(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPostCurrentJobPosition(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<CurrentJobPosition>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<CurrentJobPosition>;
-        }));
-    }
-
-    protected processPostCurrentJobPosition(response: HttpResponseBase): Observable<CurrentJobPosition> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = CurrentJobPosition.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    getCurrentJobPosition(id: string): Observable<CurrentJobPosition> {
-        let url_ = this.baseUrl + "/api/CurrentJobPositions/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
-            return this.http.request("get", url_, transformedOptions_);
-        })).pipe(_observableMergeMap((response_: any) => {
-            return this.processGetCurrentJobPosition(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetCurrentJobPosition(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<CurrentJobPosition>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<CurrentJobPosition>;
-        }));
-    }
-
-    protected processGetCurrentJobPosition(response: HttpResponseBase): Observable<CurrentJobPosition> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = CurrentJobPosition.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    putCurrentJobPosition(id: string, currentJobPosition: CurrentJobPosition): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/CurrentJobPositions/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(currentJobPosition);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
-            return this.http.request("put", url_, transformedOptions_);
-        })).pipe(_observableMergeMap((response_: any) => {
-            return this.processPutCurrentJobPosition(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPutCurrentJobPosition(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<FileResponse>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<FileResponse>;
-        }));
-    }
-
-    protected processPutCurrentJobPosition(response: HttpResponseBase): Observable<FileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    deleteCurrentJobPosition(id: string): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/CurrentJobPositions/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
-            return this.http.request("delete", url_, transformedOptions_);
-        })).pipe(_observableMergeMap((response_: any) => {
-            return this.processDeleteCurrentJobPosition(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDeleteCurrentJobPosition(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<FileResponse>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<FileResponse>;
-        }));
-    }
-
-    protected processDeleteCurrentJobPosition(response: HttpResponseBase): Observable<FileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-}
-
-export interface ISalaryAndBenefitsClient {
-    getSalaryAndBenefitsAll(): Observable<SalaryAndBenefits[]>;
-    postSalaryAndBenefits(salaryAndBenefits: SalaryAndBenefits): Observable<SalaryAndBenefits>;
-    getSalaryAndBenefits(id: string): Observable<SalaryAndBenefits>;
-    putSalaryAndBenefits(id: string, salaryAndBenefits: SalaryAndBenefits): Observable<FileResponse>;
-    deleteSalaryAndBenefits(id: string): Observable<FileResponse>;
-}
-
-@Injectable()
-export class SalaryAndBenefitsClient extends APIBase implements ISalaryAndBenefitsClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        super(configuration);
-        this.http = http;
-        this.baseUrl = baseUrl ?? this.getBaseUrl("");
-    }
-
-    getSalaryAndBenefitsAll(): Observable<SalaryAndBenefits[]> {
-        let url_ = this.baseUrl + "/api/SalaryAndBenefits";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
-            return this.http.request("get", url_, transformedOptions_);
-        })).pipe(_observableMergeMap((response_: any) => {
-            return this.processGetSalaryAndBenefitsAll(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetSalaryAndBenefitsAll(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<SalaryAndBenefits[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<SalaryAndBenefits[]>;
-        }));
-    }
-
-    protected processGetSalaryAndBenefitsAll(response: HttpResponseBase): Observable<SalaryAndBenefits[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(SalaryAndBenefits.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    postSalaryAndBenefits(salaryAndBenefits: SalaryAndBenefits): Observable<SalaryAndBenefits> {
-        let url_ = this.baseUrl + "/api/SalaryAndBenefits";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(salaryAndBenefits);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
-            return this.http.request("post", url_, transformedOptions_);
-        })).pipe(_observableMergeMap((response_: any) => {
-            return this.processPostSalaryAndBenefits(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPostSalaryAndBenefits(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<SalaryAndBenefits>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<SalaryAndBenefits>;
-        }));
-    }
-
-    protected processPostSalaryAndBenefits(response: HttpResponseBase): Observable<SalaryAndBenefits> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = SalaryAndBenefits.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    getSalaryAndBenefits(id: string): Observable<SalaryAndBenefits> {
-        let url_ = this.baseUrl + "/api/SalaryAndBenefits/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
-            return this.http.request("get", url_, transformedOptions_);
-        })).pipe(_observableMergeMap((response_: any) => {
-            return this.processGetSalaryAndBenefits(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetSalaryAndBenefits(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<SalaryAndBenefits>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<SalaryAndBenefits>;
-        }));
-    }
-
-    protected processGetSalaryAndBenefits(response: HttpResponseBase): Observable<SalaryAndBenefits> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = SalaryAndBenefits.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    putSalaryAndBenefits(id: string, salaryAndBenefits: SalaryAndBenefits): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/SalaryAndBenefits/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(salaryAndBenefits);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
-            return this.http.request("put", url_, transformedOptions_);
-        })).pipe(_observableMergeMap((response_: any) => {
-            return this.processPutSalaryAndBenefits(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPutSalaryAndBenefits(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<FileResponse>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<FileResponse>;
-        }));
-    }
-
-    protected processPutSalaryAndBenefits(response: HttpResponseBase): Observable<FileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    deleteSalaryAndBenefits(id: string): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/SalaryAndBenefits/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
-            return this.http.request("delete", url_, transformedOptions_);
-        })).pipe(_observableMergeMap((response_: any) => {
-            return this.processDeleteSalaryAndBenefits(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDeleteSalaryAndBenefits(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<FileResponse>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<FileResponse>;
-        }));
-    }
-
-    protected processDeleteSalaryAndBenefits(response: HttpResponseBase): Observable<FileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-}
-
-export interface IWorkHistoriesClient {
-    getWorkHistories(): Observable<WorkHistory[]>;
-    postWorkHistory(workHistory: WorkHistory): Observable<WorkHistory>;
-    getWorkHistory(id: string): Observable<WorkHistory>;
-    putWorkHistory(id: string, workHistory: WorkHistory): Observable<FileResponse>;
-    deleteWorkHistory(id: string): Observable<FileResponse>;
-}
-
-@Injectable()
-export class WorkHistoriesClient extends APIBase implements IWorkHistoriesClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        super(configuration);
-        this.http = http;
-        this.baseUrl = baseUrl ?? this.getBaseUrl("");
-    }
-
-    getWorkHistories(): Observable<WorkHistory[]> {
-        let url_ = this.baseUrl + "/api/WorkHistories";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
-            return this.http.request("get", url_, transformedOptions_);
-        })).pipe(_observableMergeMap((response_: any) => {
-            return this.processGetWorkHistories(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetWorkHistories(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<WorkHistory[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<WorkHistory[]>;
-        }));
-    }
-
-    protected processGetWorkHistories(response: HttpResponseBase): Observable<WorkHistory[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(WorkHistory.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    postWorkHistory(workHistory: WorkHistory): Observable<WorkHistory> {
-        let url_ = this.baseUrl + "/api/WorkHistories";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(workHistory);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
-            return this.http.request("post", url_, transformedOptions_);
-        })).pipe(_observableMergeMap((response_: any) => {
-            return this.processPostWorkHistory(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPostWorkHistory(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<WorkHistory>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<WorkHistory>;
-        }));
-    }
-
-    protected processPostWorkHistory(response: HttpResponseBase): Observable<WorkHistory> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = WorkHistory.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    getWorkHistory(id: string): Observable<WorkHistory> {
-        let url_ = this.baseUrl + "/api/WorkHistories/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
-            return this.http.request("get", url_, transformedOptions_);
-        })).pipe(_observableMergeMap((response_: any) => {
-            return this.processGetWorkHistory(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetWorkHistory(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<WorkHistory>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<WorkHistory>;
-        }));
-    }
-
-    protected processGetWorkHistory(response: HttpResponseBase): Observable<WorkHistory> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = WorkHistory.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    putWorkHistory(id: string, workHistory: WorkHistory): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/WorkHistories/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(workHistory);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
-            return this.http.request("put", url_, transformedOptions_);
-        })).pipe(_observableMergeMap((response_: any) => {
-            return this.processPutWorkHistory(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPutWorkHistory(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<FileResponse>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<FileResponse>;
-        }));
-    }
-
-    protected processPutWorkHistory(response: HttpResponseBase): Observable<FileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    deleteWorkHistory(id: string): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/WorkHistories/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
-            return this.http.request("delete", url_, transformedOptions_);
-        })).pipe(_observableMergeMap((response_: any) => {
-            return this.processDeleteWorkHistory(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDeleteWorkHistory(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<FileResponse>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<FileResponse>;
-        }));
-    }
-
-    protected processDeleteWorkHistory(response: HttpResponseBase): Observable<FileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-}
-
 export interface IMovieCommentClient {
     insert(model: MovieCommentModel): Observable<StatusMessageOfMovieCommentModel>;
     delete(model: MovieCommentModel): Observable<StatusMessageOfMovieCommentModel>;
@@ -4117,6 +3208,2597 @@ export class MovieWatchHistoryClient extends APIBase implements IMovieWatchHisto
             result200 = StatusMessageOfListOfMovieWatchHistoryModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export interface IHRMCommonClient {
+    departmentInsert(model: DepartmentModel): Observable<StatusMessageOfDepartmentModel>;
+    departmentGet(model: DepartmentModel): Observable<StatusMessageOfDepartmentModel>;
+    departmentDelete(model: DepartmentModel): Observable<StatusMessageOfDepartmentModel>;
+    departmentSearch(model: DepartmentModel): Observable<StatusMessageOfListOfDepartmentModel>;
+    departmentUpdate(model: DepartmentModel): Observable<StatusMessageOfDepartmentModel>;
+    positionInsert(model: PositionModel): Observable<StatusMessageOfPositionModel>;
+    positionGet(model: PositionModel): Observable<StatusMessageOfPositionModel>;
+    positionDelete(model: PositionModel): Observable<StatusMessageOfPositionModel>;
+    positionSearch(model: PositionModel): Observable<StatusMessageOfListOfPositionModel>;
+    positionUpdate(model: PositionModel): Observable<StatusMessageOfPositionModel>;
+    statusEmployeeInsert(model: StatusEmployeeModel): Observable<StatusMessageOfStatusEmployeeModel>;
+    statusEmployeenGet(model: StatusEmployeeModel): Observable<StatusMessageOfStatusEmployeeModel>;
+    statusEmployeeDelete(model: StatusEmployeeModel): Observable<StatusMessageOfStatusEmployeeModel>;
+    statusEmployeeSearch(model: StatusEmployeeModel): Observable<StatusMessageOfListOfStatusEmployeeModel>;
+    statusEmployeeUpdate(model: StatusEmployeeModel): Observable<StatusMessageOfStatusEmployeeModel>;
+    typeEmployeeInsert(model: TypeEmployeeModel): Observable<StatusMessageOfTypeEmployeeModel>;
+    typeEmployeeGet(model: TypeEmployeeModel): Observable<StatusMessageOfTypeEmployeeModel>;
+    typeEmployeeDelete(model: TypeEmployeeModel): Observable<StatusMessageOfTypeEmployeeModel>;
+    typeEmployeeSearch(model: TypeEmployeeModel): Observable<StatusMessageOfListOfTypeEmployeeModel>;
+    typeEmployeeUpdate(model: TypeEmployeeModel): Observable<StatusMessageOfTypeEmployeeModel>;
+    typeWorkInsert(model: TypeWorkModel): Observable<StatusMessageOfTypeWorkModel>;
+    typeWorkGet(model: TypeWorkModel): Observable<StatusMessageOfTypeWorkModel>;
+    typeWorkDelete(model: TypeWorkModel): Observable<StatusMessageOfTypeWorkModel>;
+    typeWorkSearch(model: TypeWorkModel): Observable<StatusMessageOfListOfTypeWorkModel>;
+    typeWorkUpdate(model: TypeWorkModel): Observable<StatusMessageOfTypeWorkModel>;
+}
+
+@Injectable()
+export class HRMCommonClient extends APIBase implements IHRMCommonClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        super(configuration);
+        this.http = http;
+        this.baseUrl = baseUrl ?? this.getBaseUrl("");
+    }
+
+    departmentInsert(model: DepartmentModel): Observable<StatusMessageOfDepartmentModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/DepartmentInsert";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processDepartmentInsert(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDepartmentInsert(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfDepartmentModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfDepartmentModel>;
+        }));
+    }
+
+    protected processDepartmentInsert(response: HttpResponseBase): Observable<StatusMessageOfDepartmentModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfDepartmentModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    departmentGet(model: DepartmentModel): Observable<StatusMessageOfDepartmentModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/DepartmentGet";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processDepartmentGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDepartmentGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfDepartmentModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfDepartmentModel>;
+        }));
+    }
+
+    protected processDepartmentGet(response: HttpResponseBase): Observable<StatusMessageOfDepartmentModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfDepartmentModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    departmentDelete(model: DepartmentModel): Observable<StatusMessageOfDepartmentModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/DepartmentDelete";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processDepartmentDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDepartmentDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfDepartmentModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfDepartmentModel>;
+        }));
+    }
+
+    protected processDepartmentDelete(response: HttpResponseBase): Observable<StatusMessageOfDepartmentModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfDepartmentModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    departmentSearch(model: DepartmentModel): Observable<StatusMessageOfListOfDepartmentModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/DepartmentSearch";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processDepartmentSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDepartmentSearch(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfListOfDepartmentModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfListOfDepartmentModel>;
+        }));
+    }
+
+    protected processDepartmentSearch(response: HttpResponseBase): Observable<StatusMessageOfListOfDepartmentModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfListOfDepartmentModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    departmentUpdate(model: DepartmentModel): Observable<StatusMessageOfDepartmentModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/DepartmentUpdate";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processDepartmentUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDepartmentUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfDepartmentModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfDepartmentModel>;
+        }));
+    }
+
+    protected processDepartmentUpdate(response: HttpResponseBase): Observable<StatusMessageOfDepartmentModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfDepartmentModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    positionInsert(model: PositionModel): Observable<StatusMessageOfPositionModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/PositionInsert";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processPositionInsert(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPositionInsert(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfPositionModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfPositionModel>;
+        }));
+    }
+
+    protected processPositionInsert(response: HttpResponseBase): Observable<StatusMessageOfPositionModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfPositionModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    positionGet(model: PositionModel): Observable<StatusMessageOfPositionModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/PositionGet";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processPositionGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPositionGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfPositionModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfPositionModel>;
+        }));
+    }
+
+    protected processPositionGet(response: HttpResponseBase): Observable<StatusMessageOfPositionModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfPositionModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    positionDelete(model: PositionModel): Observable<StatusMessageOfPositionModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/PositionDelete";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processPositionDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPositionDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfPositionModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfPositionModel>;
+        }));
+    }
+
+    protected processPositionDelete(response: HttpResponseBase): Observable<StatusMessageOfPositionModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfPositionModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    positionSearch(model: PositionModel): Observable<StatusMessageOfListOfPositionModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/PositionSearch";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processPositionSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPositionSearch(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfListOfPositionModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfListOfPositionModel>;
+        }));
+    }
+
+    protected processPositionSearch(response: HttpResponseBase): Observable<StatusMessageOfListOfPositionModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfListOfPositionModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    positionUpdate(model: PositionModel): Observable<StatusMessageOfPositionModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/PositionUpdate";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processPositionUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPositionUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfPositionModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfPositionModel>;
+        }));
+    }
+
+    protected processPositionUpdate(response: HttpResponseBase): Observable<StatusMessageOfPositionModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfPositionModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    statusEmployeeInsert(model: StatusEmployeeModel): Observable<StatusMessageOfStatusEmployeeModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/StatusEmployeeInsert";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processStatusEmployeeInsert(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processStatusEmployeeInsert(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfStatusEmployeeModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfStatusEmployeeModel>;
+        }));
+    }
+
+    protected processStatusEmployeeInsert(response: HttpResponseBase): Observable<StatusMessageOfStatusEmployeeModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfStatusEmployeeModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    statusEmployeenGet(model: StatusEmployeeModel): Observable<StatusMessageOfStatusEmployeeModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/StatusEmployeenGet";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processStatusEmployeenGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processStatusEmployeenGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfStatusEmployeeModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfStatusEmployeeModel>;
+        }));
+    }
+
+    protected processStatusEmployeenGet(response: HttpResponseBase): Observable<StatusMessageOfStatusEmployeeModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfStatusEmployeeModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    statusEmployeeDelete(model: StatusEmployeeModel): Observable<StatusMessageOfStatusEmployeeModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/StatusEmployeeDelete";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processStatusEmployeeDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processStatusEmployeeDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfStatusEmployeeModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfStatusEmployeeModel>;
+        }));
+    }
+
+    protected processStatusEmployeeDelete(response: HttpResponseBase): Observable<StatusMessageOfStatusEmployeeModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfStatusEmployeeModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    statusEmployeeSearch(model: StatusEmployeeModel): Observable<StatusMessageOfListOfStatusEmployeeModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/StatusEmployeeSearch";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processStatusEmployeeSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processStatusEmployeeSearch(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfListOfStatusEmployeeModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfListOfStatusEmployeeModel>;
+        }));
+    }
+
+    protected processStatusEmployeeSearch(response: HttpResponseBase): Observable<StatusMessageOfListOfStatusEmployeeModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfListOfStatusEmployeeModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    statusEmployeeUpdate(model: StatusEmployeeModel): Observable<StatusMessageOfStatusEmployeeModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/StatusEmployeeUpdate";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processStatusEmployeeUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processStatusEmployeeUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfStatusEmployeeModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfStatusEmployeeModel>;
+        }));
+    }
+
+    protected processStatusEmployeeUpdate(response: HttpResponseBase): Observable<StatusMessageOfStatusEmployeeModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfStatusEmployeeModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    typeEmployeeInsert(model: TypeEmployeeModel): Observable<StatusMessageOfTypeEmployeeModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/TypeEmployeeInsert";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processTypeEmployeeInsert(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTypeEmployeeInsert(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfTypeEmployeeModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfTypeEmployeeModel>;
+        }));
+    }
+
+    protected processTypeEmployeeInsert(response: HttpResponseBase): Observable<StatusMessageOfTypeEmployeeModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfTypeEmployeeModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    typeEmployeeGet(model: TypeEmployeeModel): Observable<StatusMessageOfTypeEmployeeModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/TypeEmployeeGet";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processTypeEmployeeGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTypeEmployeeGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfTypeEmployeeModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfTypeEmployeeModel>;
+        }));
+    }
+
+    protected processTypeEmployeeGet(response: HttpResponseBase): Observable<StatusMessageOfTypeEmployeeModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfTypeEmployeeModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    typeEmployeeDelete(model: TypeEmployeeModel): Observable<StatusMessageOfTypeEmployeeModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/TypeEmployeeDelete";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processTypeEmployeeDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTypeEmployeeDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfTypeEmployeeModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfTypeEmployeeModel>;
+        }));
+    }
+
+    protected processTypeEmployeeDelete(response: HttpResponseBase): Observable<StatusMessageOfTypeEmployeeModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfTypeEmployeeModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    typeEmployeeSearch(model: TypeEmployeeModel): Observable<StatusMessageOfListOfTypeEmployeeModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/TypeEmployeeSearch";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processTypeEmployeeSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTypeEmployeeSearch(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfListOfTypeEmployeeModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfListOfTypeEmployeeModel>;
+        }));
+    }
+
+    protected processTypeEmployeeSearch(response: HttpResponseBase): Observable<StatusMessageOfListOfTypeEmployeeModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfListOfTypeEmployeeModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    typeEmployeeUpdate(model: TypeEmployeeModel): Observable<StatusMessageOfTypeEmployeeModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/TypeEmployeeUpdate";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processTypeEmployeeUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTypeEmployeeUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfTypeEmployeeModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfTypeEmployeeModel>;
+        }));
+    }
+
+    protected processTypeEmployeeUpdate(response: HttpResponseBase): Observable<StatusMessageOfTypeEmployeeModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfTypeEmployeeModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    typeWorkInsert(model: TypeWorkModel): Observable<StatusMessageOfTypeWorkModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/TypeWorkInsert";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processTypeWorkInsert(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTypeWorkInsert(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfTypeWorkModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfTypeWorkModel>;
+        }));
+    }
+
+    protected processTypeWorkInsert(response: HttpResponseBase): Observable<StatusMessageOfTypeWorkModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfTypeWorkModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    typeWorkGet(model: TypeWorkModel): Observable<StatusMessageOfTypeWorkModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/TypeWorkGet";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processTypeWorkGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTypeWorkGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfTypeWorkModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfTypeWorkModel>;
+        }));
+    }
+
+    protected processTypeWorkGet(response: HttpResponseBase): Observable<StatusMessageOfTypeWorkModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfTypeWorkModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    typeWorkDelete(model: TypeWorkModel): Observable<StatusMessageOfTypeWorkModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/TypeWorkDelete";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processTypeWorkDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTypeWorkDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfTypeWorkModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfTypeWorkModel>;
+        }));
+    }
+
+    protected processTypeWorkDelete(response: HttpResponseBase): Observable<StatusMessageOfTypeWorkModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfTypeWorkModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    typeWorkSearch(model: TypeWorkModel): Observable<StatusMessageOfListOfTypeWorkModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/TypeWorkSearch";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processTypeWorkSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTypeWorkSearch(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfListOfTypeWorkModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfListOfTypeWorkModel>;
+        }));
+    }
+
+    protected processTypeWorkSearch(response: HttpResponseBase): Observable<StatusMessageOfListOfTypeWorkModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfListOfTypeWorkModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    typeWorkUpdate(model: TypeWorkModel): Observable<StatusMessageOfTypeWorkModel> {
+        let url_ = this.baseUrl + "/api/HRMCommon/TypeWorkUpdate";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processTypeWorkUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTypeWorkUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfTypeWorkModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfTypeWorkModel>;
+        }));
+    }
+
+    protected processTypeWorkUpdate(response: HttpResponseBase): Observable<StatusMessageOfTypeWorkModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfTypeWorkModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export interface IHRMEmployeeClient {
+    insert(model: HRM_Employee_Model): Observable<StatusMessageOfHRM_Employee_Model>;
+    get(model: HRM_Employee_Model): Observable<StatusMessageOfHRM_Employee_Model>;
+    delete(model: HRM_Employee_Model): Observable<StatusMessageOfHRM_Employee_Model>;
+    search(model: HRM_Employee_Model): Observable<StatusMessageOfListOfHRM_Employee_Model>;
+    update(model: HRM_Employee_Model): Observable<StatusMessageOfHRM_Employee_Model>;
+}
+
+@Injectable()
+export class HRMEmployeeClient extends APIBase implements IHRMEmployeeClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        super(configuration);
+        this.http = http;
+        this.baseUrl = baseUrl ?? this.getBaseUrl("");
+    }
+
+    insert(model: HRM_Employee_Model): Observable<StatusMessageOfHRM_Employee_Model> {
+        let url_ = this.baseUrl + "/api/HRMEmployee/Insert";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processInsert(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processInsert(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfHRM_Employee_Model>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfHRM_Employee_Model>;
+        }));
+    }
+
+    protected processInsert(response: HttpResponseBase): Observable<StatusMessageOfHRM_Employee_Model> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfHRM_Employee_Model.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    get(model: HRM_Employee_Model): Observable<StatusMessageOfHRM_Employee_Model> {
+        let url_ = this.baseUrl + "/api/HRMEmployee/Get";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfHRM_Employee_Model>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfHRM_Employee_Model>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<StatusMessageOfHRM_Employee_Model> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfHRM_Employee_Model.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    delete(model: HRM_Employee_Model): Observable<StatusMessageOfHRM_Employee_Model> {
+        let url_ = this.baseUrl + "/api/HRMEmployee/Delete";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfHRM_Employee_Model>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfHRM_Employee_Model>;
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<StatusMessageOfHRM_Employee_Model> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfHRM_Employee_Model.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    search(model: HRM_Employee_Model): Observable<StatusMessageOfListOfHRM_Employee_Model> {
+        let url_ = this.baseUrl + "/api/HRMEmployee/Search";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSearch(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfListOfHRM_Employee_Model>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfListOfHRM_Employee_Model>;
+        }));
+    }
+
+    protected processSearch(response: HttpResponseBase): Observable<StatusMessageOfListOfHRM_Employee_Model> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfListOfHRM_Employee_Model.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    update(model: HRM_Employee_Model): Observable<StatusMessageOfHRM_Employee_Model> {
+        let url_ = this.baseUrl + "/api/HRMEmployee/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfHRM_Employee_Model>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfHRM_Employee_Model>;
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<StatusMessageOfHRM_Employee_Model> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfHRM_Employee_Model.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export interface ICurrentJobPositionsClient {
+    getCurrentJobPositions(): Observable<CurrentJobPosition[]>;
+    postCurrentJobPosition(currentJobPosition: CurrentJobPosition): Observable<CurrentJobPosition>;
+    getCurrentJobPosition(id: string): Observable<CurrentJobPosition>;
+    putCurrentJobPosition(id: string, currentJobPosition: CurrentJobPosition): Observable<FileResponse>;
+    deleteCurrentJobPosition(id: string): Observable<FileResponse>;
+}
+
+@Injectable()
+export class CurrentJobPositionsClient extends APIBase implements ICurrentJobPositionsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        super(configuration);
+        this.http = http;
+        this.baseUrl = baseUrl ?? this.getBaseUrl("");
+    }
+
+    getCurrentJobPositions(): Observable<CurrentJobPosition[]> {
+        let url_ = this.baseUrl + "/api/CurrentJobPositions";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("get", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processGetCurrentJobPositions(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCurrentJobPositions(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CurrentJobPosition[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CurrentJobPosition[]>;
+        }));
+    }
+
+    protected processGetCurrentJobPositions(response: HttpResponseBase): Observable<CurrentJobPosition[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CurrentJobPosition.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    postCurrentJobPosition(currentJobPosition: CurrentJobPosition): Observable<CurrentJobPosition> {
+        let url_ = this.baseUrl + "/api/CurrentJobPositions";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(currentJobPosition);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processPostCurrentJobPosition(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPostCurrentJobPosition(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CurrentJobPosition>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CurrentJobPosition>;
+        }));
+    }
+
+    protected processPostCurrentJobPosition(response: HttpResponseBase): Observable<CurrentJobPosition> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CurrentJobPosition.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getCurrentJobPosition(id: string): Observable<CurrentJobPosition> {
+        let url_ = this.baseUrl + "/api/CurrentJobPositions/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("get", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processGetCurrentJobPosition(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCurrentJobPosition(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CurrentJobPosition>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CurrentJobPosition>;
+        }));
+    }
+
+    protected processGetCurrentJobPosition(response: HttpResponseBase): Observable<CurrentJobPosition> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CurrentJobPosition.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    putCurrentJobPosition(id: string, currentJobPosition: CurrentJobPosition): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/CurrentJobPositions/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(currentJobPosition);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("put", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processPutCurrentJobPosition(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPutCurrentJobPosition(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileResponse>;
+        }));
+    }
+
+    protected processPutCurrentJobPosition(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    deleteCurrentJobPosition(id: string): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/CurrentJobPositions/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("delete", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processDeleteCurrentJobPosition(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteCurrentJobPosition(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileResponse>;
+        }));
+    }
+
+    protected processDeleteCurrentJobPosition(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export interface ISalaryAndBenefitsClient {
+    getSalaryAndBenefitsAll(): Observable<SalaryAndBenefits[]>;
+    postSalaryAndBenefits(salaryAndBenefits: SalaryAndBenefits): Observable<SalaryAndBenefits>;
+    getSalaryAndBenefits(id: string): Observable<SalaryAndBenefits>;
+    putSalaryAndBenefits(id: string, salaryAndBenefits: SalaryAndBenefits): Observable<FileResponse>;
+    deleteSalaryAndBenefits(id: string): Observable<FileResponse>;
+}
+
+@Injectable()
+export class SalaryAndBenefitsClient extends APIBase implements ISalaryAndBenefitsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        super(configuration);
+        this.http = http;
+        this.baseUrl = baseUrl ?? this.getBaseUrl("");
+    }
+
+    getSalaryAndBenefitsAll(): Observable<SalaryAndBenefits[]> {
+        let url_ = this.baseUrl + "/api/SalaryAndBenefits";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("get", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processGetSalaryAndBenefitsAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSalaryAndBenefitsAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SalaryAndBenefits[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SalaryAndBenefits[]>;
+        }));
+    }
+
+    protected processGetSalaryAndBenefitsAll(response: HttpResponseBase): Observable<SalaryAndBenefits[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(SalaryAndBenefits.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    postSalaryAndBenefits(salaryAndBenefits: SalaryAndBenefits): Observable<SalaryAndBenefits> {
+        let url_ = this.baseUrl + "/api/SalaryAndBenefits";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(salaryAndBenefits);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processPostSalaryAndBenefits(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPostSalaryAndBenefits(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SalaryAndBenefits>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SalaryAndBenefits>;
+        }));
+    }
+
+    protected processPostSalaryAndBenefits(response: HttpResponseBase): Observable<SalaryAndBenefits> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SalaryAndBenefits.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getSalaryAndBenefits(id: string): Observable<SalaryAndBenefits> {
+        let url_ = this.baseUrl + "/api/SalaryAndBenefits/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("get", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processGetSalaryAndBenefits(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSalaryAndBenefits(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SalaryAndBenefits>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SalaryAndBenefits>;
+        }));
+    }
+
+    protected processGetSalaryAndBenefits(response: HttpResponseBase): Observable<SalaryAndBenefits> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SalaryAndBenefits.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    putSalaryAndBenefits(id: string, salaryAndBenefits: SalaryAndBenefits): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/SalaryAndBenefits/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(salaryAndBenefits);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("put", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processPutSalaryAndBenefits(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPutSalaryAndBenefits(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileResponse>;
+        }));
+    }
+
+    protected processPutSalaryAndBenefits(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    deleteSalaryAndBenefits(id: string): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/SalaryAndBenefits/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("delete", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processDeleteSalaryAndBenefits(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteSalaryAndBenefits(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileResponse>;
+        }));
+    }
+
+    protected processDeleteSalaryAndBenefits(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export interface IWorkHistoriesClient {
+    getWorkHistories(): Observable<WorkHistory[]>;
+    postWorkHistory(workHistory: WorkHistory): Observable<WorkHistory>;
+    getWorkHistory(id: string): Observable<WorkHistory>;
+    putWorkHistory(id: string, workHistory: WorkHistory): Observable<FileResponse>;
+    deleteWorkHistory(id: string): Observable<FileResponse>;
+}
+
+@Injectable()
+export class WorkHistoriesClient extends APIBase implements IWorkHistoriesClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        super(configuration);
+        this.http = http;
+        this.baseUrl = baseUrl ?? this.getBaseUrl("");
+    }
+
+    getWorkHistories(): Observable<WorkHistory[]> {
+        let url_ = this.baseUrl + "/api/WorkHistories";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("get", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processGetWorkHistories(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetWorkHistories(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<WorkHistory[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<WorkHistory[]>;
+        }));
+    }
+
+    protected processGetWorkHistories(response: HttpResponseBase): Observable<WorkHistory[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(WorkHistory.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    postWorkHistory(workHistory: WorkHistory): Observable<WorkHistory> {
+        let url_ = this.baseUrl + "/api/WorkHistories";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(workHistory);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processPostWorkHistory(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPostWorkHistory(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<WorkHistory>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<WorkHistory>;
+        }));
+    }
+
+    protected processPostWorkHistory(response: HttpResponseBase): Observable<WorkHistory> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = WorkHistory.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getWorkHistory(id: string): Observable<WorkHistory> {
+        let url_ = this.baseUrl + "/api/WorkHistories/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("get", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processGetWorkHistory(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetWorkHistory(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<WorkHistory>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<WorkHistory>;
+        }));
+    }
+
+    protected processGetWorkHistory(response: HttpResponseBase): Observable<WorkHistory> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = WorkHistory.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    putWorkHistory(id: string, workHistory: WorkHistory): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/WorkHistories/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(workHistory);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("put", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processPutWorkHistory(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPutWorkHistory(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileResponse>;
+        }));
+    }
+
+    protected processPutWorkHistory(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    deleteWorkHistory(id: string): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/WorkHistories/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("delete", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processDeleteWorkHistory(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteWorkHistory(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileResponse>;
+        }));
+    }
+
+    protected processDeleteWorkHistory(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
@@ -6028,6 +7710,242 @@ export class CategoryCommonClient extends APIBase implements ICategoryCommonClie
     }
 }
 
+export interface ICompanyClient {
+    insert(model: Company): Observable<StatusMessageOfCompany>;
+    update(model: Company): Observable<StatusMessageOfCompany>;
+    delete(model: Company): Observable<StatusMessageOfCompany>;
+    search(model: Company): Observable<StatusMessageOfListOfCompany>;
+}
+
+@Injectable()
+export class CompanyClient extends APIBase implements ICompanyClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(Injector) configuration: Injector, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        super(configuration);
+        this.http = http;
+        this.baseUrl = baseUrl ?? this.getBaseUrl("");
+    }
+
+    insert(model: Company): Observable<StatusMessageOfCompany> {
+        let url_ = this.baseUrl + "/api/Company/Insert";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processInsert(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processInsert(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfCompany>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfCompany>;
+        }));
+    }
+
+    protected processInsert(response: HttpResponseBase): Observable<StatusMessageOfCompany> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfCompany.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    update(model: Company): Observable<StatusMessageOfCompany> {
+        let url_ = this.baseUrl + "/api/Company/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfCompany>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfCompany>;
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<StatusMessageOfCompany> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfCompany.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    delete(model: Company): Observable<StatusMessageOfCompany> {
+        let url_ = this.baseUrl + "/api/Company/Delete";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfCompany>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfCompany>;
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<StatusMessageOfCompany> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfCompany.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    search(model: Company): Observable<StatusMessageOfListOfCompany> {
+        let url_ = this.baseUrl + "/api/Company/Search";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSearch(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfListOfCompany>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfListOfCompany>;
+        }));
+    }
+
+    protected processSearch(response: HttpResponseBase): Observable<StatusMessageOfListOfCompany> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfListOfCompany.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export interface IMenuPermissionsClient {
     getListMenu(): Observable<SysMenu[]>;
     getListMenuV2(): Observable<SysMenu[]>;
@@ -7012,6 +8930,8 @@ export interface ICommonContronllerClient {
     uploadFileVersion11(table_name?: string | null | undefined, col_name?: string | null | undefined, create_date?: Date | null | undefined, create_by?: string | null | undefined, id?: string | null | undefined, file_name?: string | null | undefined, file_type?: string | null | undefined, file_size?: number | null | undefined, file_path?: string | null | undefined, description?: string | null | undefined, company_code?: string | null | undefined, enabled?: boolean | null | undefined, file?: any | null | undefined, files?: FileParameter[] | null | undefined, file2?: FileParameter | null | undefined): Observable<StatusMessageOfListOfUploadFileModel>;
     uploadFileVersion12(): Observable<StatusMessageOfListOfUploadFileModel>;
     viewFile(fileID?: string | undefined): Observable<FileResponse>;
+    fileSearch(table_name?: string | null | undefined, col_name?: string | null | undefined, create_date?: Date | null | undefined, create_by?: string | null | undefined, id?: string | null | undefined, file_name?: string | null | undefined, file_type?: string | null | undefined, file_size?: number | null | undefined, file_path?: string | null | undefined, description?: string | null | undefined, company_code?: string | null | undefined, enabled?: boolean | null | undefined, file?: any | null | undefined, files?: FileParameter[] | null | undefined, file2?: FileParameter | null | undefined): Observable<StatusMessageOfListOfUploadFileModel>;
+    fileSearch2(list_id: string[]): Observable<StatusMessageOfListOfUploadFileModel>;
 }
 
 @Injectable()
@@ -7499,6 +9419,143 @@ export class CommonContronllerClient extends APIBase implements ICommonContronll
                 fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
             }
             return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    fileSearch(table_name?: string | null | undefined, col_name?: string | null | undefined, create_date?: Date | null | undefined, create_by?: string | null | undefined, id?: string | null | undefined, file_name?: string | null | undefined, file_type?: string | null | undefined, file_size?: number | null | undefined, file_path?: string | null | undefined, description?: string | null | undefined, company_code?: string | null | undefined, enabled?: boolean | null | undefined, file?: any | null | undefined, files?: FileParameter[] | null | undefined, file2?: FileParameter | null | undefined): Observable<StatusMessageOfListOfUploadFileModel> {
+        let url_ = this.baseUrl + "/api/CommonContronller/File/Search?";
+        if (table_name !== undefined && table_name !== null)
+            url_ += "table_name=" + encodeURIComponent("" + table_name) + "&";
+        if (col_name !== undefined && col_name !== null)
+            url_ += "col_name=" + encodeURIComponent("" + col_name) + "&";
+        if (create_date !== undefined && create_date !== null)
+            url_ += "create_date=" + encodeURIComponent(create_date ? "" + create_date.toISOString() : "") + "&";
+        if (create_by !== undefined && create_by !== null)
+            url_ += "create_by=" + encodeURIComponent("" + create_by) + "&";
+        if (id !== undefined && id !== null)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (file_name !== undefined && file_name !== null)
+            url_ += "file_name=" + encodeURIComponent("" + file_name) + "&";
+        if (file_type !== undefined && file_type !== null)
+            url_ += "file_type=" + encodeURIComponent("" + file_type) + "&";
+        if (file_size !== undefined && file_size !== null)
+            url_ += "file_size=" + encodeURIComponent("" + file_size) + "&";
+        if (file_path !== undefined && file_path !== null)
+            url_ += "file_path=" + encodeURIComponent("" + file_path) + "&";
+        if (description !== undefined && description !== null)
+            url_ += "description=" + encodeURIComponent("" + description) + "&";
+        if (company_code !== undefined && company_code !== null)
+            url_ += "company_code=" + encodeURIComponent("" + company_code) + "&";
+        if (enabled !== undefined && enabled !== null)
+            url_ += "enabled=" + encodeURIComponent("" + enabled) + "&";
+        if (file !== undefined && file !== null)
+            url_ += "file=" + encodeURIComponent("" + file) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (files !== null && files !== undefined)
+            files.forEach(item_ => content_.append("files", item_.data, item_.fileName ? item_.fileName : "files") );
+        if (file2 !== null && file2 !== undefined)
+            content_.append("file2", file2.data, file2.fileName ? file2.fileName : "file2");
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processFileSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFileSearch(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfListOfUploadFileModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfListOfUploadFileModel>;
+        }));
+    }
+
+    protected processFileSearch(response: HttpResponseBase): Observable<StatusMessageOfListOfUploadFileModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfListOfUploadFileModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    fileSearch2(list_id: string[]): Observable<StatusMessageOfListOfUploadFileModel> {
+        let url_ = this.baseUrl + "/api/CommonContronller/File/SearchV2";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(list_id);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processFileSearch2(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFileSearch2(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfListOfUploadFileModel>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfListOfUploadFileModel>;
+        }));
+    }
+
+    protected processFileSearch2(response: HttpResponseBase): Observable<StatusMessageOfListOfUploadFileModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfListOfUploadFileModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
@@ -8872,282 +10929,6 @@ export interface IStatusMessageOfListOfSysVoucherFormGroup {
     currentID?: string | undefined;
 }
 
-export class CurrentJobPosition implements ICurrentJobPosition {
-    id?: string | undefined;
-    date?: Date | undefined;
-    idUserInfo?: string | undefined;
-    modyfiBy?: string | undefined;
-    jobDescription?: string | undefined;
-    departmentOrTeam?: string | undefined;
-    positionAndLevel?: string | undefined;
-    workSchedule?: string | undefined;
-    currentProjects?: string | undefined;
-    goalsAndDevelopment?: string | undefined;
-
-    constructor(data?: ICurrentJobPosition) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
-            this.idUserInfo = _data["idUserInfo"];
-            this.modyfiBy = _data["modyfiBy"];
-            this.jobDescription = _data["jobDescription"];
-            this.departmentOrTeam = _data["departmentOrTeam"];
-            this.positionAndLevel = _data["positionAndLevel"];
-            this.workSchedule = _data["workSchedule"];
-            this.currentProjects = _data["currentProjects"];
-            this.goalsAndDevelopment = _data["goalsAndDevelopment"];
-        }
-    }
-
-    static fromJS(data: any): CurrentJobPosition {
-        data = typeof data === 'object' ? data : {};
-        let result = new CurrentJobPosition();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
-        data["idUserInfo"] = this.idUserInfo;
-        data["modyfiBy"] = this.modyfiBy;
-        data["jobDescription"] = this.jobDescription;
-        data["departmentOrTeam"] = this.departmentOrTeam;
-        data["positionAndLevel"] = this.positionAndLevel;
-        data["workSchedule"] = this.workSchedule;
-        data["currentProjects"] = this.currentProjects;
-        data["goalsAndDevelopment"] = this.goalsAndDevelopment;
-        return data;
-    }
-}
-
-export interface ICurrentJobPosition {
-    id?: string | undefined;
-    date?: Date | undefined;
-    idUserInfo?: string | undefined;
-    modyfiBy?: string | undefined;
-    jobDescription?: string | undefined;
-    departmentOrTeam?: string | undefined;
-    positionAndLevel?: string | undefined;
-    workSchedule?: string | undefined;
-    currentProjects?: string | undefined;
-    goalsAndDevelopment?: string | undefined;
-}
-
-export class SalaryAndBenefits implements ISalaryAndBenefits {
-    id?: string | undefined;
-    date?: Date | undefined;
-    idUserInfo?: string | undefined;
-    modyfiBy?: string | undefined;
-    salary?: number | undefined;
-    benefits?: string | undefined;
-    wagesAndPerks?: string | undefined;
-    compensationPackageAmount?: number | undefined;
-    compensationPackage?: string | undefined;
-    compensationPackageAmount1?: number | undefined;
-    compensationPackage1?: string | undefined;
-    compensationPackageAmount2?: number | undefined;
-    compensationPackage2?: string | undefined;
-    compensationPackageAmount3?: number | undefined;
-    compensationPackage3?: string | undefined;
-    insuranceCoverage?: string | undefined;
-    allowancesAndAidsAmount?: number | undefined;
-    allowancesAndAids?: string | undefined;
-    allowancesAndAidsAmount1?: number | undefined;
-    allowancesAndAids1?: string | undefined;
-    allowancesAndAidsAmount2?: number | undefined;
-    allowancesAndAids2?: string | undefined;
-    allowancesAndAidsAmount3?: number | undefined;
-    allowancesAndAids3?: string | undefined;
-
-    constructor(data?: ISalaryAndBenefits) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
-            this.idUserInfo = _data["idUserInfo"];
-            this.modyfiBy = _data["modyfiBy"];
-            this.salary = _data["salary"];
-            this.benefits = _data["benefits"];
-            this.wagesAndPerks = _data["wagesAndPerks"];
-            this.compensationPackageAmount = _data["compensationPackageAmount"];
-            this.compensationPackage = _data["compensationPackage"];
-            this.compensationPackageAmount1 = _data["compensationPackageAmount1"];
-            this.compensationPackage1 = _data["compensationPackage1"];
-            this.compensationPackageAmount2 = _data["compensationPackageAmount2"];
-            this.compensationPackage2 = _data["compensationPackage2"];
-            this.compensationPackageAmount3 = _data["compensationPackageAmount3"];
-            this.compensationPackage3 = _data["compensationPackage3"];
-            this.insuranceCoverage = _data["insuranceCoverage"];
-            this.allowancesAndAidsAmount = _data["allowancesAndAidsAmount"];
-            this.allowancesAndAids = _data["allowancesAndAids"];
-            this.allowancesAndAidsAmount1 = _data["allowancesAndAidsAmount1"];
-            this.allowancesAndAids1 = _data["allowancesAndAids1"];
-            this.allowancesAndAidsAmount2 = _data["allowancesAndAidsAmount2"];
-            this.allowancesAndAids2 = _data["allowancesAndAids2"];
-            this.allowancesAndAidsAmount3 = _data["allowancesAndAidsAmount3"];
-            this.allowancesAndAids3 = _data["allowancesAndAids3"];
-        }
-    }
-
-    static fromJS(data: any): SalaryAndBenefits {
-        data = typeof data === 'object' ? data : {};
-        let result = new SalaryAndBenefits();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
-        data["idUserInfo"] = this.idUserInfo;
-        data["modyfiBy"] = this.modyfiBy;
-        data["salary"] = this.salary;
-        data["benefits"] = this.benefits;
-        data["wagesAndPerks"] = this.wagesAndPerks;
-        data["compensationPackageAmount"] = this.compensationPackageAmount;
-        data["compensationPackage"] = this.compensationPackage;
-        data["compensationPackageAmount1"] = this.compensationPackageAmount1;
-        data["compensationPackage1"] = this.compensationPackage1;
-        data["compensationPackageAmount2"] = this.compensationPackageAmount2;
-        data["compensationPackage2"] = this.compensationPackage2;
-        data["compensationPackageAmount3"] = this.compensationPackageAmount3;
-        data["compensationPackage3"] = this.compensationPackage3;
-        data["insuranceCoverage"] = this.insuranceCoverage;
-        data["allowancesAndAidsAmount"] = this.allowancesAndAidsAmount;
-        data["allowancesAndAids"] = this.allowancesAndAids;
-        data["allowancesAndAidsAmount1"] = this.allowancesAndAidsAmount1;
-        data["allowancesAndAids1"] = this.allowancesAndAids1;
-        data["allowancesAndAidsAmount2"] = this.allowancesAndAidsAmount2;
-        data["allowancesAndAids2"] = this.allowancesAndAids2;
-        data["allowancesAndAidsAmount3"] = this.allowancesAndAidsAmount3;
-        data["allowancesAndAids3"] = this.allowancesAndAids3;
-        return data;
-    }
-}
-
-export interface ISalaryAndBenefits {
-    id?: string | undefined;
-    date?: Date | undefined;
-    idUserInfo?: string | undefined;
-    modyfiBy?: string | undefined;
-    salary?: number | undefined;
-    benefits?: string | undefined;
-    wagesAndPerks?: string | undefined;
-    compensationPackageAmount?: number | undefined;
-    compensationPackage?: string | undefined;
-    compensationPackageAmount1?: number | undefined;
-    compensationPackage1?: string | undefined;
-    compensationPackageAmount2?: number | undefined;
-    compensationPackage2?: string | undefined;
-    compensationPackageAmount3?: number | undefined;
-    compensationPackage3?: string | undefined;
-    insuranceCoverage?: string | undefined;
-    allowancesAndAidsAmount?: number | undefined;
-    allowancesAndAids?: string | undefined;
-    allowancesAndAidsAmount1?: number | undefined;
-    allowancesAndAids1?: string | undefined;
-    allowancesAndAidsAmount2?: number | undefined;
-    allowancesAndAids2?: string | undefined;
-    allowancesAndAidsAmount3?: number | undefined;
-    allowancesAndAids3?: string | undefined;
-}
-
-export class WorkHistory implements IWorkHistory {
-    id?: string | undefined;
-    date?: Date | undefined;
-    idUserInfo?: string | undefined;
-    modyfiBy?: string | undefined;
-    companyAndPosition?: string | undefined;
-    workHistoryStart?: Date | undefined;
-    workHistoryEnd?: Date | undefined;
-    timeWorked?: string | undefined;
-    jobdeScription?: string | undefined;
-    achievementSkills?: string | undefined;
-    reasonForChange?: string | undefined;
-
-    constructor(data?: IWorkHistory) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
-            this.idUserInfo = _data["idUserInfo"];
-            this.modyfiBy = _data["modyfiBy"];
-            this.companyAndPosition = _data["companyAndPosition"];
-            this.workHistoryStart = _data["workHistoryStart"] ? new Date(_data["workHistoryStart"].toString()) : <any>undefined;
-            this.workHistoryEnd = _data["workHistoryEnd"] ? new Date(_data["workHistoryEnd"].toString()) : <any>undefined;
-            this.timeWorked = _data["timeWorked"];
-            this.jobdeScription = _data["jobdeScription"];
-            this.achievementSkills = _data["achievementSkills"];
-            this.reasonForChange = _data["reasonForChange"];
-        }
-    }
-
-    static fromJS(data: any): WorkHistory {
-        data = typeof data === 'object' ? data : {};
-        let result = new WorkHistory();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
-        data["idUserInfo"] = this.idUserInfo;
-        data["modyfiBy"] = this.modyfiBy;
-        data["companyAndPosition"] = this.companyAndPosition;
-        data["workHistoryStart"] = this.workHistoryStart ? this.workHistoryStart.toISOString() : <any>undefined;
-        data["workHistoryEnd"] = this.workHistoryEnd ? this.workHistoryEnd.toISOString() : <any>undefined;
-        data["timeWorked"] = this.timeWorked;
-        data["jobdeScription"] = this.jobdeScription;
-        data["achievementSkills"] = this.achievementSkills;
-        data["reasonForChange"] = this.reasonForChange;
-        return data;
-    }
-}
-
-export interface IWorkHistory {
-    id?: string | undefined;
-    date?: Date | undefined;
-    idUserInfo?: string | undefined;
-    modyfiBy?: string | undefined;
-    companyAndPosition?: string | undefined;
-    workHistoryStart?: Date | undefined;
-    workHistoryEnd?: Date | undefined;
-    timeWorked?: string | undefined;
-    jobdeScription?: string | undefined;
-    achievementSkills?: string | undefined;
-    reasonForChange?: string | undefined;
-}
-
 export class StatusMessageOfMovieCommentModel implements IStatusMessageOfMovieCommentModel {
     status?: number | undefined;
     msg?: string | undefined;
@@ -10359,6 +12140,1519 @@ export interface IStatusMessageOfListOfMovieWatchHistoryModel {
     msg?: string | undefined;
     data?: MovieWatchHistoryModel[] | undefined;
     currentID?: string | undefined;
+}
+
+export class StatusMessageOfDepartmentModel implements IStatusMessageOfDepartmentModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: DepartmentModel | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfDepartmentModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            this.data = _data["data"] ? DepartmentModel.fromJS(_data["data"]) : <any>undefined;
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfDepartmentModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfDepartmentModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfDepartmentModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: DepartmentModel | undefined;
+    currentID?: string | undefined;
+}
+
+export class DepartmentModel implements IDepartmentModel {
+    id?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    level?: number | undefined;
+    is_delete?: boolean | undefined;
+    is_active?: boolean | undefined;
+    created_at?: Date | undefined;
+    update_at?: Date | undefined;
+    delete_at?: Date | undefined;
+    created_by?: string | undefined;
+    update_by?: string | undefined;
+    delete_by?: string | undefined;
+    company_code?: string | undefined;
+
+    constructor(data?: IDepartmentModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.level = _data["level"];
+            this.is_delete = _data["is_delete"];
+            this.is_active = _data["is_active"];
+            this.created_at = _data["created_at"] ? new Date(_data["created_at"].toString()) : <any>undefined;
+            this.update_at = _data["update_at"] ? new Date(_data["update_at"].toString()) : <any>undefined;
+            this.delete_at = _data["delete_at"] ? new Date(_data["delete_at"].toString()) : <any>undefined;
+            this.created_by = _data["created_by"];
+            this.update_by = _data["update_by"];
+            this.delete_by = _data["delete_by"];
+            this.company_code = _data["company_code"];
+        }
+    }
+
+    static fromJS(data: any): DepartmentModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new DepartmentModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["level"] = this.level;
+        data["is_delete"] = this.is_delete;
+        data["is_active"] = this.is_active;
+        data["created_at"] = this.created_at ? this.created_at.toISOString() : <any>undefined;
+        data["update_at"] = this.update_at ? this.update_at.toISOString() : <any>undefined;
+        data["delete_at"] = this.delete_at ? this.delete_at.toISOString() : <any>undefined;
+        data["created_by"] = this.created_by;
+        data["update_by"] = this.update_by;
+        data["delete_by"] = this.delete_by;
+        data["company_code"] = this.company_code;
+        return data;
+    }
+}
+
+export interface IDepartmentModel {
+    id?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    level?: number | undefined;
+    is_delete?: boolean | undefined;
+    is_active?: boolean | undefined;
+    created_at?: Date | undefined;
+    update_at?: Date | undefined;
+    delete_at?: Date | undefined;
+    created_by?: string | undefined;
+    update_by?: string | undefined;
+    delete_by?: string | undefined;
+    company_code?: string | undefined;
+}
+
+export class StatusMessageOfListOfDepartmentModel implements IStatusMessageOfListOfDepartmentModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: DepartmentModel[] | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfListOfDepartmentModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(DepartmentModel.fromJS(item));
+            }
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfListOfDepartmentModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfListOfDepartmentModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfListOfDepartmentModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: DepartmentModel[] | undefined;
+    currentID?: string | undefined;
+}
+
+export class StatusMessageOfPositionModel implements IStatusMessageOfPositionModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: PositionModel | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfPositionModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            this.data = _data["data"] ? PositionModel.fromJS(_data["data"]) : <any>undefined;
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfPositionModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfPositionModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfPositionModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: PositionModel | undefined;
+    currentID?: string | undefined;
+}
+
+export class PositionModel implements IPositionModel {
+    id?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    level?: number | undefined;
+    is_delete?: boolean | undefined;
+    is_active?: boolean | undefined;
+    created_at?: Date | undefined;
+    update_at?: Date | undefined;
+    delete_at?: Date | undefined;
+    created_by?: string | undefined;
+    update_by?: string | undefined;
+    delete_by?: string | undefined;
+    company_code?: string | undefined;
+
+    constructor(data?: IPositionModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.level = _data["level"];
+            this.is_delete = _data["is_delete"];
+            this.is_active = _data["is_active"];
+            this.created_at = _data["created_at"] ? new Date(_data["created_at"].toString()) : <any>undefined;
+            this.update_at = _data["update_at"] ? new Date(_data["update_at"].toString()) : <any>undefined;
+            this.delete_at = _data["delete_at"] ? new Date(_data["delete_at"].toString()) : <any>undefined;
+            this.created_by = _data["created_by"];
+            this.update_by = _data["update_by"];
+            this.delete_by = _data["delete_by"];
+            this.company_code = _data["company_code"];
+        }
+    }
+
+    static fromJS(data: any): PositionModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PositionModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["level"] = this.level;
+        data["is_delete"] = this.is_delete;
+        data["is_active"] = this.is_active;
+        data["created_at"] = this.created_at ? this.created_at.toISOString() : <any>undefined;
+        data["update_at"] = this.update_at ? this.update_at.toISOString() : <any>undefined;
+        data["delete_at"] = this.delete_at ? this.delete_at.toISOString() : <any>undefined;
+        data["created_by"] = this.created_by;
+        data["update_by"] = this.update_by;
+        data["delete_by"] = this.delete_by;
+        data["company_code"] = this.company_code;
+        return data;
+    }
+}
+
+export interface IPositionModel {
+    id?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    level?: number | undefined;
+    is_delete?: boolean | undefined;
+    is_active?: boolean | undefined;
+    created_at?: Date | undefined;
+    update_at?: Date | undefined;
+    delete_at?: Date | undefined;
+    created_by?: string | undefined;
+    update_by?: string | undefined;
+    delete_by?: string | undefined;
+    company_code?: string | undefined;
+}
+
+export class StatusMessageOfListOfPositionModel implements IStatusMessageOfListOfPositionModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: PositionModel[] | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfListOfPositionModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(PositionModel.fromJS(item));
+            }
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfListOfPositionModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfListOfPositionModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfListOfPositionModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: PositionModel[] | undefined;
+    currentID?: string | undefined;
+}
+
+export class StatusMessageOfStatusEmployeeModel implements IStatusMessageOfStatusEmployeeModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: StatusEmployeeModel | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfStatusEmployeeModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            this.data = _data["data"] ? StatusEmployeeModel.fromJS(_data["data"]) : <any>undefined;
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfStatusEmployeeModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfStatusEmployeeModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfStatusEmployeeModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: StatusEmployeeModel | undefined;
+    currentID?: string | undefined;
+}
+
+export class StatusEmployeeModel implements IStatusEmployeeModel {
+    id?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    level?: number | undefined;
+    is_delete?: boolean | undefined;
+    is_active?: boolean | undefined;
+    created_at?: Date | undefined;
+    update_at?: Date | undefined;
+    delete_at?: Date | undefined;
+    created_by?: string | undefined;
+    update_by?: string | undefined;
+    delete_by?: string | undefined;
+    company_code?: string | undefined;
+
+    constructor(data?: IStatusEmployeeModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.level = _data["level"];
+            this.is_delete = _data["is_delete"];
+            this.is_active = _data["is_active"];
+            this.created_at = _data["created_at"] ? new Date(_data["created_at"].toString()) : <any>undefined;
+            this.update_at = _data["update_at"] ? new Date(_data["update_at"].toString()) : <any>undefined;
+            this.delete_at = _data["delete_at"] ? new Date(_data["delete_at"].toString()) : <any>undefined;
+            this.created_by = _data["created_by"];
+            this.update_by = _data["update_by"];
+            this.delete_by = _data["delete_by"];
+            this.company_code = _data["company_code"];
+        }
+    }
+
+    static fromJS(data: any): StatusEmployeeModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusEmployeeModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["level"] = this.level;
+        data["is_delete"] = this.is_delete;
+        data["is_active"] = this.is_active;
+        data["created_at"] = this.created_at ? this.created_at.toISOString() : <any>undefined;
+        data["update_at"] = this.update_at ? this.update_at.toISOString() : <any>undefined;
+        data["delete_at"] = this.delete_at ? this.delete_at.toISOString() : <any>undefined;
+        data["created_by"] = this.created_by;
+        data["update_by"] = this.update_by;
+        data["delete_by"] = this.delete_by;
+        data["company_code"] = this.company_code;
+        return data;
+    }
+}
+
+export interface IStatusEmployeeModel {
+    id?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    level?: number | undefined;
+    is_delete?: boolean | undefined;
+    is_active?: boolean | undefined;
+    created_at?: Date | undefined;
+    update_at?: Date | undefined;
+    delete_at?: Date | undefined;
+    created_by?: string | undefined;
+    update_by?: string | undefined;
+    delete_by?: string | undefined;
+    company_code?: string | undefined;
+}
+
+export class StatusMessageOfListOfStatusEmployeeModel implements IStatusMessageOfListOfStatusEmployeeModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: StatusEmployeeModel[] | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfListOfStatusEmployeeModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(StatusEmployeeModel.fromJS(item));
+            }
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfListOfStatusEmployeeModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfListOfStatusEmployeeModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfListOfStatusEmployeeModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: StatusEmployeeModel[] | undefined;
+    currentID?: string | undefined;
+}
+
+export class StatusMessageOfTypeEmployeeModel implements IStatusMessageOfTypeEmployeeModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: TypeEmployeeModel | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfTypeEmployeeModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            this.data = _data["data"] ? TypeEmployeeModel.fromJS(_data["data"]) : <any>undefined;
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfTypeEmployeeModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfTypeEmployeeModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfTypeEmployeeModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: TypeEmployeeModel | undefined;
+    currentID?: string | undefined;
+}
+
+export class TypeEmployeeModel implements ITypeEmployeeModel {
+    id?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    level?: number | undefined;
+    is_delete?: boolean | undefined;
+    is_active?: boolean | undefined;
+    created_at?: Date | undefined;
+    update_at?: Date | undefined;
+    delete_at?: Date | undefined;
+    created_by?: string | undefined;
+    update_by?: string | undefined;
+    delete_by?: string | undefined;
+    company_code?: string | undefined;
+
+    constructor(data?: ITypeEmployeeModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.level = _data["level"];
+            this.is_delete = _data["is_delete"];
+            this.is_active = _data["is_active"];
+            this.created_at = _data["created_at"] ? new Date(_data["created_at"].toString()) : <any>undefined;
+            this.update_at = _data["update_at"] ? new Date(_data["update_at"].toString()) : <any>undefined;
+            this.delete_at = _data["delete_at"] ? new Date(_data["delete_at"].toString()) : <any>undefined;
+            this.created_by = _data["created_by"];
+            this.update_by = _data["update_by"];
+            this.delete_by = _data["delete_by"];
+            this.company_code = _data["company_code"];
+        }
+    }
+
+    static fromJS(data: any): TypeEmployeeModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new TypeEmployeeModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["level"] = this.level;
+        data["is_delete"] = this.is_delete;
+        data["is_active"] = this.is_active;
+        data["created_at"] = this.created_at ? this.created_at.toISOString() : <any>undefined;
+        data["update_at"] = this.update_at ? this.update_at.toISOString() : <any>undefined;
+        data["delete_at"] = this.delete_at ? this.delete_at.toISOString() : <any>undefined;
+        data["created_by"] = this.created_by;
+        data["update_by"] = this.update_by;
+        data["delete_by"] = this.delete_by;
+        data["company_code"] = this.company_code;
+        return data;
+    }
+}
+
+export interface ITypeEmployeeModel {
+    id?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    level?: number | undefined;
+    is_delete?: boolean | undefined;
+    is_active?: boolean | undefined;
+    created_at?: Date | undefined;
+    update_at?: Date | undefined;
+    delete_at?: Date | undefined;
+    created_by?: string | undefined;
+    update_by?: string | undefined;
+    delete_by?: string | undefined;
+    company_code?: string | undefined;
+}
+
+export class StatusMessageOfListOfTypeEmployeeModel implements IStatusMessageOfListOfTypeEmployeeModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: TypeEmployeeModel[] | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfListOfTypeEmployeeModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(TypeEmployeeModel.fromJS(item));
+            }
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfListOfTypeEmployeeModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfListOfTypeEmployeeModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfListOfTypeEmployeeModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: TypeEmployeeModel[] | undefined;
+    currentID?: string | undefined;
+}
+
+export class StatusMessageOfTypeWorkModel implements IStatusMessageOfTypeWorkModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: TypeWorkModel | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfTypeWorkModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            this.data = _data["data"] ? TypeWorkModel.fromJS(_data["data"]) : <any>undefined;
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfTypeWorkModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfTypeWorkModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfTypeWorkModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: TypeWorkModel | undefined;
+    currentID?: string | undefined;
+}
+
+export class TypeWorkModel implements ITypeWorkModel {
+    id?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    level?: number | undefined;
+    is_delete?: boolean | undefined;
+    is_active?: boolean | undefined;
+    created_at?: Date | undefined;
+    update_at?: Date | undefined;
+    delete_at?: Date | undefined;
+    created_by?: string | undefined;
+    update_by?: string | undefined;
+    delete_by?: string | undefined;
+    company_code?: string | undefined;
+
+    constructor(data?: ITypeWorkModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.level = _data["level"];
+            this.is_delete = _data["is_delete"];
+            this.is_active = _data["is_active"];
+            this.created_at = _data["created_at"] ? new Date(_data["created_at"].toString()) : <any>undefined;
+            this.update_at = _data["update_at"] ? new Date(_data["update_at"].toString()) : <any>undefined;
+            this.delete_at = _data["delete_at"] ? new Date(_data["delete_at"].toString()) : <any>undefined;
+            this.created_by = _data["created_by"];
+            this.update_by = _data["update_by"];
+            this.delete_by = _data["delete_by"];
+            this.company_code = _data["company_code"];
+        }
+    }
+
+    static fromJS(data: any): TypeWorkModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new TypeWorkModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["level"] = this.level;
+        data["is_delete"] = this.is_delete;
+        data["is_active"] = this.is_active;
+        data["created_at"] = this.created_at ? this.created_at.toISOString() : <any>undefined;
+        data["update_at"] = this.update_at ? this.update_at.toISOString() : <any>undefined;
+        data["delete_at"] = this.delete_at ? this.delete_at.toISOString() : <any>undefined;
+        data["created_by"] = this.created_by;
+        data["update_by"] = this.update_by;
+        data["delete_by"] = this.delete_by;
+        data["company_code"] = this.company_code;
+        return data;
+    }
+}
+
+export interface ITypeWorkModel {
+    id?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    level?: number | undefined;
+    is_delete?: boolean | undefined;
+    is_active?: boolean | undefined;
+    created_at?: Date | undefined;
+    update_at?: Date | undefined;
+    delete_at?: Date | undefined;
+    created_by?: string | undefined;
+    update_by?: string | undefined;
+    delete_by?: string | undefined;
+    company_code?: string | undefined;
+}
+
+export class StatusMessageOfListOfTypeWorkModel implements IStatusMessageOfListOfTypeWorkModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: TypeWorkModel[] | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfListOfTypeWorkModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(TypeWorkModel.fromJS(item));
+            }
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfListOfTypeWorkModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfListOfTypeWorkModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfListOfTypeWorkModel {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: TypeWorkModel[] | undefined;
+    currentID?: string | undefined;
+}
+
+export class StatusMessageOfHRM_Employee_Model implements IStatusMessageOfHRM_Employee_Model {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: HRM_Employee_Model | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfHRM_Employee_Model) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            this.data = _data["data"] ? HRM_Employee_Model.fromJS(_data["data"]) : <any>undefined;
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfHRM_Employee_Model {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfHRM_Employee_Model();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfHRM_Employee_Model {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: HRM_Employee_Model | undefined;
+    currentID?: string | undefined;
+}
+
+export class EmployeeModel implements IEmployeeModel {
+    id?: string | undefined;
+    name?: string | undefined;
+    dateOfBirth?: Date | undefined;
+    address?: string | undefined;
+    phoneNumber?: string | undefined;
+    gender?: string | undefined;
+    nationality?: string | undefined;
+    ethnicity?: string | undefined;
+    interests?: string | undefined;
+    maritalStatus?: string | undefined;
+    modifyDate?: Date | undefined;
+    bhxh?: string | undefined;
+    cccd?: string | undefined;
+    codeCompany?: string | undefined;
+    avatar?: string | undefined;
+    avatar16?: string | undefined;
+    avatar32?: string | undefined;
+    avatar64?: string | undefined;
+    department_id?: string | undefined;
+    type_employee_id?: string | undefined;
+    position_id?: string | undefined;
+    type_work_id?: string | undefined;
+    is_delete?: boolean | undefined;
+    create_at?: Date | undefined;
+    update_at?: Date | undefined;
+    delete_at?: Date | undefined;
+    create_by?: string | undefined;
+    update_by?: string | undefined;
+    delete_by?: string | undefined;
+
+    constructor(data?: IEmployeeModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.dateOfBirth = _data["dateOfBirth"] ? new Date(_data["dateOfBirth"].toString()) : <any>undefined;
+            this.address = _data["address"];
+            this.phoneNumber = _data["phoneNumber"];
+            this.gender = _data["gender"];
+            this.nationality = _data["nationality"];
+            this.ethnicity = _data["ethnicity"];
+            this.interests = _data["interests"];
+            this.maritalStatus = _data["maritalStatus"];
+            this.modifyDate = _data["modifyDate"] ? new Date(_data["modifyDate"].toString()) : <any>undefined;
+            this.bhxh = _data["bhxh"];
+            this.cccd = _data["cccd"];
+            this.codeCompany = _data["codeCompany"];
+            this.avatar = _data["avatar"];
+            this.avatar16 = _data["avatar16"];
+            this.avatar32 = _data["avatar32"];
+            this.avatar64 = _data["avatar64"];
+            this.department_id = _data["department_id"];
+            this.type_employee_id = _data["type_employee_id"];
+            this.position_id = _data["position_id"];
+            this.type_work_id = _data["type_work_id"];
+            this.is_delete = _data["is_delete"];
+            this.create_at = _data["create_at"] ? new Date(_data["create_at"].toString()) : <any>undefined;
+            this.update_at = _data["update_at"] ? new Date(_data["update_at"].toString()) : <any>undefined;
+            this.delete_at = _data["delete_at"] ? new Date(_data["delete_at"].toString()) : <any>undefined;
+            this.create_by = _data["create_by"];
+            this.update_by = _data["update_by"];
+            this.delete_by = _data["delete_by"];
+        }
+    }
+
+    static fromJS(data: any): EmployeeModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new EmployeeModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
+        data["address"] = this.address;
+        data["phoneNumber"] = this.phoneNumber;
+        data["gender"] = this.gender;
+        data["nationality"] = this.nationality;
+        data["ethnicity"] = this.ethnicity;
+        data["interests"] = this.interests;
+        data["maritalStatus"] = this.maritalStatus;
+        data["modifyDate"] = this.modifyDate ? this.modifyDate.toISOString() : <any>undefined;
+        data["bhxh"] = this.bhxh;
+        data["cccd"] = this.cccd;
+        data["codeCompany"] = this.codeCompany;
+        data["avatar"] = this.avatar;
+        data["avatar16"] = this.avatar16;
+        data["avatar32"] = this.avatar32;
+        data["avatar64"] = this.avatar64;
+        data["department_id"] = this.department_id;
+        data["type_employee_id"] = this.type_employee_id;
+        data["position_id"] = this.position_id;
+        data["type_work_id"] = this.type_work_id;
+        data["is_delete"] = this.is_delete;
+        data["create_at"] = this.create_at ? this.create_at.toISOString() : <any>undefined;
+        data["update_at"] = this.update_at ? this.update_at.toISOString() : <any>undefined;
+        data["delete_at"] = this.delete_at ? this.delete_at.toISOString() : <any>undefined;
+        data["create_by"] = this.create_by;
+        data["update_by"] = this.update_by;
+        data["delete_by"] = this.delete_by;
+        return data;
+    }
+}
+
+export interface IEmployeeModel {
+    id?: string | undefined;
+    name?: string | undefined;
+    dateOfBirth?: Date | undefined;
+    address?: string | undefined;
+    phoneNumber?: string | undefined;
+    gender?: string | undefined;
+    nationality?: string | undefined;
+    ethnicity?: string | undefined;
+    interests?: string | undefined;
+    maritalStatus?: string | undefined;
+    modifyDate?: Date | undefined;
+    bhxh?: string | undefined;
+    cccd?: string | undefined;
+    codeCompany?: string | undefined;
+    avatar?: string | undefined;
+    avatar16?: string | undefined;
+    avatar32?: string | undefined;
+    avatar64?: string | undefined;
+    department_id?: string | undefined;
+    type_employee_id?: string | undefined;
+    position_id?: string | undefined;
+    type_work_id?: string | undefined;
+    is_delete?: boolean | undefined;
+    create_at?: Date | undefined;
+    update_at?: Date | undefined;
+    delete_at?: Date | undefined;
+    create_by?: string | undefined;
+    update_by?: string | undefined;
+    delete_by?: string | undefined;
+}
+
+export class HRM_Employee_Model extends EmployeeModel implements IHRM_Employee_Model {
+    position_name?: string | undefined;
+    department_name?: string | undefined;
+    type_employee_name?: string | undefined;
+    type_work_name?: string | undefined;
+
+    constructor(data?: IHRM_Employee_Model) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.position_name = _data["position_name"];
+            this.department_name = _data["department_name"];
+            this.type_employee_name = _data["type_employee_name"];
+            this.type_work_name = _data["type_work_name"];
+        }
+    }
+
+    static override fromJS(data: any): HRM_Employee_Model {
+        data = typeof data === 'object' ? data : {};
+        let result = new HRM_Employee_Model();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["position_name"] = this.position_name;
+        data["department_name"] = this.department_name;
+        data["type_employee_name"] = this.type_employee_name;
+        data["type_work_name"] = this.type_work_name;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IHRM_Employee_Model extends IEmployeeModel {
+    position_name?: string | undefined;
+    department_name?: string | undefined;
+    type_employee_name?: string | undefined;
+    type_work_name?: string | undefined;
+}
+
+export class StatusMessageOfListOfHRM_Employee_Model implements IStatusMessageOfListOfHRM_Employee_Model {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: HRM_Employee_Model[] | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfListOfHRM_Employee_Model) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(HRM_Employee_Model.fromJS(item));
+            }
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfListOfHRM_Employee_Model {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfListOfHRM_Employee_Model();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfListOfHRM_Employee_Model {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: HRM_Employee_Model[] | undefined;
+    currentID?: string | undefined;
+}
+
+export class CurrentJobPosition implements ICurrentJobPosition {
+    id?: string | undefined;
+    date?: Date | undefined;
+    idUserInfo?: string | undefined;
+    modyfiBy?: string | undefined;
+    jobDescription?: string | undefined;
+    departmentOrTeam?: string | undefined;
+    positionAndLevel?: string | undefined;
+    workSchedule?: string | undefined;
+    currentProjects?: string | undefined;
+    goalsAndDevelopment?: string | undefined;
+
+    constructor(data?: ICurrentJobPosition) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.idUserInfo = _data["idUserInfo"];
+            this.modyfiBy = _data["modyfiBy"];
+            this.jobDescription = _data["jobDescription"];
+            this.departmentOrTeam = _data["departmentOrTeam"];
+            this.positionAndLevel = _data["positionAndLevel"];
+            this.workSchedule = _data["workSchedule"];
+            this.currentProjects = _data["currentProjects"];
+            this.goalsAndDevelopment = _data["goalsAndDevelopment"];
+        }
+    }
+
+    static fromJS(data: any): CurrentJobPosition {
+        data = typeof data === 'object' ? data : {};
+        let result = new CurrentJobPosition();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["idUserInfo"] = this.idUserInfo;
+        data["modyfiBy"] = this.modyfiBy;
+        data["jobDescription"] = this.jobDescription;
+        data["departmentOrTeam"] = this.departmentOrTeam;
+        data["positionAndLevel"] = this.positionAndLevel;
+        data["workSchedule"] = this.workSchedule;
+        data["currentProjects"] = this.currentProjects;
+        data["goalsAndDevelopment"] = this.goalsAndDevelopment;
+        return data;
+    }
+}
+
+export interface ICurrentJobPosition {
+    id?: string | undefined;
+    date?: Date | undefined;
+    idUserInfo?: string | undefined;
+    modyfiBy?: string | undefined;
+    jobDescription?: string | undefined;
+    departmentOrTeam?: string | undefined;
+    positionAndLevel?: string | undefined;
+    workSchedule?: string | undefined;
+    currentProjects?: string | undefined;
+    goalsAndDevelopment?: string | undefined;
+}
+
+export class SalaryAndBenefits implements ISalaryAndBenefits {
+    id?: string | undefined;
+    date?: Date | undefined;
+    idUserInfo?: string | undefined;
+    modyfiBy?: string | undefined;
+    salary?: number | undefined;
+    benefits?: string | undefined;
+    wagesAndPerks?: string | undefined;
+    compensationPackageAmount?: number | undefined;
+    compensationPackage?: string | undefined;
+    compensationPackageAmount1?: number | undefined;
+    compensationPackage1?: string | undefined;
+    compensationPackageAmount2?: number | undefined;
+    compensationPackage2?: string | undefined;
+    compensationPackageAmount3?: number | undefined;
+    compensationPackage3?: string | undefined;
+    insuranceCoverage?: string | undefined;
+    allowancesAndAidsAmount?: number | undefined;
+    allowancesAndAids?: string | undefined;
+    allowancesAndAidsAmount1?: number | undefined;
+    allowancesAndAids1?: string | undefined;
+    allowancesAndAidsAmount2?: number | undefined;
+    allowancesAndAids2?: string | undefined;
+    allowancesAndAidsAmount3?: number | undefined;
+    allowancesAndAids3?: string | undefined;
+
+    constructor(data?: ISalaryAndBenefits) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.idUserInfo = _data["idUserInfo"];
+            this.modyfiBy = _data["modyfiBy"];
+            this.salary = _data["salary"];
+            this.benefits = _data["benefits"];
+            this.wagesAndPerks = _data["wagesAndPerks"];
+            this.compensationPackageAmount = _data["compensationPackageAmount"];
+            this.compensationPackage = _data["compensationPackage"];
+            this.compensationPackageAmount1 = _data["compensationPackageAmount1"];
+            this.compensationPackage1 = _data["compensationPackage1"];
+            this.compensationPackageAmount2 = _data["compensationPackageAmount2"];
+            this.compensationPackage2 = _data["compensationPackage2"];
+            this.compensationPackageAmount3 = _data["compensationPackageAmount3"];
+            this.compensationPackage3 = _data["compensationPackage3"];
+            this.insuranceCoverage = _data["insuranceCoverage"];
+            this.allowancesAndAidsAmount = _data["allowancesAndAidsAmount"];
+            this.allowancesAndAids = _data["allowancesAndAids"];
+            this.allowancesAndAidsAmount1 = _data["allowancesAndAidsAmount1"];
+            this.allowancesAndAids1 = _data["allowancesAndAids1"];
+            this.allowancesAndAidsAmount2 = _data["allowancesAndAidsAmount2"];
+            this.allowancesAndAids2 = _data["allowancesAndAids2"];
+            this.allowancesAndAidsAmount3 = _data["allowancesAndAidsAmount3"];
+            this.allowancesAndAids3 = _data["allowancesAndAids3"];
+        }
+    }
+
+    static fromJS(data: any): SalaryAndBenefits {
+        data = typeof data === 'object' ? data : {};
+        let result = new SalaryAndBenefits();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["idUserInfo"] = this.idUserInfo;
+        data["modyfiBy"] = this.modyfiBy;
+        data["salary"] = this.salary;
+        data["benefits"] = this.benefits;
+        data["wagesAndPerks"] = this.wagesAndPerks;
+        data["compensationPackageAmount"] = this.compensationPackageAmount;
+        data["compensationPackage"] = this.compensationPackage;
+        data["compensationPackageAmount1"] = this.compensationPackageAmount1;
+        data["compensationPackage1"] = this.compensationPackage1;
+        data["compensationPackageAmount2"] = this.compensationPackageAmount2;
+        data["compensationPackage2"] = this.compensationPackage2;
+        data["compensationPackageAmount3"] = this.compensationPackageAmount3;
+        data["compensationPackage3"] = this.compensationPackage3;
+        data["insuranceCoverage"] = this.insuranceCoverage;
+        data["allowancesAndAidsAmount"] = this.allowancesAndAidsAmount;
+        data["allowancesAndAids"] = this.allowancesAndAids;
+        data["allowancesAndAidsAmount1"] = this.allowancesAndAidsAmount1;
+        data["allowancesAndAids1"] = this.allowancesAndAids1;
+        data["allowancesAndAidsAmount2"] = this.allowancesAndAidsAmount2;
+        data["allowancesAndAids2"] = this.allowancesAndAids2;
+        data["allowancesAndAidsAmount3"] = this.allowancesAndAidsAmount3;
+        data["allowancesAndAids3"] = this.allowancesAndAids3;
+        return data;
+    }
+}
+
+export interface ISalaryAndBenefits {
+    id?: string | undefined;
+    date?: Date | undefined;
+    idUserInfo?: string | undefined;
+    modyfiBy?: string | undefined;
+    salary?: number | undefined;
+    benefits?: string | undefined;
+    wagesAndPerks?: string | undefined;
+    compensationPackageAmount?: number | undefined;
+    compensationPackage?: string | undefined;
+    compensationPackageAmount1?: number | undefined;
+    compensationPackage1?: string | undefined;
+    compensationPackageAmount2?: number | undefined;
+    compensationPackage2?: string | undefined;
+    compensationPackageAmount3?: number | undefined;
+    compensationPackage3?: string | undefined;
+    insuranceCoverage?: string | undefined;
+    allowancesAndAidsAmount?: number | undefined;
+    allowancesAndAids?: string | undefined;
+    allowancesAndAidsAmount1?: number | undefined;
+    allowancesAndAids1?: string | undefined;
+    allowancesAndAidsAmount2?: number | undefined;
+    allowancesAndAids2?: string | undefined;
+    allowancesAndAidsAmount3?: number | undefined;
+    allowancesAndAids3?: string | undefined;
+}
+
+export class WorkHistory implements IWorkHistory {
+    id?: string | undefined;
+    date?: Date | undefined;
+    idUserInfo?: string | undefined;
+    modyfiBy?: string | undefined;
+    companyAndPosition?: string | undefined;
+    workHistoryStart?: Date | undefined;
+    workHistoryEnd?: Date | undefined;
+    timeWorked?: string | undefined;
+    jobdeScription?: string | undefined;
+    achievementSkills?: string | undefined;
+    reasonForChange?: string | undefined;
+
+    constructor(data?: IWorkHistory) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.idUserInfo = _data["idUserInfo"];
+            this.modyfiBy = _data["modyfiBy"];
+            this.companyAndPosition = _data["companyAndPosition"];
+            this.workHistoryStart = _data["workHistoryStart"] ? new Date(_data["workHistoryStart"].toString()) : <any>undefined;
+            this.workHistoryEnd = _data["workHistoryEnd"] ? new Date(_data["workHistoryEnd"].toString()) : <any>undefined;
+            this.timeWorked = _data["timeWorked"];
+            this.jobdeScription = _data["jobdeScription"];
+            this.achievementSkills = _data["achievementSkills"];
+            this.reasonForChange = _data["reasonForChange"];
+        }
+    }
+
+    static fromJS(data: any): WorkHistory {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkHistory();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["idUserInfo"] = this.idUserInfo;
+        data["modyfiBy"] = this.modyfiBy;
+        data["companyAndPosition"] = this.companyAndPosition;
+        data["workHistoryStart"] = this.workHistoryStart ? this.workHistoryStart.toISOString() : <any>undefined;
+        data["workHistoryEnd"] = this.workHistoryEnd ? this.workHistoryEnd.toISOString() : <any>undefined;
+        data["timeWorked"] = this.timeWorked;
+        data["jobdeScription"] = this.jobdeScription;
+        data["achievementSkills"] = this.achievementSkills;
+        data["reasonForChange"] = this.reasonForChange;
+        return data;
+    }
+}
+
+export interface IWorkHistory {
+    id?: string | undefined;
+    date?: Date | undefined;
+    idUserInfo?: string | undefined;
+    modyfiBy?: string | undefined;
+    companyAndPosition?: string | undefined;
+    workHistoryStart?: Date | undefined;
+    workHistoryEnd?: Date | undefined;
+    timeWorked?: string | undefined;
+    jobdeScription?: string | undefined;
+    achievementSkills?: string | undefined;
+    reasonForChange?: string | undefined;
 }
 
 export class AccountClientLoginParamsModel implements IAccountClientLoginParamsModel {
@@ -11882,6 +15176,206 @@ export interface IStatusMessageOfListOfSysTypeAccount {
     currentID?: string | undefined;
 }
 
+export class StatusMessageOfCompany implements IStatusMessageOfCompany {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: Company | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfCompany) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            this.data = _data["data"] ? Company.fromJS(_data["data"]) : <any>undefined;
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfCompany {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfCompany();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfCompany {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: Company | undefined;
+    currentID?: string | undefined;
+}
+
+export class Company implements ICompany {
+    id?: string | undefined;
+    name?: string | undefined;
+    code?: string | undefined;
+    address1?: string | undefined;
+    address2?: string | undefined;
+    create_at?: Date | undefined;
+    adminCompany?: string | undefined;
+    notes?: string | undefined;
+    left_company?: number | undefined;
+    right_company?: number | undefined;
+    is_delete?: boolean | undefined;
+    delete_at?: Date | undefined;
+    update_at?: Date | undefined;
+    create_by?: string | undefined;
+    update_by?: string | undefined;
+    delete_by?: string | undefined;
+
+    constructor(data?: ICompany) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.code = _data["code"];
+            this.address1 = _data["address1"];
+            this.address2 = _data["address2"];
+            this.create_at = _data["create_at"] ? new Date(_data["create_at"].toString()) : <any>undefined;
+            this.adminCompany = _data["adminCompany"];
+            this.notes = _data["notes"];
+            this.left_company = _data["left_company"];
+            this.right_company = _data["right_company"];
+            this.is_delete = _data["is_delete"];
+            this.delete_at = _data["delete_at"] ? new Date(_data["delete_at"].toString()) : <any>undefined;
+            this.update_at = _data["update_at"] ? new Date(_data["update_at"].toString()) : <any>undefined;
+            this.create_by = _data["create_by"];
+            this.update_by = _data["update_by"];
+            this.delete_by = _data["delete_by"];
+        }
+    }
+
+    static fromJS(data: any): Company {
+        data = typeof data === 'object' ? data : {};
+        let result = new Company();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["code"] = this.code;
+        data["address1"] = this.address1;
+        data["address2"] = this.address2;
+        data["create_at"] = this.create_at ? this.create_at.toISOString() : <any>undefined;
+        data["adminCompany"] = this.adminCompany;
+        data["notes"] = this.notes;
+        data["left_company"] = this.left_company;
+        data["right_company"] = this.right_company;
+        data["is_delete"] = this.is_delete;
+        data["delete_at"] = this.delete_at ? this.delete_at.toISOString() : <any>undefined;
+        data["update_at"] = this.update_at ? this.update_at.toISOString() : <any>undefined;
+        data["create_by"] = this.create_by;
+        data["update_by"] = this.update_by;
+        data["delete_by"] = this.delete_by;
+        return data;
+    }
+}
+
+export interface ICompany {
+    id?: string | undefined;
+    name?: string | undefined;
+    code?: string | undefined;
+    address1?: string | undefined;
+    address2?: string | undefined;
+    create_at?: Date | undefined;
+    adminCompany?: string | undefined;
+    notes?: string | undefined;
+    left_company?: number | undefined;
+    right_company?: number | undefined;
+    is_delete?: boolean | undefined;
+    delete_at?: Date | undefined;
+    update_at?: Date | undefined;
+    create_by?: string | undefined;
+    update_by?: string | undefined;
+    delete_by?: string | undefined;
+}
+
+export class StatusMessageOfListOfCompany implements IStatusMessageOfListOfCompany {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: Company[] | undefined;
+    currentID?: string | undefined;
+
+    constructor(data?: IStatusMessageOfListOfCompany) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.msg = _data["msg"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(Company.fromJS(item));
+            }
+            this.currentID = _data["currentID"];
+        }
+    }
+
+    static fromJS(data: any): StatusMessageOfListOfCompany {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusMessageOfListOfCompany();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["msg"] = this.msg;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        data["currentID"] = this.currentID;
+        return data;
+    }
+}
+
+export interface IStatusMessageOfListOfCompany {
+    status?: number | undefined;
+    msg?: string | undefined;
+    data?: Company[] | undefined;
+    currentID?: string | undefined;
+}
+
 export class Sys_Menu_Tree_View_MODEL extends SysMenu implements ISys_Menu_Tree_View_MODEL {
     items?: Sys_Menu_Tree_View_MODEL[] | undefined;
     expanded?: boolean | undefined;
@@ -12289,70 +15783,6 @@ export interface IUserInformationClientGetUser {
     codeDepartment?: string | undefined;
     codeName?: string | undefined;
     tokens?: TOKEN[] | undefined;
-}
-
-export class Company implements ICompany {
-    id?: string | undefined;
-    name?: string | undefined;
-    code?: string | undefined;
-    address1?: string | undefined;
-    address2?: string | undefined;
-    date?: Date | undefined;
-    adminCompany?: string | undefined;
-    notes?: string | undefined;
-
-    constructor(data?: ICompany) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.code = _data["code"];
-            this.address1 = _data["address1"];
-            this.address2 = _data["address2"];
-            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
-            this.adminCompany = _data["adminCompany"];
-            this.notes = _data["notes"];
-        }
-    }
-
-    static fromJS(data: any): Company {
-        data = typeof data === 'object' ? data : {};
-        let result = new Company();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["code"] = this.code;
-        data["address1"] = this.address1;
-        data["address2"] = this.address2;
-        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
-        data["adminCompany"] = this.adminCompany;
-        data["notes"] = this.notes;
-        return data;
-    }
-}
-
-export interface ICompany {
-    id?: string | undefined;
-    name?: string | undefined;
-    code?: string | undefined;
-    address1?: string | undefined;
-    address2?: string | undefined;
-    date?: Date | undefined;
-    adminCompany?: string | undefined;
-    notes?: string | undefined;
 }
 
 export class QueryCommonModel implements IQueryCommonModel {

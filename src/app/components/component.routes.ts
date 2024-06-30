@@ -6,9 +6,12 @@ import { ToolBarComponent } from "./tool-bar/tool-bar.component";
 import { VoucherFormComponent } from "./form/voucher-form/voucher-form/voucher-form.component";
 import { DateBoxComponent } from "./js-devextreme/editor/date-box/date-box.component";
 import { FileUploaderComponent } from "./editor/file-uploader/file-uploader.component";
+import { TextBoxDevextremeComponent } from "./editor/text-box-devextreme/text-box-devextreme.component";
+import { ControlTextBoxComponent } from "./js-devextreme/editor/text-box/text-box.component";
 
 const routes: Routes = [
   { path: 'editor-text-box', component: TextBoxComponent },
+  { path: 'control-text-box-component', component: ControlTextBoxComponent },
   { path: 'tree-view-component', component: TreeViewComponent },
   { path: 'control-input-block', component: ControlInputBlockComponent },
   { path: 'control-date-box', component: DateBoxComponent },

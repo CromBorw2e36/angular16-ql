@@ -2,7 +2,12 @@
   <div *ngSwitchCase="typeComponent.textBox">
     <control-text-box-component
       [propertyControl]="GenValueConfig"
-      [label]="translate(InputMaster.labelControlVN ?? '' ,   InputMaster.labelControl ?? '' )"
+      [label]="
+        translate(
+          InputMaster.labelControlVN ?? '',
+          InputMaster.labelControl ?? ''
+        )
+      "
       [value]="value"
       (valueChange)="handleValueChange($event)"
     ></control-text-box-component>
@@ -10,7 +15,12 @@
   <div *ngSwitchCase="typeComponent.checkBox">
     <control-check-box-component
       [propertyControl]="GenValueConfig"
-      [label]="translate(InputMaster.labelControlVN ?? '' ,   InputMaster.labelControl ?? '' )"
+      [label]="
+        translate(
+          InputMaster.labelControlVN ?? '',
+          InputMaster.labelControl ?? ''
+        )
+      "
       [value]="value"
       (valueChange)="handleValueChange($event)"
     ></control-check-box-component>
@@ -18,7 +28,12 @@
   <div *ngSwitchCase="typeComponent.dateBox">
     <control-date-box-component
       [propertyControl]="GenValueConfigDate"
-      [label]="translate(InputMaster.labelControlVN ?? '' ,   InputMaster.labelControl ?? '' )"
+      [label]="
+        translate(
+          InputMaster.labelControlVN ?? '',
+          InputMaster.labelControl ?? ''
+        )
+      "
       [value]="value"
       (valueChange)="handleValueChange($event)"
     ></control-date-box-component>
@@ -26,14 +41,24 @@
   <div *ngSwitchCase="typeComponent.numberBox">
     <control-number-box-component
       [propertyControl]="GenValueConfigNumber"
-      [label]="translate(InputMaster.labelControlVN ?? '' ,   InputMaster.labelControl ?? '' )"
+      [label]="
+        translate(
+          InputMaster.labelControlVN ?? '',
+          InputMaster.labelControl ?? ''
+        )
+      "
       [value]="value"
       (valueChange)="handleValueChange($event)"
     ></control-number-box-component>
   </div>
   <div *ngSwitchCase="typeComponent.comboBox">
     <control-select-box-component
-      [label]="translate(InputMaster.labelControlVN ?? '' ,   InputMaster.labelControl ?? '' )"
+      [label]="
+        translate(
+          InputMaster.labelControlVN ?? '',
+          InputMaster.labelControl ?? ''
+        )
+      "
       [dataSource]="dataSourceItems"
       [value]="value"
       (valueChange)="handleValueChange($event)"

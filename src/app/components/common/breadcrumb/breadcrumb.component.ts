@@ -21,7 +21,7 @@ export class BreadcrumbComponent extends LayoutComponentBase {
     // if (this.menuV2Service.getMenuSelectedByLv('1')) arr.push(this.menuV2Service.itemSelectedMenuLv1)
     if (this.menuV2Service.getMenuSelectedByLv('2')) arr.push(this.menuV2Service.itemSelectedMenuLv2)
     if (this.menuV2Service.getMenuSelectedByLv('3')) arr.push(this.menuV2Service.itemSelectedMenuLv3)
-    console.log(arr)
+    // console.log(arr)
     return arr;
   }
 

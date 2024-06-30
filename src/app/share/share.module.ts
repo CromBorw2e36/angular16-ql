@@ -1,4 +1,4 @@
-import { CategoryCommonClient, CommonContronllerClient } from './../system/server/api_share';
+import { CategoryCommonClient, CommonContronllerClient, MovieClient, MovieCommentClient, MovieFavoritesClient, MovieGenresClient, MovieReviewClient, MovieWatchHistoryClient } from './../system/server/api_share';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
@@ -22,7 +22,7 @@ import { DxButtonModule, DxTextBoxModule } from 'devextreme-angular';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
 import routes from './share.routes';
 import { NgxBootstrapIconsModule, alarm, alarmFill, alignBottom, fullscreen, fullscreenExit, pencilSquare } from 'ngx-bootstrap-icons';
@@ -55,6 +55,11 @@ import { RoleMenuListComponent } from './99_00_00/99_10_00/99_10_02/role-menu-li
 import { RoleMenuEditComponent } from './99_00_00/99_10_00/99_10_02/role-menu-edit/role-menu-edit.component';
 import { RoleMenuPopupComponent } from './99_00_00/99_10_00/99_10_02/role-menu-edit/role-menu-popup/role-menu-popup.component';
 import { AccountAddEditComponent } from './99_00_00/99_10_00/99_10_01/account-add-edit/account-add-edit.component';
+import { GenresListComponent } from './20_00_00/20_01_00/20_01_01/genres-list/genres-list.component';
+import { GenresEditComponent } from './20_00_00/20_01_00/20_01_01/genres-edit/genres-edit.component';
+import { MovieEditComponent } from './20_00_00/20_01_00/20_04_00/20_04_01/movie-edit/movie-edit.component';
+import { MovieListComponent } from './20_00_00/20_01_00/20_04_00/20_04_01/movie-list/movie-list.component';
+import { VoucherFormColumnSettingsEditV2Component } from './99_00_00/voucher-form-column-settings/voucher-form-column-settings-edit-v2/voucher-form-column-settings-edit-v2.component';
 
 const icons = {
   alarm,
@@ -97,6 +102,11 @@ const icons = {
     RoleMenuEditComponent,
     RoleMenuPopupComponent,
     AccountAddEditComponent,
+    GenresListComponent,
+    GenresEditComponent,
+    MovieEditComponent,
+    MovieListComponent,
+    VoucherFormColumnSettingsEditV2Component,
   ],
   providers: [
     CookieService,
@@ -109,7 +119,13 @@ const icons = {
     SysMenusClient,
     CommonContronllerClient,
     CategoryCommonClient,
-   ],
+    MovieGenresClient,
+    MovieCommentClient,
+    MovieFavoritesClient,
+    MovieWatchHistoryClient,
+    MovieReviewClient,
+    MovieClient,
+  ],
   exports: [QlTaiKhoanComponent],
   imports: [
     RouterModule.forChild(routes),
@@ -132,4 +148,4 @@ const icons = {
 
   ],
 })
-export class ShareModule {}
+export class ShareModule { }

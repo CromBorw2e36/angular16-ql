@@ -10,6 +10,7 @@ import { ComponentModule } from './components/component.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ShareModule } from './share/share.module';
 import { NgxBootstrapIconsModule, alarm, alarmFill, alignBottom, allIcons } from 'ngx-bootstrap-icons';
+import { PageModule } from './page/page.module';
 const icons = {
   alarm,
   alarmFill,
@@ -29,6 +30,7 @@ const icons = {
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000',
     }),
+    PageModule,
     SystemModule,
     ComponentModule,
     ShareModule,

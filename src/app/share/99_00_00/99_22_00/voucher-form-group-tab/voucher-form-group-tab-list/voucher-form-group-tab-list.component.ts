@@ -21,7 +21,7 @@ export class VoucherFormGroupTabListComponent extends LayoutComponentBase implem
 
     this.propertyDataGrid = {
       keyExpr: 'id',
-      height: window.innerHeight - 46,
+      height: window.innerHeight - 50,
       width: '100%',
       columnAutoWidth: true,
       scrolling: {

@@ -47,7 +47,7 @@ export class ToolBarComponent extends LayoutComponentBase {
     const paramObj = {
       code: this.menuV2Service.getMenuSelected()[`action${this.action_type!}`]
     } as SysGroupAction;
-    console.log(this.menuV2Service.getMenuSelected())
+    // console.log(this.menuV2Service.getMenuSelected())
     // if (paramObj.code) {
     this.sysActionClient.getListActionByGroupCode(paramObj).subscribe(res => {
       if (res.status == 0) {
@@ -76,7 +76,7 @@ export class ToolBarComponent extends LayoutComponentBase {
       event: ev
     }
     this.onActionClick.emit(obj)
-    // console.log(obj)
+    //console.log(obj)
   }
 
   handleClickBack() {

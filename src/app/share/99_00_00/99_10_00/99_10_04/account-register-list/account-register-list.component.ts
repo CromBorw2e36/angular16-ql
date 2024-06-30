@@ -21,7 +21,7 @@ export class AccountRegisterListComponent extends LayoutComponentBase implements
 
     this.propertyDataGrid = {
       keyExpr: 'id',
-      height: window.innerHeight - 46,
+      height: window.innerHeight - 50,
       width: '100%',
       columnAutoWidth: true,
       scrolling: {

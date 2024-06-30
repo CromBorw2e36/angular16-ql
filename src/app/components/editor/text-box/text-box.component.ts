@@ -42,7 +42,7 @@ export class TextBoxComponent {
   }
 
   handleChange(ev: Event) {
-    // console.log((ev.currentTarget as HTMLInputElement).value)
+    //console.log((ev.currentTarget as HTMLInputElement).value)
     this.onChange.emit(ev);
   }
 

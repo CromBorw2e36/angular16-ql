@@ -30,7 +30,6 @@
             id="account"
             placeholder=""
             [(ngModel)]="InputMaster.account"
-            (keyup.enter)="OnSubmit()"
             [ngModelOptions]="{ standalone: true }"
             autofocus
           />
@@ -45,7 +44,6 @@
             id="password"
             placeholder=""
             [(ngModel)]="InputMaster.password"
-            (keyup.enter)="OnSubmit()"
             [ngModelOptions]="{ standalone: true }"
           />
         </div>
@@ -56,7 +54,7 @@
             <button
               type="submit"
               class="login100-form-btn"
-              (click)="this.OnSubmit()"
+              (click)="this.OnSubmit('button login')"
               [disabled]="isLoading"
             >
               <ng-container *ngIf="isLoading; else elseEnterTemplate">

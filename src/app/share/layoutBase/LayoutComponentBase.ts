@@ -53,6 +53,8 @@ export default class LayoutComponentBase {
   title_website: string = this.translate('Quản trị doanh nghiệp', '2K')
   col_title: ICol_Title_Model[] = _col_title;
   route: ActivatedRoute;
+  _userInfo: UserInfo = new UserInfo();
+  _loading: boolean = false;
   _menuV2Service: MenuV2Service;
   _httpGlobal: HttpClient;
 
@@ -177,6 +179,7 @@ export default class LayoutComponentBase {
     const data = this.getUserInfo();
     if (data) localStorage.removeItem('user_info');
     localStorage.setItem('user_info', JSON.stringify(p));
+    this._userInfo = p;
   }
 
   public getUserInfo() {
@@ -273,7 +276,8 @@ export default class LayoutComponentBase {
   }
 
   trackByFunc(index: number, data: any) {
-    return index;
+    if ('id' in data) return data.id;
+    else return index;
   }
 
   get_col_title_by_id(id: number): ICol_Title_Model {
@@ -319,6 +323,41 @@ export default class LayoutComponentBase {
     return res;
   }
 
+  getFileImage(
+    idCode: string,
+    data: any,
+    col_name: string | undefined) {
+
+    if (col_name) {
+      this.getFile(idCode).then(
+        blob => {
+          if (blob) {
+            const url = window.URL.createObjectURL(blob);
+            // console.log(url)
+            data[col_name] = url; // Set the URL to the imageUrl property
+          }
+        },
+        error => {
+          if (error.status == 401 || error.status == 403) this.Authorization();
+        }
+      );
+    } else {
+      this.getFile(idCode).then(
+        blob => {
+          if (blob) {
+            const url = window.URL.createObjectURL(blob);
+            // console.log(url)
+            data = url; // Set the URL to the imageUrl property
+          }
+        },
+        error => {
+          if (error.status == 401 || error.status == 403) this.Authorization();
+        }
+      );
+    }
+
+
+  }
 
 }
 

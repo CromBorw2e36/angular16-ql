@@ -21,14 +21,14 @@ export class CategoryCommonListComponent extends LayoutComponentBase implements 
 
     this.propertyDataGrid = {
       keyExpr: 'id',
-      height: window.innerHeight - 46,
+      height: window.innerHeight - 50,
       width: '100%',
       columnAutoWidth: true,
       scrolling: {
         mode: 'virtual'
       },
       pager: {
-        displayMode: 'adaptive',
+        displayMode: 'full',
         showNavigationButtons: true,
         showPageSizeSelector: true,
         visible: true,

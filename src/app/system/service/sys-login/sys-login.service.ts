@@ -17,7 +17,7 @@ export class SysLoginService implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // console.log(this.isLogin);
+    //console.log(this.isLogin);
   }
   ngOnInit(): void {
   }

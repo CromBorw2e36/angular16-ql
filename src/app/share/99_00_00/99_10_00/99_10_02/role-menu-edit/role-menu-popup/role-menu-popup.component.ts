@@ -37,7 +37,7 @@ export class RoleMenuPopupComponent extends LayoutComponentBase implements IPopu
         mode: 'virtual'
       },
       pager: {
-        displayMode: 'adaptive',
+        displayMode: 'full',
         showNavigationButtons: true,
         showPageSizeSelector: true,
         visible: true,
