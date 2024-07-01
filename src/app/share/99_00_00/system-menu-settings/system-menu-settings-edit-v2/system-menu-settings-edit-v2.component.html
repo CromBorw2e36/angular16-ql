@@ -1,0 +1,14 @@
+<popup-component
+  #popupComponent
+  [listAction]="listDialogAction"
+  [title]="titlePopUp"
+  (actionClick)="onActionClick_PopupComponent($event)"
+  [action]="typeAction"
+  [showTitleAction]="true"
+  [loading]="_loading"
+>
+  <voucher-form-component
+    [InputMaster]="InputMaster"
+    [table_name]="_tableName"
+  ></voucher-form-component>
+</popup-component>

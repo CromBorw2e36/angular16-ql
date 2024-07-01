@@ -60,6 +60,7 @@ import { GenresEditComponent } from './20_00_00/20_01_00/20_01_01/genres-edit/ge
 import { MovieEditComponent } from './20_00_00/20_01_00/20_04_00/20_04_01/movie-edit/movie-edit.component';
 import { MovieListComponent } from './20_00_00/20_01_00/20_04_00/20_04_01/movie-list/movie-list.component';
 import { VoucherFormColumnSettingsEditV2Component } from './99_00_00/voucher-form-column-settings/voucher-form-column-settings-edit-v2/voucher-form-column-settings-edit-v2.component';
+import { SystemMenuSettingsEditV2Component } from './99_00_00/system-menu-settings/system-menu-settings-edit-v2/system-menu-settings-edit-v2.component';
 
 const icons = {
   alarm,
@@ -107,6 +108,7 @@ const icons = {
     MovieEditComponent,
     MovieListComponent,
     VoucherFormColumnSettingsEditV2Component,
+    SystemMenuSettingsEditV2Component,
   ],
   providers: [
     CookieService,
@@ -145,7 +147,6 @@ const icons = {
     MatTabsModule,
     DxTextBoxModule,
     NgxBootstrapIconsModule.pick(icons)
-
   ],
 })
 export class ShareModule { }

@@ -5,3 +5,10 @@
 [propertyDataGrid]="propertyDataGrid"
 [dataSource]="InputMaster"
 ></data-grid-component>
+
+
+<app-system-menu-settings-edit-v2
+  #systemMenuSettingsEditV2Component
+  [filterInput]="filterInput"
+  (onEditSuccess)="ActionEditSuccess($event)"
+></app-system-menu-settings-edit-v2>

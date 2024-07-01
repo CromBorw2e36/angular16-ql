@@ -5,6 +5,7 @@ import { IToolBarComponent, I_ToolbarComponent_ActionClick } from 'src/app/compo
 import LayoutComponentBase from 'src/app/share/layoutBase/LayoutComponentBase';
 import { Action_Type_Enum } from 'src/app/components/js-devextreme/popup/enum_action';
 import { Properties } from 'devextreme/ui/data_grid';
+import { SystemMenuSettingsEditV2Component } from '../system-menu-settings-edit-v2/system-menu-settings-edit-v2.component';
 
 @Component({
   selector: 'app-system-menu-settings-list',
@@ -46,8 +47,10 @@ export class SystemMenuSettingsListComponent extends LayoutComponentBase impleme
   propertyDataGrid: Properties;
   value: string = '';
   InputMaster: Array<SysMenu> = [];
+  filterInput: SysMenu = new SysMenu();
 
   @ViewChild('dataGridComponent') dataGridComponent: DataGridComponent | undefined;
+  @ViewChild('systemMenuSettingsEditV2Component') systemMenuSettingsEditV2Component: SystemMenuSettingsEditV2Component | undefined;
 
   ngOnInit(): void {
     this.onLoadData();
@@ -61,14 +64,24 @@ export class SystemMenuSettingsListComponent extends LayoutComponentBase impleme
       case Action_Type_Enum.COPY: {
         const dataSelected = this.dataGridComponent?.getRowSelectedData();
         if (dataSelected && dataSelected[0]) {
-          this.setRouter(this._urlVoucherFormEdit, dataSelected[0], ev.code);
+          // this.setRouter(this._urlVoucherFormEdit, dataSelected[0], ev.code);
+          if (this.systemMenuSettingsEditV2Component) {
+            this.systemMenuSettingsEditV2Component.setShowPopup({ state: true, data: dataSelected[0], typeAction: ev.code });
+          }
         } else {
-          this.setRouter(this._urlVoucherFormEdit, null, ev.code);
+          // this.setRouter(this._urlVoucherFormEdit, null, ev.code);
+          if (this.systemMenuSettingsEditV2Component) {
+            this.systemMenuSettingsEditV2Component.setShowPopup({ state: true, data: null, typeAction: ev.code });
+          }
         }
         break;
       }
       case Action_Type_Enum.DELETE: {
         const dataSelected = this.dataGridComponent?.getRowSelectedData();
+
+        const confirmDelete = confirm(this.translate('Bạn có chắc chắn muốn xóa?', 'Are you sure to delete?'));
+        if (!confirmDelete) break;
+
         if (dataSelected && dataSelected[0]) {
           this.sysMenusClient.sysMenuDelete(dataSelected[0] as SysMenu).subscribe(res => {
             if (res.status == 0) {
@@ -98,6 +111,12 @@ export class SystemMenuSettingsListComponent extends LayoutComponentBase impleme
       if (error.status == 401 || error.status == 403) this.setLogin(false);
       else if (error.status == 500) this.showMessageError(error.msg)
     });
+  }
+
+  ActionEditSuccess(event: { code: Action_Type_Enum, data: SysMenu }) {
+    const id = event!.data!.menuid!
+    this.onLoadData();
+    this.dataGridComponent?.dxDataGridComponent?.instance.selectRows([id], true);
   }
 
 }
