@@ -1,9 +1,9 @@
-import { SysMenu, SysMenusClient } from 'src/app/system/server/api_share';
 import { Component, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
 import LayoutComponentBase from 'src/app/share/layoutBase/LayoutComponentBase';
 import { Action_Type_Enum } from 'src/app/components/js-devextreme/popup/enum_action';
 import { PopupComponent } from 'src/app/components/js-devextreme/popup/popup.component';
 import { Location } from '@angular/common';
+import { SysMenu, SysMenusClient } from 'src/app/system/server/api_share';
 
 @Component({
   selector: 'app-system-menu-settings-edit-v2',

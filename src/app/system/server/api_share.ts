@@ -7715,6 +7715,7 @@ export interface ICompanyClient {
     update(model: Company): Observable<StatusMessageOfCompany>;
     delete(model: Company): Observable<StatusMessageOfCompany>;
     search(model: Company): Observable<StatusMessageOfListOfCompany>;
+    get(model: Company): Observable<StatusMessageOfCompany>;
 }
 
 @Injectable()
@@ -7935,6 +7936,60 @@ export class CompanyClient extends APIBase implements ICompanyClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = StatusMessageOfListOfCompany.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    get(model: Company): Observable<StatusMessageOfCompany> {
+        let url_ = this.baseUrl + "/api/Company/Get";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(model);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("post", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatusMessageOfCompany>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatusMessageOfCompany>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<StatusMessageOfCompany> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = StatusMessageOfCompany.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -13130,7 +13185,7 @@ export interface IStatusMessageOfHRM_Employee_Model {
     currentID?: string | undefined;
 }
 
-export class EmployeeModel implements IEmployeeModel {
+export class UserInfo implements IUserInfo {
     id?: string | undefined;
     name?: string | undefined;
     dateOfBirth?: Date | undefined;
@@ -13149,6 +13204,7 @@ export class EmployeeModel implements IEmployeeModel {
     avatar16?: string | undefined;
     avatar32?: string | undefined;
     avatar64?: string | undefined;
+    email?: string | undefined;
     department_id?: string | undefined;
     type_employee_id?: string | undefined;
     position_id?: string | undefined;
@@ -13161,7 +13217,7 @@ export class EmployeeModel implements IEmployeeModel {
     update_by?: string | undefined;
     delete_by?: string | undefined;
 
-    constructor(data?: IEmployeeModel) {
+    constructor(data?: IUserInfo) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -13190,6 +13246,7 @@ export class EmployeeModel implements IEmployeeModel {
             this.avatar16 = _data["avatar16"];
             this.avatar32 = _data["avatar32"];
             this.avatar64 = _data["avatar64"];
+            this.email = _data["email"];
             this.department_id = _data["department_id"];
             this.type_employee_id = _data["type_employee_id"];
             this.position_id = _data["position_id"];
@@ -13204,9 +13261,9 @@ export class EmployeeModel implements IEmployeeModel {
         }
     }
 
-    static fromJS(data: any): EmployeeModel {
+    static fromJS(data: any): UserInfo {
         data = typeof data === 'object' ? data : {};
-        let result = new EmployeeModel();
+        let result = new UserInfo();
         result.init(data);
         return result;
     }
@@ -13231,6 +13288,7 @@ export class EmployeeModel implements IEmployeeModel {
         data["avatar16"] = this.avatar16;
         data["avatar32"] = this.avatar32;
         data["avatar64"] = this.avatar64;
+        data["email"] = this.email;
         data["department_id"] = this.department_id;
         data["type_employee_id"] = this.type_employee_id;
         data["position_id"] = this.position_id;
@@ -13246,7 +13304,7 @@ export class EmployeeModel implements IEmployeeModel {
     }
 }
 
-export interface IEmployeeModel {
+export interface IUserInfo {
     id?: string | undefined;
     name?: string | undefined;
     dateOfBirth?: Date | undefined;
@@ -13265,6 +13323,7 @@ export interface IEmployeeModel {
     avatar16?: string | undefined;
     avatar32?: string | undefined;
     avatar64?: string | undefined;
+    email?: string | undefined;
     department_id?: string | undefined;
     type_employee_id?: string | undefined;
     position_id?: string | undefined;
@@ -13278,7 +13337,7 @@ export interface IEmployeeModel {
     delete_by?: string | undefined;
 }
 
-export class HRM_Employee_Model extends EmployeeModel implements IHRM_Employee_Model {
+export class HRM_Employee_Model extends UserInfo implements IHRM_Employee_Model {
     position_name?: string | undefined;
     department_name?: string | undefined;
     type_employee_name?: string | undefined;
@@ -13316,7 +13375,7 @@ export class HRM_Employee_Model extends EmployeeModel implements IHRM_Employee_M
     }
 }
 
-export interface IHRM_Employee_Model extends IEmployeeModel {
+export interface IHRM_Employee_Model extends IUserInfo {
     position_name?: string | undefined;
     department_name?: string | undefined;
     type_employee_name?: string | undefined;
@@ -13903,110 +13962,6 @@ export interface IAccount {
     companyCode_f?: string | undefined;
 }
 
-export class UserInfo implements IUserInfo {
-    id?: string | undefined;
-    name?: string | undefined;
-    dateOfBirth?: Date | undefined;
-    address?: string | undefined;
-    phoneNumber?: string | undefined;
-    gender?: string | undefined;
-    nationality?: string | undefined;
-    ethnicity?: string | undefined;
-    interests?: string | undefined;
-    maritalStatus?: string | undefined;
-    modifyDate?: Date | undefined;
-    bhxh?: string | undefined;
-    cccd?: string | undefined;
-    codeCompany?: string | undefined;
-    avatar?: string | undefined;
-    avatar16?: string | undefined;
-    avatar32?: string | undefined;
-    avatar64?: string | undefined;
-
-    constructor(data?: IUserInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.dateOfBirth = _data["dateOfBirth"] ? new Date(_data["dateOfBirth"].toString()) : <any>undefined;
-            this.address = _data["address"];
-            this.phoneNumber = _data["phoneNumber"];
-            this.gender = _data["gender"];
-            this.nationality = _data["nationality"];
-            this.ethnicity = _data["ethnicity"];
-            this.interests = _data["interests"];
-            this.maritalStatus = _data["maritalStatus"];
-            this.modifyDate = _data["modifyDate"] ? new Date(_data["modifyDate"].toString()) : <any>undefined;
-            this.bhxh = _data["bhxh"];
-            this.cccd = _data["cccd"];
-            this.codeCompany = _data["codeCompany"];
-            this.avatar = _data["avatar"];
-            this.avatar16 = _data["avatar16"];
-            this.avatar32 = _data["avatar32"];
-            this.avatar64 = _data["avatar64"];
-        }
-    }
-
-    static fromJS(data: any): UserInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new UserInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
-        data["address"] = this.address;
-        data["phoneNumber"] = this.phoneNumber;
-        data["gender"] = this.gender;
-        data["nationality"] = this.nationality;
-        data["ethnicity"] = this.ethnicity;
-        data["interests"] = this.interests;
-        data["maritalStatus"] = this.maritalStatus;
-        data["modifyDate"] = this.modifyDate ? this.modifyDate.toISOString() : <any>undefined;
-        data["bhxh"] = this.bhxh;
-        data["cccd"] = this.cccd;
-        data["codeCompany"] = this.codeCompany;
-        data["avatar"] = this.avatar;
-        data["avatar16"] = this.avatar16;
-        data["avatar32"] = this.avatar32;
-        data["avatar64"] = this.avatar64;
-        return data;
-    }
-}
-
-export interface IUserInfo {
-    id?: string | undefined;
-    name?: string | undefined;
-    dateOfBirth?: Date | undefined;
-    address?: string | undefined;
-    phoneNumber?: string | undefined;
-    gender?: string | undefined;
-    nationality?: string | undefined;
-    ethnicity?: string | undefined;
-    interests?: string | undefined;
-    maritalStatus?: string | undefined;
-    modifyDate?: Date | undefined;
-    bhxh?: string | undefined;
-    cccd?: string | undefined;
-    codeCompany?: string | undefined;
-    avatar?: string | undefined;
-    avatar16?: string | undefined;
-    avatar32?: string | undefined;
-    avatar64?: string | undefined;
-}
-
 export class TOKEN implements ITOKEN {
     id?: string | undefined;
     token?: string | undefined;
@@ -14239,7 +14194,6 @@ export class UserInfoGetListModel extends UserInfo implements IUserInfoGetListMo
     status?: string | undefined;
     lock_date?: Date | undefined;
     last_enter?: Date | undefined;
-    email?: string | undefined;
     type_account?: string | undefined;
     namePermision?: string | undefined;
     status_f?: string | undefined;
@@ -14255,7 +14209,6 @@ export class UserInfoGetListModel extends UserInfo implements IUserInfoGetListMo
             this.status = _data["status"];
             this.lock_date = _data["lock_date"] ? new Date(_data["lock_date"].toString()) : <any>undefined;
             this.last_enter = _data["last_enter"] ? new Date(_data["last_enter"].toString()) : <any>undefined;
-            this.email = _data["email"];
             this.type_account = _data["type_account"];
             this.namePermision = _data["namePermision"];
             this.status_f = _data["status_f"];
@@ -14275,7 +14228,6 @@ export class UserInfoGetListModel extends UserInfo implements IUserInfoGetListMo
         data["status"] = this.status;
         data["lock_date"] = this.lock_date ? this.lock_date.toISOString() : <any>undefined;
         data["last_enter"] = this.last_enter ? this.last_enter.toISOString() : <any>undefined;
-        data["email"] = this.email;
         data["type_account"] = this.type_account;
         data["namePermision"] = this.namePermision;
         data["status_f"] = this.status_f;
@@ -14289,7 +14241,6 @@ export interface IUserInfoGetListModel extends IUserInfo {
     status?: string | undefined;
     lock_date?: Date | undefined;
     last_enter?: Date | undefined;
-    email?: string | undefined;
     type_account?: string | undefined;
     namePermision?: string | undefined;
     status_f?: string | undefined;
