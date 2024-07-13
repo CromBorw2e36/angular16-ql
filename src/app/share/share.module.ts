@@ -1,4 +1,4 @@
-import { CategoryCommonClient, CommonContronllerClient, MovieClient, MovieCommentClient, MovieFavoritesClient, MovieGenresClient, MovieReviewClient, MovieWatchHistoryClient } from './../system/server/api_share';
+import { CategoryCommonClient, CommonContronllerClient, CompanyClient, MovieClient, MovieCommentClient, MovieFavoritesClient, MovieGenresClient, MovieReviewClient, MovieWatchHistoryClient } from './../system/server/api_share';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
@@ -61,6 +61,10 @@ import { MovieEditComponent } from './20_00_00/20_01_00/20_04_00/20_04_01/movie-
 import { MovieListComponent } from './20_00_00/20_01_00/20_04_00/20_04_01/movie-list/movie-list.component';
 import { VoucherFormColumnSettingsEditV2Component } from './99_00_00/voucher-form-column-settings/voucher-form-column-settings-edit-v2/voucher-form-column-settings-edit-v2.component';
 import { SystemMenuSettingsEditV2Component } from './99_00_00/system-menu-settings/system-menu-settings-edit-v2/system-menu-settings-edit-v2.component';
+import { CompanyListManagermentListComponent } from './99_00_00/99_10_00/99_10_06/company-list-managerment-list/company-list-managerment-list.component';
+import { CompanyListManagermentEditComponent } from './99_00_00/99_10_00/99_10_06/company-list-managerment-edit/company-list-managerment-edit.component';
+import { CompanyListComponent } from './99_00_00/99_10_00/99_10_05/company-list/company-list.component';
+import { CompanyEditComponent } from './99_00_00/99_10_00/99_10_05/company-edit/company-edit.component';
 
 const icons = {
   alarm,
@@ -109,6 +113,10 @@ const icons = {
     MovieListComponent,
     VoucherFormColumnSettingsEditV2Component,
     SystemMenuSettingsEditV2Component,
+    CompanyListManagermentListComponent,
+    CompanyListManagermentEditComponent,
+    CompanyListComponent,
+    CompanyEditComponent,
   ],
   providers: [
     CookieService,
@@ -127,6 +135,7 @@ const icons = {
     MovieWatchHistoryClient,
     MovieReviewClient,
     MovieClient,
+    CompanyClient,
   ],
   exports: [QlTaiKhoanComponent],
   imports: [
