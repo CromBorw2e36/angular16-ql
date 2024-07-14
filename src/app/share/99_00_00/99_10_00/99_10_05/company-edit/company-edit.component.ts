@@ -9,7 +9,7 @@ import { Company, CompanyClient } from 'src/app/system/server/api_share';
   templateUrl: './company-edit.component.html',
   styleUrls: ['./company-edit.component.scss']
 })
-export class CompanyEditComponent   extends LayoutComponentBase {
+export class CompanyEditComponent extends LayoutComponentBase {
 
   constructor(
     injector: Injector,
@@ -48,6 +48,7 @@ export class CompanyEditComponent   extends LayoutComponentBase {
         this.companyClient.get(new Company({
           id: ev.data?.id,
           code: ev.data?.code,
+          account_code: this._userInfo.id,
         })).subscribe(res => {
           if (res.status == 0 && res.data) {
             this.InputMaster = res.data;
@@ -102,6 +103,7 @@ export class CompanyEditComponent   extends LayoutComponentBase {
 
   UpdateInputMaster() {
     this._loading = true;
+    this.InputMaster.account_code = this._userInfo.id;
     this.companyClient.update(this.InputMaster).subscribe(res => {
       if (res.status == 0) {
         this.showMessageSuccess(res.msg);
@@ -119,6 +121,7 @@ export class CompanyEditComponent   extends LayoutComponentBase {
 
   InsertInputMaster() {
     this._loading = true;
+    this.InputMaster.account_code = this._userInfo.id;
     this.companyClient.insert(this.InputMaster).subscribe(res => {
       if (res.status == 0) {
         this.showMessageSuccess(res.msg);

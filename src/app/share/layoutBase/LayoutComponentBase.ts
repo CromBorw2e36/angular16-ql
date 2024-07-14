@@ -11,6 +11,7 @@ import { Action_Type_Enum } from 'src/app/components/js-devextreme/popup/enum_ac
 import { MenuV2Service } from 'src/app/components/menu-v2/service/menu-v2.service';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { LanguageNational } from 'src/app/components/common/enum/language';
 
 interface ICol_Title_Model {
   id: number,
@@ -63,6 +64,7 @@ export default class LayoutComponentBase {
   _urlVoucherFormEdit: string = ''; // URL Voucher Form Edit - Set value in router-outlet
   _urlVoucherFormEdit2: string[] = []; // Case have any  voucher form edit
   _pathGetFile: string = ``;
+  _languageUser: string = "ORTHER"; // khai báo ngôn ngữ người dùng
 
   constructor(
     injector: Injector,
@@ -78,6 +80,9 @@ export default class LayoutComponentBase {
     this._httpGlobal = injector.get(HttpClient);
 
     // document.title = this.title_website
+
+    this._userInfo = this.getUserInfo();
+    this._languageUser = (this._userInfo as Account).language ?? "ORTHER";
 
     this.route.data.subscribe(data => {
       this._tableName = data['table_name'];
@@ -104,9 +109,9 @@ export default class LayoutComponentBase {
   ): string {
     const languageUser = (this.getUserInfo() as Account).language;
     switch (languageUser) {
-      case "vi-VN":
+      case LanguageNational.VIETNAM:
         return message_vn ?? "";
-      case "ORTHER":
+      case LanguageNational.OTHER:
         return message_other ?? "";
       default:
         return message_other ?? "";

@@ -15182,6 +15182,7 @@ export class Company implements ICompany {
     address1?: string | undefined;
     address2?: string | undefined;
     create_at?: Date | undefined;
+    active?: boolean | undefined;
     adminCompany?: string | undefined;
     notes?: string | undefined;
     left_company?: number | undefined;
@@ -15192,6 +15193,12 @@ export class Company implements ICompany {
     create_by?: string | undefined;
     update_by?: string | undefined;
     delete_by?: string | undefined;
+    account_code?: string | undefined;
+    expiry?: Date;
+    create_by_fullName?: string | undefined;
+    update_by_fullName?: string | undefined;
+    delete_by_fullName?: string | undefined;
+    admin_company_fullName?: string | undefined;
 
     constructor(data?: ICompany) {
         if (data) {
@@ -15210,6 +15217,7 @@ export class Company implements ICompany {
             this.address1 = _data["address1"];
             this.address2 = _data["address2"];
             this.create_at = _data["create_at"] ? new Date(_data["create_at"].toString()) : <any>undefined;
+            this.active = _data["active"];
             this.adminCompany = _data["adminCompany"];
             this.notes = _data["notes"];
             this.left_company = _data["left_company"];
@@ -15220,6 +15228,12 @@ export class Company implements ICompany {
             this.create_by = _data["create_by"];
             this.update_by = _data["update_by"];
             this.delete_by = _data["delete_by"];
+            this.account_code = _data["account_code"];
+            this.expiry = _data["expiry"] ? new Date(_data["expiry"].toString()) : <any>undefined;
+            this.create_by_fullName = _data["create_by_fullName"];
+            this.update_by_fullName = _data["update_by_fullName"];
+            this.delete_by_fullName = _data["delete_by_fullName"];
+            this.admin_company_fullName = _data["admin_company_fullName"];
         }
     }
 
@@ -15238,6 +15252,7 @@ export class Company implements ICompany {
         data["address1"] = this.address1;
         data["address2"] = this.address2;
         data["create_at"] = this.create_at ? this.create_at.toISOString() : <any>undefined;
+        data["active"] = this.active;
         data["adminCompany"] = this.adminCompany;
         data["notes"] = this.notes;
         data["left_company"] = this.left_company;
@@ -15248,6 +15263,12 @@ export class Company implements ICompany {
         data["create_by"] = this.create_by;
         data["update_by"] = this.update_by;
         data["delete_by"] = this.delete_by;
+        data["account_code"] = this.account_code;
+        data["expiry"] = this.expiry ? this.expiry.toISOString() : <any>undefined;
+        data["create_by_fullName"] = this.create_by_fullName;
+        data["update_by_fullName"] = this.update_by_fullName;
+        data["delete_by_fullName"] = this.delete_by_fullName;
+        data["admin_company_fullName"] = this.admin_company_fullName;
         return data;
     }
 }
@@ -15259,6 +15280,7 @@ export interface ICompany {
     address1?: string | undefined;
     address2?: string | undefined;
     create_at?: Date | undefined;
+    active?: boolean | undefined;
     adminCompany?: string | undefined;
     notes?: string | undefined;
     left_company?: number | undefined;
@@ -15269,6 +15291,12 @@ export interface ICompany {
     create_by?: string | undefined;
     update_by?: string | undefined;
     delete_by?: string | undefined;
+    account_code?: string | undefined;
+    expiry?: Date;
+    create_by_fullName?: string | undefined;
+    update_by_fullName?: string | undefined;
+    delete_by_fullName?: string | undefined;
+    admin_company_fullName?: string | undefined;
 }
 
 export class StatusMessageOfListOfCompany implements IStatusMessageOfListOfCompany {

@@ -31,6 +31,7 @@ import { MovieListComponent } from "./20_00_00/20_01_00/20_04_00/20_04_01/movie-
 import { MovieEditComponent } from "./20_00_00/20_01_00/20_04_00/20_04_01/movie-edit/movie-edit.component";
 import { CompanyListManagermentEditComponent } from "./99_00_00/99_10_00/99_10_06/company-list-managerment-edit/company-list-managerment-edit.component";
 import { CompanyListManagermentListComponent } from "./99_00_00/99_10_00/99_10_06/company-list-managerment-list/company-list-managerment-list.component";
+import { CompanyListComponent } from "./99_00_00/99_10_00/99_10_05/company-list/company-list.component";
 
 const routes: Routes = [
   { path: 'ql-tai-khoan', component: QlTaiKhoanComponent },
@@ -85,6 +86,7 @@ const routes: Routes = [
   { path: 'movie-edit', component: MovieEditComponent, data: { table_name2: ["20.04.01_Movie", "20.04.01_Movie_2"] } },
 
   { path: 'company-list-managerment', component: CompanyListManagermentListComponent, data: { table_name: "99.10.06_Company", url_voucher_form_edit: undefined } },
+  { path: 'company-list', component: CompanyListComponent, data: { table_name: "99.10.05_Company", url_voucher_form_edit: undefined } },
   // { path: 'company-list-managerment-edit', component: CompanyListManagermentEditComponent, data: { table_name: "99.10.06_Company" } },
 
   { path: '**', component: NotFoundPageComponent },

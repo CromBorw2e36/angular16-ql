@@ -14,7 +14,7 @@
   <dxi-column
     *ngFor="let item of columns; let i = index"
     [dataField]="item.dataField"
-    [caption]="item.caption"
+    [caption]="translate(item.caption_VN, item.caption)"
     [dataType]="item.dataType"
     [minWidth]="item.width"
     [alignment]="item.alignment"
