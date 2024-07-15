@@ -27,7 +27,10 @@ export class MenuV2Component extends LayoutComponentBase implements OnInit, OnCh
       hasItemsExpr: '',
       parentIdExpr: '',
       noDataText: '',
-      expandAllEnabled: true,
+      expandAllEnabled: false,
+      animationEnabled: true,
+      hoverStateEnabled: true,
+
     } as DxTreeViewTypes.Properties;
 
 

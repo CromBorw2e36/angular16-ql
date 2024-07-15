@@ -31,6 +31,7 @@ export class SelectBoxComponent {
 
   @Output() onValueChanged = new EventEmitter<any>();
   @Output() valueChange = new EventEmitter<any>();
+  @Output() valueNameChange = new EventEmitter<any>();
   @ViewChild('dxSelectBoxComponent') dxSelectBoxComponent: DxSelectBoxComponent | undefined;
 
   handleValueChange(ev: ValueChangedEvent) {
@@ -38,6 +39,11 @@ export class SelectBoxComponent {
     // console.log(ev);
     this.onValueChanged.emit(ev);
     this.valueChange.emit(data);
+    const findItem = this.dataSource.find(x => x[this.valueExpr] === data);
+    if (findItem && this.valueExpr.endsWith('_id')) {
+      // const dataField = this.valueExpr.replace('_id', '_name');
+      this.valueNameChange.emit(findItem['name']);
+    }
   }
 
 }

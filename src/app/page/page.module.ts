@@ -1,4 +1,4 @@
-import { CategoryCommonClient, CommonContronllerClient, HRMCommonClient, MovieClient, MovieCommentClient, MovieFavoritesClient, MovieGenresClient, MovieReviewClient, MovieWatchHistoryClient } from '../system/server/api_share';
+import { CategoryCommonClient, CommonContronllerClient, HRMCommonClient, HRMEmployeeClient, MovieClient, MovieCommentClient, MovieFavoritesClient, MovieGenresClient, MovieReviewClient, MovieWatchHistoryClient } from '../system/server/api_share';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
@@ -34,6 +34,9 @@ import { ThongTinLoaiNhanVienListComponent } from './HRM_module/danh-muc/thong-t
 import { ThongTinLoaiNhanVienEditComponent } from './HRM_module/danh-muc/thong-tin-loai-nhan-vien/thong-tin-loai-nhan-vien-edit/thong-tin-loai-nhan-vien-edit.component';
 import { ThongTinLoaiCongViecListComponent } from './HRM_module/danh-muc/thong-tin-loai-cong-viec/thong-tin-loai-cong-viec-list/thong-tin-loai-cong-viec-list.component';
 import { ThongTinLoaiCongViecEditComponent } from './HRM_module/danh-muc/thong-tin-loai-cong-viec/thong-tin-loai-cong-viec-edit/thong-tin-loai-cong-viec-edit.component';
+import { EmployeeInfoListComponent } from './HRM_module/employee/employee-info/employee-info-list/employee-info-list.component';
+import { EmployeeInfoEditComponent } from './HRM_module/employee/employee-info/employee-info-edit/employee-info-edit.component';
+import { EmployeeInfoFilterComponent } from './HRM_module/employee/employee-info/employee-info-filter/employee-info-filter.component';
 
 const icons = {
   alarm,
@@ -54,7 +57,10 @@ const icons = {
     ThongTinLoaiNhanVienListComponent,
     ThongTinLoaiNhanVienEditComponent,
     ThongTinLoaiCongViecListComponent,
-    ThongTinLoaiCongViecEditComponent
+    ThongTinLoaiCongViecEditComponent,
+    EmployeeInfoListComponent,
+    EmployeeInfoEditComponent,
+    EmployeeInfoFilterComponent
   ],
   providers: [
     CookieService,
@@ -74,6 +80,7 @@ const icons = {
     MovieReviewClient,
     MovieClient,
     HRMCommonClient,
+    HRMEmployeeClient,
   ],
   exports: [],
   imports: [

@@ -5,6 +5,7 @@ import { SysMenuService } from 'src/app/system/service/sys-menu/sys-menu.service
 import { HomePageService } from '../../home-page/service/home-page.service';
 import { NavigationEnd, NavigationSkipped, Router, Scroll } from '@angular/router';
 import { MenuV2Service } from 'src/app/components/menu-v2/service/menu-v2.service';
+import { debounceTime, fromEvent } from 'rxjs';
 
 @Component({
   selector: 'list-page-menu-component',
@@ -24,14 +25,12 @@ export class ListPageMenuComponent extends LayoutComponentBase implements OnInit
     super(injector);
     this.InputMaster = [];
     this.itemSelected = this.menuV2Service.getMenuSelectedByLv('2');
-
     this.router.events.subscribe(x => {
       if (x instanceof Scroll && x.routerEvent.url === '/menu') {
         this.onLoadMenu();
         this.itemSelected = this.menuV2Service.getMenuSelectedByLv('2');
       }
     })
-
   }
 
   itemSelected: Sys_Menu_Tree_View_MODEL;
@@ -39,6 +38,11 @@ export class ListPageMenuComponent extends LayoutComponentBase implements OnInit
   InputMaster: Array<SysMenu>;
 
   ngOnInit(): void {
+  }
+
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
     this.onLoadMenu();
   }
 

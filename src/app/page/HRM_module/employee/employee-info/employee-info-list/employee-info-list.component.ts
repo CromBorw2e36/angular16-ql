@@ -1,22 +1,22 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { Properties } from 'devextreme/ui/data_grid';
 import { DataGridComponent, IDataGridComponent } from 'src/app/components/js-devextreme/data-grid/data-grid.component';
-import { IToolBarComponent, I_ToolbarComponent_ActionClick } from 'src/app/components/tool-bar/tool-bar.component';
+import { I_ToolbarComponent_ActionClick, IToolBarComponent } from 'src/app/components/tool-bar/tool-bar.component';
 import LayoutComponentBase from 'src/app/share/layoutBase/LayoutComponentBase';
-import { HRMCommonClient, TypeEmployeeModel } from 'src/app/system/server/api_share';
+import { HRM_Employee_Model, HRMCommonClient, HRMEmployeeClient } from 'src/app/system/server/api_share';
+import { EmployeeInfoEditComponent } from '../employee-info-edit/employee-info-edit.component';
 import { Action_Type_Enum } from 'src/app/components/js-devextreme/popup/enum_action';
-import { ThongTinLoaiCongViecEditComponent } from '../thong-tin-loai-cong-viec-edit/thong-tin-loai-cong-viec-edit.component';
 
 @Component({
-  selector: 'app-thong-tin-loai-cong-viec-list',
-  templateUrl: './thong-tin-loai-cong-viec-list.component.html',
-  styleUrls: ['./thong-tin-loai-cong-viec-list.component.scss']
+  selector: 'app-employee-info-list',
+  templateUrl: './employee-info-list.component.html',
+  styleUrls: ['./employee-info-list.component.scss']
 })
-export class ThongTinLoaiCongViecListComponent   extends LayoutComponentBase implements OnInit, IDataGridComponent, IToolBarComponent {
+export class EmployeeInfoListComponent extends LayoutComponentBase implements OnInit, IDataGridComponent, IToolBarComponent {
 
   constructor(
     injector: Injector,
-    private hRMCommonClient: HRMCommonClient,
+    private hRMEmployeeClient: HRMEmployeeClient,
   ) {
     super(injector);
 
@@ -42,11 +42,11 @@ export class ThongTinLoaiCongViecListComponent   extends LayoutComponentBase imp
 
   propertyDataGrid: Properties;
   value: string = '';
-  InputMaster: Array<TypeEmployeeModel> = [];
-  filterInput: TypeEmployeeModel = {} as TypeEmployeeModel;
+  InputMaster: Array<HRM_Employee_Model> = [];
+  filterInput: HRM_Employee_Model = {} as HRM_Employee_Model;
 
   @ViewChild('dataGridComponent') dataGridComponent: DataGridComponent | undefined;
-  @ViewChild('thongTinLoaiCongViecEditComponent') thongTinLoaiCongViecEditComponent: ThongTinLoaiCongViecEditComponent | undefined;
+  @ViewChild('employeeInfoEditComponent') employeeInfoEditComponent: EmployeeInfoEditComponent | undefined;
 
 
   ngOnInit(): void {
@@ -57,8 +57,8 @@ export class ThongTinLoaiCongViecListComponent   extends LayoutComponentBase imp
     switch (ev.code) {
       case Action_Type_Enum.ADD: {
         // this.setRouter(this._urlVoucherFormEdit, null, ev.code);
-        if (this.thongTinLoaiCongViecEditComponent) {
-          this.thongTinLoaiCongViecEditComponent.setShowPopup({ state: true, data: null, typeAction: ev.code });
+        if (this.employeeInfoEditComponent) {
+          this.employeeInfoEditComponent.setShowPopup({ state: true, data: null, typeAction: ev.code });
         }
         break;
       }
@@ -67,8 +67,8 @@ export class ThongTinLoaiCongViecListComponent   extends LayoutComponentBase imp
       case Action_Type_Enum.COPY: {
         const dataSelected = this.dataGridComponent?.getRowSelectedData();
         if (dataSelected && dataSelected[0]) {
-          if (this.thongTinLoaiCongViecEditComponent) {
-            this.thongTinLoaiCongViecEditComponent.setShowPopup({ state: true, data: dataSelected[0], typeAction: ev.code });
+          if (this.employeeInfoEditComponent) {
+            this.employeeInfoEditComponent.setShowPopup({ state: true, data: dataSelected[0], typeAction: ev.code });
           }
         } else {
           this.showMessageError(this.translate('Vui lòng chọn ít nhất 1 dòng để thực hiện', 'Please select at least 1 row to execute'));
@@ -77,28 +77,31 @@ export class ThongTinLoaiCongViecListComponent   extends LayoutComponentBase imp
       }
       case Action_Type_Enum.DELETE: {
         const dataSelected = this.dataGridComponent?.getRowSelectedData();
+
         if (dataSelected?.length === 0) {
           this.showMessageError(this.translate('Vui lòng chọn ít nhất 1 dòng để thực hiện', 'Please select at least 1 row to execute'));
           break;
         }
+
         const userConfirm = confirm(this.translate('Bạn có chắc chắn muốn xóa', 'Are you sure to delete'));
 
         if (dataSelected && dataSelected[0] && userConfirm) {
-          const itemSelected = dataSelected[0] as TypeEmployeeModel;
-          const obj = new TypeEmployeeModel();
+          const itemSelected = dataSelected[0] as HRM_Employee_Model;
+          const obj = new HRM_Employee_Model();
           obj.id = itemSelected.id;
-          obj.company_code = itemSelected.company_code;
-          this.hRMCommonClient.typeWorkDelete(obj).subscribe(res => {
+          obj.codeCompany = itemSelected.codeCompany;
+          obj.is_delete = true;
+          this.hRMEmployeeClient.delete(obj).subscribe(res => {
             if (res.status == 0) {
               this.onLoadData();
               this.showMessageSuccess(res.msg!)
-            }else
-            this.showMessageError(res.msg!)
+            } else
+              this.showMessageError(res.msg!)
           }, error => {
             if (error.status == 401 || error.status == 403) this.setLogin(false);
             else if (error.status == 500) this.showMessageError(error.msg)
           });
-        } else if (!userConfirm) {        }
+        } else if (!userConfirm) { }
         else {
           this.showMessageError(this.translate('Vui lòng chọn ít nhất 1 dòng để thực hiện', 'Please select at least 1 row to execute'));
         }
@@ -110,7 +113,7 @@ export class ThongTinLoaiCongViecListComponent   extends LayoutComponentBase imp
 
   onLoadData() {
     this._loading = true;
-    this.hRMCommonClient.typeWorkSearch(new TypeEmployeeModel({
+    this.hRMEmployeeClient.search(new HRM_Employee_Model({
       is_delete: false,
     })).subscribe(res => {
       if (res.status == 0) {
@@ -126,7 +129,7 @@ export class ThongTinLoaiCongViecListComponent   extends LayoutComponentBase imp
     });
   }
 
-  ActionEditSuccess(event: { code: Action_Type_Enum, data: TypeEmployeeModel }) {
+  ActionEditSuccess(event: { code: Action_Type_Enum, data: HRM_Employee_Model }) {
     const id = event!.data!.id!
     this.onLoadData();
     this.dataGridComponent?.dxDataGridComponent?.instance.selectRows([id], true);

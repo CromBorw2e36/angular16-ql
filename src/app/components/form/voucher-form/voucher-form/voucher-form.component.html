@@ -81,6 +81,7 @@
           (valueChange)="ValueChange(itemVoucherFormCol.code!, $event)"
           [displayExpr]="'name'"
           [valueExpr]="'code'"
+          (valueNameChange)="ValueChange(itemVoucherFormCol.code!.replace('_id','_name')!, $event)"
         ></control-select-box-component>
       </div>
       <div *ngSwitchCase="typeComponent.textArea">not exists</div>

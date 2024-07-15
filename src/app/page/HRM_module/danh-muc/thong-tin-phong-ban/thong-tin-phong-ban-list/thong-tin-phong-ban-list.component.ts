@@ -77,7 +77,10 @@ export class ThongTinPhongBanListComponent extends LayoutComponentBase implement
       }
       case Action_Type_Enum.DELETE: {
         const dataSelected = this.dataGridComponent?.getRowSelectedData();
-
+        if (dataSelected?.length === 0) {
+          this.showMessageError(this.translate('Vui lòng chọn ít nhất 1 dòng để thực hiện', 'Please select at least 1 row to execute'));
+          break;
+        }
         const userConfirm = confirm(this.translate('Bạn có chắc chắn muốn xóa', 'Are you sure to delete'));
 
         if (dataSelected && dataSelected[0] && userConfirm) {
