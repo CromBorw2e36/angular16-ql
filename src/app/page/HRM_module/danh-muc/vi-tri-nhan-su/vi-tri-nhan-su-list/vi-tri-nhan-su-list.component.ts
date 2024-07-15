@@ -12,7 +12,7 @@ import { ViTriNhanSuEditComponent } from '../vi-tri-nhan-su-edit/vi-tri-nhan-su-
   templateUrl: './vi-tri-nhan-su-list.component.html',
   styleUrls: ['./vi-tri-nhan-su-list.component.scss']
 })
-export class ViTriNhanSuListComponent  extends LayoutComponentBase implements OnInit, IDataGridComponent, IToolBarComponent {
+export class ViTriNhanSuListComponent extends LayoutComponentBase implements OnInit, IDataGridComponent, IToolBarComponent {
 
   constructor(
     injector: Injector,
@@ -77,7 +77,10 @@ export class ViTriNhanSuListComponent  extends LayoutComponentBase implements On
       }
       case Action_Type_Enum.DELETE: {
         const dataSelected = this.dataGridComponent?.getRowSelectedData();
-
+        if (dataSelected?.length === 0) {
+          this.showMessageError(this.translate('Vui lòng chọn ít nhất 1 dòng để thực hiện', 'Please select at least 1 row to execute'));
+          break;
+        }
         const userConfirm = confirm(this.translate('Bạn có chắc chắn muốn xóa', 'Are you sure to delete'));
 
         if (dataSelected && dataSelected[0] && userConfirm) {
@@ -89,13 +92,13 @@ export class ViTriNhanSuListComponent  extends LayoutComponentBase implements On
             if (res.status == 0) {
               this.onLoadData();
               this.showMessageSuccess(res.msg!)
-            }else
-            this.showMessageError(res.msg!)
+            } else
+              this.showMessageError(res.msg!)
           }, error => {
             if (error.status == 401 || error.status == 403) this.setLogin(false);
             else if (error.status == 500) this.showMessageError(error.msg)
           });
-        } else if (!userConfirm) {        }
+        } else if (!userConfirm) { }
         else {
           this.showMessageError(this.translate('Vui lòng chọn ít nhất 1 dòng để thực hiện', 'Please select at least 1 row to execute'));
         }

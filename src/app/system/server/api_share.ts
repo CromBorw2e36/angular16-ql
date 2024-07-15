@@ -13200,15 +13200,23 @@ export class UserInfo implements IUserInfo {
     bhxh?: string | undefined;
     cccd?: string | undefined;
     codeCompany?: string | undefined;
+    companyName?: string | undefined;
     avatar?: string | undefined;
     avatar16?: string | undefined;
     avatar32?: string | undefined;
     avatar64?: string | undefined;
+    employee_code?: string | undefined;
     email?: string | undefined;
     department_id?: string | undefined;
     type_employee_id?: string | undefined;
     position_id?: string | undefined;
     type_work_id?: string | undefined;
+    status_employee_id?: string | undefined;
+    department_name?: string | undefined;
+    type_employee_name?: string | undefined;
+    position_name?: string | undefined;
+    type_work_name?: string | undefined;
+    status_employee_name?: string | undefined;
     is_delete?: boolean | undefined;
     create_at?: Date | undefined;
     update_at?: Date | undefined;
@@ -13216,6 +13224,9 @@ export class UserInfo implements IUserInfo {
     create_by?: string | undefined;
     update_by?: string | undefined;
     delete_by?: string | undefined;
+    create_by_fullname?: string | undefined;
+    update_by_fullname?: string | undefined;
+    delete_by_fullname?: string | undefined;
 
     constructor(data?: IUserInfo) {
         if (data) {
@@ -13242,15 +13253,23 @@ export class UserInfo implements IUserInfo {
             this.bhxh = _data["bhxh"];
             this.cccd = _data["cccd"];
             this.codeCompany = _data["codeCompany"];
+            this.companyName = _data["companyName"];
             this.avatar = _data["avatar"];
             this.avatar16 = _data["avatar16"];
             this.avatar32 = _data["avatar32"];
             this.avatar64 = _data["avatar64"];
+            this.employee_code = _data["employee_code"];
             this.email = _data["email"];
             this.department_id = _data["department_id"];
             this.type_employee_id = _data["type_employee_id"];
             this.position_id = _data["position_id"];
             this.type_work_id = _data["type_work_id"];
+            this.status_employee_id = _data["status_employee_id"];
+            this.department_name = _data["department_name"];
+            this.type_employee_name = _data["type_employee_name"];
+            this.position_name = _data["position_name"];
+            this.type_work_name = _data["type_work_name"];
+            this.status_employee_name = _data["status_employee_name"];
             this.is_delete = _data["is_delete"];
             this.create_at = _data["create_at"] ? new Date(_data["create_at"].toString()) : <any>undefined;
             this.update_at = _data["update_at"] ? new Date(_data["update_at"].toString()) : <any>undefined;
@@ -13258,6 +13277,9 @@ export class UserInfo implements IUserInfo {
             this.create_by = _data["create_by"];
             this.update_by = _data["update_by"];
             this.delete_by = _data["delete_by"];
+            this.create_by_fullname = _data["create_by_fullname"];
+            this.update_by_fullname = _data["update_by_fullname"];
+            this.delete_by_fullname = _data["delete_by_fullname"];
         }
     }
 
@@ -13284,15 +13306,23 @@ export class UserInfo implements IUserInfo {
         data["bhxh"] = this.bhxh;
         data["cccd"] = this.cccd;
         data["codeCompany"] = this.codeCompany;
+        data["companyName"] = this.companyName;
         data["avatar"] = this.avatar;
         data["avatar16"] = this.avatar16;
         data["avatar32"] = this.avatar32;
         data["avatar64"] = this.avatar64;
+        data["employee_code"] = this.employee_code;
         data["email"] = this.email;
         data["department_id"] = this.department_id;
         data["type_employee_id"] = this.type_employee_id;
         data["position_id"] = this.position_id;
         data["type_work_id"] = this.type_work_id;
+        data["status_employee_id"] = this.status_employee_id;
+        data["department_name"] = this.department_name;
+        data["type_employee_name"] = this.type_employee_name;
+        data["position_name"] = this.position_name;
+        data["type_work_name"] = this.type_work_name;
+        data["status_employee_name"] = this.status_employee_name;
         data["is_delete"] = this.is_delete;
         data["create_at"] = this.create_at ? this.create_at.toISOString() : <any>undefined;
         data["update_at"] = this.update_at ? this.update_at.toISOString() : <any>undefined;
@@ -13300,6 +13330,9 @@ export class UserInfo implements IUserInfo {
         data["create_by"] = this.create_by;
         data["update_by"] = this.update_by;
         data["delete_by"] = this.delete_by;
+        data["create_by_fullname"] = this.create_by_fullname;
+        data["update_by_fullname"] = this.update_by_fullname;
+        data["delete_by_fullname"] = this.delete_by_fullname;
         return data;
     }
 }
@@ -13319,15 +13352,23 @@ export interface IUserInfo {
     bhxh?: string | undefined;
     cccd?: string | undefined;
     codeCompany?: string | undefined;
+    companyName?: string | undefined;
     avatar?: string | undefined;
     avatar16?: string | undefined;
     avatar32?: string | undefined;
     avatar64?: string | undefined;
+    employee_code?: string | undefined;
     email?: string | undefined;
     department_id?: string | undefined;
     type_employee_id?: string | undefined;
     position_id?: string | undefined;
     type_work_id?: string | undefined;
+    status_employee_id?: string | undefined;
+    department_name?: string | undefined;
+    type_employee_name?: string | undefined;
+    position_name?: string | undefined;
+    type_work_name?: string | undefined;
+    status_employee_name?: string | undefined;
     is_delete?: boolean | undefined;
     create_at?: Date | undefined;
     update_at?: Date | undefined;
@@ -13335,13 +13376,12 @@ export interface IUserInfo {
     create_by?: string | undefined;
     update_by?: string | undefined;
     delete_by?: string | undefined;
+    create_by_fullname?: string | undefined;
+    update_by_fullname?: string | undefined;
+    delete_by_fullname?: string | undefined;
 }
 
 export class HRM_Employee_Model extends UserInfo implements IHRM_Employee_Model {
-    position_name?: string | undefined;
-    department_name?: string | undefined;
-    type_employee_name?: string | undefined;
-    type_work_name?: string | undefined;
 
     constructor(data?: IHRM_Employee_Model) {
         super(data);
@@ -13349,12 +13389,6 @@ export class HRM_Employee_Model extends UserInfo implements IHRM_Employee_Model 
 
     override init(_data?: any) {
         super.init(_data);
-        if (_data) {
-            this.position_name = _data["position_name"];
-            this.department_name = _data["department_name"];
-            this.type_employee_name = _data["type_employee_name"];
-            this.type_work_name = _data["type_work_name"];
-        }
     }
 
     static override fromJS(data: any): HRM_Employee_Model {
@@ -13366,20 +13400,12 @@ export class HRM_Employee_Model extends UserInfo implements IHRM_Employee_Model 
 
     override toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["position_name"] = this.position_name;
-        data["department_name"] = this.department_name;
-        data["type_employee_name"] = this.type_employee_name;
-        data["type_work_name"] = this.type_work_name;
         super.toJSON(data);
         return data;
     }
 }
 
 export interface IHRM_Employee_Model extends IUserInfo {
-    position_name?: string | undefined;
-    department_name?: string | undefined;
-    type_employee_name?: string | undefined;
-    type_work_name?: string | undefined;
 }
 
 export class StatusMessageOfListOfHRM_Employee_Model implements IStatusMessageOfListOfHRM_Employee_Model {
